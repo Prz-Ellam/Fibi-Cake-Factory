@@ -47,8 +47,8 @@ class Application
     {
         $this->router = new Router();
         $this->request = RequestBuilder::createFromPhpServer();
-        $this->viewEngine = new ViewEngine(__DIR__ . "//..//..//public");
-        //$this->viewEngine->setMainLayout("main");
+        $this->viewEngine = new ViewEngine(__DIR__ . "//..//..//frontend");
+        $this->viewEngine->setMainLayout("main");
     }
 
     /**

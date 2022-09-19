@@ -65,29 +65,33 @@ class Response
         return $this;
     }
     
-    public function json(array $content)
+    public function json(array $content) : self
     {
         $this->setContentType("application/json")
                 ->setBody(json_encode($content));
+        return $this;
     }
 
-    public function text(string $content)
+    public function text(string $content) : self
     {
         $this->setContentType("text/plain")
                 ->setBody($content);
+        return $this;
     }
 
-    public function redirect(string $uri)
+    public function redirect(string $uri) : self
     {
         $this->setHeader("Location", $uri);
+        return $this;
     }
 
-    public function view(string $view)
+    public function view(string $view) : self
     {
         $content = Application::app()->viewEngine->render($view);
 
         $this->setContentType("text/html")
                 ->setBody($content);
+        return $this;
     }
 }
 

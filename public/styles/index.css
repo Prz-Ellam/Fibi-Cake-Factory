@@ -1,0 +1,172 @@
+
+
+@font-face {
+    font-family: bello;
+    src: url(../Assets/Fonts/Bello-Script.ttf);
+}
+
+
+.orange {
+    background-color: #FF5E1F;
+    border: 1px solid #FF5E1F;
+    font-size: 22px;
+}
+
+.orange:hover {
+    background-color: #c44817;
+    border: 1px solid #c44817;
+}
+
+
+#search {
+    border: none;
+}
+
+
+.product-card {
+    width: 215px;
+    height: 350px;
+    border-radius: 16px;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+
+.prueb, .text-brown {
+    color: #391113;
+}
+
+
+.btn-cart {
+    background-color: #FF5E1F;
+    border-color: #FF5E1F;
+}
+
+.price {
+    font-size: 24px;
+    color: #3B1002;
+}
+
+.car-prueba:hover {
+    box-shadow: 0 0 1.5em rgba(0,0,0,0.25)
+}
+
+.social-media {
+    font-size: 1.5em;
+}
+
+
+.car-prueba img {
+    transition: 0.5s;
+}
+
+.car-prueba img:hover {
+    transform: scale(1.1);
+}
+
+.search {
+    border-top-right-radius: 0em;
+    border-bottom-right-radius: 0em;
+}
+
+.search-btn {
+    border-top-left-radius: 0em;
+    border-bottom-left-radius: 0em;
+}
+
+.cta {
+    z-index: 100;
+}
+
+.img-wrapper {
+    position: relative;
+  }
+  
+  .img-responsive {
+    width: 100%;
+    height: auto;
+  }
+  
+  .img-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  
+  .img-overlay:before {
+    content: ' ';
+    display: block;
+    /* adjust 'height' to position overlay content vertically */
+    height: 15%;
+  }
+
+
+.hero-paragraph {
+    font-size: 3em;
+}
+
+.supremo {
+    font-weight: 800;
+    font-size: 2em;
+}
+
+.cte-container {
+    width: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+
+.carousel-card {
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+
+
+#banner {
+    position: relative;
+    background: url("../assets/img/Wallpaper1.jpg") no-repeat center;
+    background-size: cover;
+    height: 600px;
+    overflow: hidden;
+}
+
+
+.cte {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 3em;
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 576px) {
+
+    #hero-title {
+        font-size: 1.75em;
+    }
+
+    .carousel-card {
+        width: 100% !important;
+    }
+ 
+}
+
+@media only screen and (max-width: 992px) {
+
+    #search-box {
+        width: 100% !important;
+    }
+
+    .primary-nav-item {
+        padding-left: 1em !important;
+    }
+ 
+}

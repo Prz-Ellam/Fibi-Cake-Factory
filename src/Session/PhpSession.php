@@ -4,6 +4,10 @@ namespace Fibi\Session;
 
 class PhpSession implements Session
 {
+    public function __construct() {
+        $this->start();
+    }
+
     public function start()
     {
         session_start();

@@ -120,7 +120,7 @@ class Request
             return $this->headers;
         }
 
-        return $this->headers;
+        return $this->headers[$key] ?? null;
     }
 
     public function setHeaders(array $headers) : self
@@ -156,8 +156,13 @@ class Request
         return $this;
     }
 
-    public function getFile(string $key) : mixed
+    public function getFile(?string $key = null) : mixed
     {
+        if (is_null($key))
+        {
+            return $this->files;
+        }
+
         return $this->files[$key] ?? null;
     }
 

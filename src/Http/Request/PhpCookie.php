@@ -11,7 +11,7 @@ class PhpCookie implements Cookie
 
     public function set(string $key, string $value, int $timeout = 0) : void
     {
-        setcookie($key, $value, $timeout);
+        setcookie($key, $value, $timeout, '/');
     }
 }
 

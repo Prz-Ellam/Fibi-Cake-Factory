@@ -10,6 +10,7 @@ use CakeFactory\Repositories\UserRepository;
 use CakeFactory\Validators\UserValidator;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
+use Fibi\Http\Request\PhpCookie;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
 use Fibi\Session\Session;
@@ -77,7 +78,7 @@ class UserController extends Controller
         if ($result === false)
         {
             // Errors
-            $response->json(["response" => "No"]);
+            $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
 
@@ -86,10 +87,9 @@ class UserController extends Controller
 
         if ($result === false)
         {
-            $response->json(["response" => "No"]);
+            $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
-
 
         $response->json(["response" => "Si"]);
     }
@@ -132,13 +132,34 @@ class UserController extends Controller
         $passwordHashed = $authRepository->login($loginOrEmail)[0]["password"];
         $passwordCheck = password_verify($password, $passwordHashed);
 
-        $token = JWT::encode([ "login" => $loginOrEmail ], "1234", "HS256");
+        if ($passwordCheck === false)
+        {
+            $response->json([
+                "status" => false
+            ])->setStatusCode(400);
+            return;
+        }
+
+        // Cuida mucho el JWT_SECRET
+        $JWT_SECRET = "3bb515fea33c5a653a5bbdcd20d958c8b7e49a91db0c74e91a04a0faab4f5c3a";
+        $iat = time();
+        $exp = $iat + 60 * 60;
+        $token = JWT::encode([ 
+            "login" => $loginOrEmail,
+            "iat" => $iat,
+            "exp" => $exp
+        ], $JWT_SECRET, "HS256");
 
         $session = new PhpSession();
-        $session->start();
-        //$session->set('token', $token);
+        $session->set('token', $token);
 
-        var_dump($session->get()); die;
+        $cookies = new PhpCookie();
+        $cookies->set('token', $token, time() + (60 * 60));
+
+        $response->json([
+            "status" => true,
+            "token" => $token
+        ]);
     }
 
     public function isEmailAvailable(Request $request, Response $response)
