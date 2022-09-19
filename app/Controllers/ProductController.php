@@ -1,0 +1,5 @@
+<?php
+
+namespace CakeFactory\Controllers;
+
+?>

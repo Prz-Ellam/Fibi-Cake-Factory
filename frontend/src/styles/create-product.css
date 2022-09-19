@@ -1,0 +1,15 @@
+.product-mul {
+    width: auto;
+    height: 240px;
+    object-fit: cover
+}
+
+@media (max-width: 575px) {
+
+    .product-mul {
+        width: 240px;
+        height: auto;
+        object-fit: cover
+    }
+
+}

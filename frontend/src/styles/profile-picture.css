@@ -1,0 +1,23 @@
+.img {
+    width: 156px;
+    height: 156px;
+    object-fit: cover;
+}
+
+.profile-picture-label {
+    width: 156px; 
+    height: 156px;
+    line-height: 156px;
+}
+
+.profile-picture-label:hover::after {
+    content: 'Foto de perfil'
+}
+
+.profile-picture-label:hover {
+    background-color: rgba(48, 133, 214, 0.5);
+}
+
+#profile-picture, #edit-profile-picture {
+    scale: 0.01;
+}

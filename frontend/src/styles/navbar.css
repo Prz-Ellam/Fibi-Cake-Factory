@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,400;1,500&display=swap');
+
+body {
+    background-color: #F0D5CC;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navbar {
+    background-color: #FF5E1F;
+}
+
+#sub-navbar ul li a {
+    color: #3B1002;
+}
+
+#search {
+    border: none;
+}
+
+#brand-logo { 
+    height: 38px;
+}
+
+#brand-logo-auth {
+    height: 48px;
+}
+
+.search {
+    border-top-right-radius: 0em;
+    border-bottom-right-radius: 0em;
+}
+
+.search-btn {
+    border-top-left-radius: 0em;
+    border-bottom-left-radius: 0em;
+}
+
+.orange {
+    background-color: #FF5E1F;
+    border: 1px solid #FF5E1F;
+}
+
+.orange:hover {
+    background-color: #c44817;
+    border: 1px solid #c44817;
+}
+
+.primary-nav-item:hover {
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: rgb(59, 16, 2, 0.5);
+    transition: background-color 200ms linear;
+}
+
+.nav-link i {
+    font-size: 1.2em;
+}
+
+.navbar-badge {
+    background-color: yellow;
+    font-size: .8rem;
+    font-weight: 300;
+    padding: 2px 4px;
+    position: absolute;
+}

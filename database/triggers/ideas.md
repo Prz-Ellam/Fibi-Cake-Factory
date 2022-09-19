@@ -1,0 +1,1 @@
+-- Un trigger que le regrese su stock al producto si se elimina del carrito

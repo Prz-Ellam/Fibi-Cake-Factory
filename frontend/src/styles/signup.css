@@ -1,0 +1,51 @@
+.text-orange {
+    color: #FF5E1F;
+}
+
+.text-orange:hover, .text-orange:active {
+    color: #C44817;
+}
+
+.btn-password {
+    width: 48px !important;
+}
+
+/* Estos son los botones naranjas */
+
+/*
+.btn-check:focus + .btn-orange, .btn-orange:focus {
+    color: #fff;
+    background-color: #FF5E1F;
+    border-color: #FF5E1F;
+}
+
+.btn-check:checked + .btn-orange, .btn-check:active + .btn-orange, .btn-orange:active, .btn-orange.active, .show > .btn-orange.dropdown-toggle {
+    color: #fff;
+    background-color: #bd491b;
+    border-color: #bd491b;
+}
+
+.btn-orange:disabled, .btn-orange.disabled {
+    color: #fff;
+    background-color: #bd491b;
+    border-color: #bd491b;
+}
+*/
+
+.btn-orange {
+    color: #fff;
+    background-color: #FF5E1F;
+    border-color: #FF5E1F;
+}
+
+.btn-orange:hover {
+    color: #fff;
+    background-color: #CA4C1B;
+    border-color: #CA4C1B;
+}
+
+.btn-orange:active {
+    color: #fff;
+    background-color: #bd491b;
+    border-color: #bd491b;
+}

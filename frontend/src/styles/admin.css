@@ -1,0 +1,30 @@
+.side-bar {
+    min-width: 225px;
+    max-width: 225px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.content {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.list-item:hover {
+    background-color: rgba(0,0,0,0.75);
+}
+
+@media (max-width: 767px) {
+
+    .side-bar {
+        margin-left: -225px;
+        position: fixed;
+        min-height: 100vh;
+        z-index: 5;
+    }
+
+    .side-bar.active {
+        margin-left: 0;
+    }
+
+}

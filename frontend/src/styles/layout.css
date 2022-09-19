@@ -1,0 +1,133 @@
+.bg-brown {
+    background-color: #391113;
+}
+
+.text-brown {
+    color: #391113;
+}
+
+.text-orange {
+    color: #FF5E1F;
+}
+
+.orange {
+    background-color: #FF5E1F;
+    border: 1px solid #FF5E1F;
+    font-size: 22px;
+}
+
+.bg-orange {
+    background-color: #FF5E1F !important;
+    border: 1px solid #FF5E1F !important;
+}
+/*
+.orange:hover, .bg-orange:hover, .bg-orange:checked, .bg-orange:visited {
+    background-color: #c44817 !important;
+    border: 1px solid #c44817 !important;
+}
+
+.bg-orange:active {
+    background-color: #a53d13 !important;
+    border: 1px solid #a53d13 !important;
+}
+*/
+/* Este estilo es para el boton gris */
+.bg-gray, .bg-gray:visited {
+    background-color: #ededed !important;
+    border: 1px solid #ededed !important;
+}
+
+.bg-gray:hover {
+    background-color: #e0e0e0 !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+.bg-gray:active {
+    background-color: rgb(192, 192, 192) !important;
+    border: 1px solid rgb(192, 192, 192) !important;
+}
+
+
+/* Este es para que las imagenes de las cards tengan el mismo tamaño */
+.card-img-top {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
+}
+
+/* Este es para que los botones de Sweet Alert no tengan sombreado, no funciona aun */
+.swal2-confirm:focus, .swal2-confirm:visited, .swal2-confirm:checked, .swal2-confirm:hover {
+    box-shadow: none;
+}
+.swal2-modal .swal2-styled:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+/*
+.form-control {
+    border: none;
+    outline: 1px solid grey;
+    transition: outline 100ms linear;
+    z-index: 100;
+}
+
+.form-control:focus {
+    outline: 1px solid #FF5E1F;
+    transition: outline 100ms linear;
+}
+*/
+
+.custom-control-input:checked {
+    background-color: #FF5E1F !important;
+    border-color: #FF5E1F !important;
+}
+
+
+
+
+
+@media (max-width: 575px) {
+    
+    #login-form, #sign-up-form, #search-container, #create-product-form, #msform {
+        border-radius: 0 !important;
+    }
+    
+/*
+    .form-card, #profile-body {
+        
+        border-radius: 0 !important;
+        padding: 24px !important;
+    }
+*/
+    section.container {
+        margin-bottom: 0 !important;
+    }
+}
+
+/* Este es para el blur */
+.modal.fade.show {
+    backdrop-filter: blur(3px);
+}
+
+td {
+    overflow: auto;
+}
+
+.btn-orange {
+    color: #fff;
+    background-color: #FF5E1F;
+    border-color: #FF5E1F;
+}
+
+.btn-orange:hover {
+    color: #fff;
+    background-color: #CA4C1B;
+    border-color: #CA4C1B;
+}
+
+.btn-orange:active {
+    color: #fff;
+    background-color: #bd491b;
+    border-color: #bd491b;
+}

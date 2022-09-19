@@ -1,0 +1,22 @@
+{
+    "name": "przellam/fibi-framework",
+    "description": "PHP Framework",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Fibi\\": "src/",
+            "CakeFactory\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "PrzEllam",
+            "email": "PerezAlex088@outlook.com"
+        }
+    ],
+    "require": {
+        "ramsey/uuid": "^4.5",
+        "firebase/php-jwt": "^6.3"
+    }
+}
