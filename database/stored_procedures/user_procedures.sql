@@ -56,6 +56,24 @@ CREATE PROCEDURE sp_delete_user();
 
 CREATE PROCEDURE sp_get_users();
 
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_user(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+            BIN_TO_UUID(profile_picture) as 'profile_picture'
+    FROM
+            users
+    WHERE
+            BIN_TO_UUID(user_id) = _user_id;
+
+END $$
+
+DELIMITER ;
+
 CREATE PROCEDURE sp_is_email_available();
 
 CREATE PROCEDURE sp_is_username_available();

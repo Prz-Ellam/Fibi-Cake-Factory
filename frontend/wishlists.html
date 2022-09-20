@@ -141,7 +141,7 @@
                             <label for="add-images-transfer" label="form-label" role="button">Imágenes (mínimo 3)</label>
                             <div class="input-group">
                                 <label for="add-images-transfer" role="button" class="btn btn-blue rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir imágenes</label>
-                                <input type="file" class="position-absolute" style="scale: 0.01" name="images" id="images" accept="image/*" multiple>
+                                <input type="file" class="position-absolute" style="scale: 0.01" name="images[]" id="images" accept="image/*" multiple>
                                 <input type="file" class="d-none" id="add-images-transfer" accept="image/*" multiple>
                             </div>
                             <div class="my-4" style="overflow-x: scroll; width: 100%; white-space: nowrap;" id="add-image-list">
@@ -341,6 +341,6 @@
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
 
     <!-- Script -->
-    <script type="text/javascript" src="./js/my-wishlists.js"></script>
+    <script type="text/javascript" src="./js/wishlists.js"></script>
 </body>
 </html>

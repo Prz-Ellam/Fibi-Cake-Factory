@@ -1,3 +1,8 @@
+import '../vendor/node_modules/jquery/dist/jquery.min.js';
+import '../vendor/node_modules/jquery-validation/dist/jquery.validate.min.js';
+import '../vendor/node_modules/bootstrap/dist/js/bootstrap.min.js';
+import 'https://kit.fontawesome.com/48ce36e499.js';
+
 $(document).ready(function() {
 
     // Reglas del formulario de login
@@ -84,27 +89,20 @@ $(document).ready(function() {
             return;
         }
 
-        const requestBody = new FormData(this);
-        console.log([...requestBody]);
-
-        window.location.href = '/home';
-        return;
         $.ajax({
             method: 'POST',
             url: 'api/v1/login',
-            headers: {
-                'Accept' : 'application/json',
-                'Content-Type' : 'application/json'
-            },
-            dataType: 'json',
-            data: JSON.stringify(requestBody),
+            data: $(this).serialize(),
             success: function(response) {
                 // Debe devolver el token
-                console.log(response);
+                if (response.status)
+                {
+                    window.location.href = '/home';
+                }
             },
             error: function(response, status, error) {
                 // Debe devolver un error
-                console.log(status);
+                console.log(error);
             },
             complete: function() {
                 

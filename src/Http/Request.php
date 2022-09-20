@@ -166,6 +166,24 @@ class Request
         return $this->files[$key] ?? null;
     }
 
+    public function getFileArray(string $key)
+    {
+        $rawImages = $this->getFile("images");
+
+        $images = [];
+        for ($i = 0; $i < count($rawImages["name"]); $i++)
+        {
+            $images[$i]["name"] = $rawImages["name"][$i];
+            $images[$i]["full_path"] = $rawImages["full_path"][$i];
+            $images[$i]["type"] = $rawImages["type"][$i];
+            $images[$i]["tmp_name"] = $rawImages["tmp_name"][$i];
+            $images[$i]["error"] = $rawImages["error"][$i];
+            $images[$i]["size"] = $rawImages["size"][$i];
+        }
+
+        return $images;
+    }
+
     public function hasFile(string $key) : bool
     {
         return isset($this->files[$key]);

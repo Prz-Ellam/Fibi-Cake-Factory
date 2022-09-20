@@ -1,5 +1,5 @@
-DELIMITER $$
 
+DELIMITER $$
 
 CREATE PROCEDURE sp_login(
     IN _loginOrEmail            VARCHAR(255)
@@ -7,11 +7,13 @@ CREATE PROCEDURE sp_login(
 BEGIN
 
     SELECT
-            password
+        BIN_TO_UUID(user_id) as 'user_id',
+        password,
+        BIN_TO_UUID(profile_picture) as 'profile_picture'
     FROM
-            users
+        users
     WHERE
-            email = _loginOrEmail OR username = _loginOrEmail;
+        email = _loginOrEmail OR username = _loginOrEmail;
 
 END$$
 

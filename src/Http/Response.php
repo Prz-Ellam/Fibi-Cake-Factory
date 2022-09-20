@@ -85,9 +85,9 @@ class Response
         return $this;
     }
 
-    public function view(string $view) : self
+    public function view(string $view, ?string $layout = null) : self
     {
-        $content = Application::app()->viewEngine->render($view);
+        $content = Application::app()->viewEngine->render($view, $layout);
 
         $this->setContentType("text/html")
                 ->setBody($content);

@@ -8,6 +8,7 @@ class Wishlist
     private ?string $name;
     private ?string $description;
     private ?int $visibility;
+    private ?string $userId;
 
     public function getWishlistId() : ?string
     {
@@ -45,6 +46,23 @@ class Wishlist
     public function getVisibility() : ?int
     {
         return $this->visibility;
+    }
+
+    public function setVisibility(?int $visibility) : self
+    {
+        $this->visibility = $visibility;
+        return $this;
+    }
+
+    public function getUserId() : ?string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?string $userId) : self
+    {
+        $this->userId = $userId;
+        return $this;
     }
 }
 

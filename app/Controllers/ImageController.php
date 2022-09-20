@@ -23,7 +23,6 @@ class ImageController extends Controller
             return;
         }
         
-
         $response->setContentType($result[0]["type"]);
         $response->setHeader("Content-Disposition", 'inline; filename="' . $result[0]["name"] . '"');
         $response->setBody($result[0]["content"]);

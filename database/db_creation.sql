@@ -55,10 +55,10 @@ CREATE TABLE IF NOT EXISTS products(
 
 -- Categories
 CREATE TABLE IF NOT EXISTS categories(
-    category_id                 INT NOT NULL AUTO_INCREMENT,
+    category_id                 BINARY(16) NOT NULL,
     name                        VARCHAR(50) NOT NULL,
     description                 VARCHAR(200),
-    user_id                     INT NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -92,13 +92,15 @@ CREATE TABLE IF NOT EXISTS reviews(
         PRIMARY KEY (review_id)
 );
 
+
 -- Wishlists
 CREATE TABLE IF NOT EXISTS wishlists(
-    wishlist_id                 INT NOT NULL AUTO_INCREMENT,
+    wishlist_id                 BINARY(16) NOT NULL,
     name                        VARCHAR(50) NOT NULL,
     description                 VARCHAR(200) NOT NULL,
     multimedia_type             INT NOT NULL DEFAULT 3,
-    user_id                     INT NOT NULL,
+    visibility                  INT NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,

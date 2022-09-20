@@ -65,6 +65,37 @@ function WishlistCard(wishlist) {
 
 }
 
+function createWishlistCard(wishlist)
+{
+    return /*html*/`
+    <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
+        <div class="card mx-auto" style="width: 18rem;">
+            <div class="carousel slide" data-bs-ride="carousel" role="button">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="10000">
+                        <div class="ratio ratio-4x3">
+                            <img src="assets/img/wishlist.png" class="card-img-top w-100 h-100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-brown wishlist-name">${wishlist.name}</h5>
+                <p class="card-text text-brown wishlist-description mb-2">${wishlist.description}</p>
+                ${ (wishlist.visibility === 1) ? 
+                    /*html*/`<p class="text-brown wishlist-visibility" value="1"><i class="fas fa-users" aria-hidden="true"></i> Pública</p>` : 
+                    /*html*/`<p class="text-brown wishlist-visibility" value="2"><i class="fas fa-lock"></i> Privada</p>`
+                }
+                <div class="d-flex justify-content-start">
+                    <a href="/edit-product" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
+                    <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-wishlist">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
 
 const wishlistCard = /*html*/`
 <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
@@ -81,7 +112,9 @@ const wishlistCard = /*html*/`
         <div class="card-body">
             <h5 class="card-title text-brown wishlist-name">Nombre de la lista</h5>
             <p class="card-text text-brown wishlist-description mb-2">Descripción de la lista</p>
-            <p class="text-brown wishlist-visibility" value="1"><i class="fas fa-users" aria-hidden="true"></i> Pública</p>
+            <p class="text-brown wishlist-visibility" value="1">
+                <i class="fas fa-users" aria-hidden="true"></i> Pública
+            </p>
             <div class="d-flex justify-content-start">
                 <a href="/edit-product" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
                 <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-wishlist">Eliminar</a>
@@ -91,10 +124,27 @@ const wishlistCard = /*html*/`
 </div>
 `;
 
-for (let i = 0; i < 12; i++)
-{
-    $('#wishlist-container').append(wishlistCard);
-}
+$.ajax({
+    url: "api/v1/session",
+    method: "GET",
+    timeout: 0,
+    success: function(response) {
+        console.log(response.id);
+
+        $.ajax({
+            url: `api/v1/users/${response.id}/wishlists`,
+            method: 'GET',
+            timeout: 0,
+            success: function(response) {
+                console.log(response[0]);
+
+                response.forEach(function(element) {
+                    $('#wishlist-container').append(createWishlistCard(element));
+                });
+            }
+        });
+    }
+});
 
 $(document).ready(function() {
 
@@ -456,7 +506,6 @@ $(document).ready(function() {
         }
 
         const requestBody = new FormData(this);
-        console.log([...requestBody]);
 
         modal = document.getElementById('create-wishlist');
         modalInstance = bootstrap.Modal.getInstance(modal);
@@ -464,13 +513,14 @@ $(document).ready(function() {
         
         $.ajax({
             method: 'POST',
-            url: `Cake-Factory/api/v1/users/${1}/wishlists`,
+            url: `/api/v1/wishlists`,
             data: requestBody,
             //dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,
             success: function(response) {
+                console.log(response);
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu lista de deseos se ha guardado'

@@ -123,13 +123,26 @@ class UserController extends Controller
 
     }
 
+    public function getUser(Request $request, Response $response) : void
+    {
+        $userId = $request->getRouteParams('userId');
+
+        $userRepository = new UserRepository();
+        $user = $userRepository->getUser($userId);
+
+        $response->json($user[0]);
+    }
+
     public function login(Request $request, Response $response) : void
     {
         $loginOrEmail = $request->getBody('login-or-email');
         $password = $request->getBody('password');
 
         $authRepository = new AuthRepository();
-        $passwordHashed = $authRepository->login($loginOrEmail)[0]["password"];
+        $result = $authRepository->login($loginOrEmail);
+        $passwordHashed = $result[0]["password"];
+        $userId = $result[0]["user_id"];
+
         $passwordCheck = password_verify($password, $passwordHashed);
 
         if ($passwordCheck === false)
@@ -152,6 +165,7 @@ class UserController extends Controller
 
         $session = new PhpSession();
         $session->set('token', $token);
+        $session->set('user_id', $userId);
 
         $cookies = new PhpCookie();
         $cookies->set('token', $token, time() + (60 * 60));
@@ -170,6 +184,14 @@ class UserController extends Controller
     public function isUsernameAvailable(Request $request, Response $response)
     {
         
+    }
+
+    public function session(Request $request, Response $response)
+    {
+        $session = new PhpSession();
+        $userId = $session->get('user_id');
+
+        $response->json(["id" => $userId]);
     }
 }
 

@@ -1,3 +1,15 @@
+$.ajax({
+    url: 'api/v1/categories',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response) {
+        response.forEach(function(element) {
+            $('#categories').append(`<option value="${element.category_id}">${element.name}</option>`);
+        });
+    }
+});
+
 $(document).ready(function() {
 
     $('#sell').click(function() {
@@ -256,20 +268,15 @@ $(document).ready(function() {
         modalInstance.hide();
 
         const requestBody = new FormData(this);
-        console.log([...requestBody]);
 
         $('#categories').append(`<option value="${optionsCount}">${requestBody.get('name')}</option>`);
         $('#categories').multipleSelect('refresh');
 
-        return;
         $.ajax({
             method: 'POST',
             url: 'api/v1/categories',
-            headers: {
-                'Accept' : 'application/json',
-                'Content-Type' : 'application/json'
-            },
-            data: JSON.stringify(requestBody),
+            timeout: 0,
+            data: $(this).serialize(),
             //dataType: 'json',
             success: function(response) {
                 console.log(response);

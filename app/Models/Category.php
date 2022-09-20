@@ -6,16 +6,17 @@ use Fibi\Model\Model;
 
 class Category extends Model
 {
-    private ?int $categoryId;
+    private ?string $categoryId;
     private ?string $name;
     private ?string $description;
+    private ?string $userId;
 
-    public function getCategoryId() : ?int
+    public function getCategoryId() : ?string
     {
         return $this->categoryId;
     }
 
-    public function setCategoryId(?int $categoryId) : self
+    public function setCategoryId(?string $categoryId) : self
     {
         $this->categoryId = $categoryId;
         return $this;
@@ -40,6 +41,17 @@ class Category extends Model
     public function setDescription(?string $description) : self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getUserId() : ?string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?string $userId) : self
+    {
+        $this->userId = $userId;
         return $this;
     }
 
