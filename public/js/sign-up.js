@@ -337,10 +337,6 @@ $(document).ready(function() {
         }
 
         const requestBody = new FormData(this);
-        console.log([...requestBody]);
-
-        window.location.href = '/home';
-        return;
         // Send Sign Up Request
         $.ajax({
             method: 'POST',
@@ -353,7 +349,7 @@ $(document).ready(function() {
             success: function(response) {
                 // Debe devolver un token con el inicio de sesion
                 console.log(response);
-                //window.location.href = "/home";
+                window.location.href = "/home";
             },
             error: function(response, status, error) {
                 console.log(status);

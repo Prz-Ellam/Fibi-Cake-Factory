@@ -51,7 +51,7 @@ class WishlistRepository
             "userId"        => $userId
         ]);
 
-        return $result;   
+        return $result[0];
     }
 }
 

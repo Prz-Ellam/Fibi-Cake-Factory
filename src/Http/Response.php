@@ -28,9 +28,10 @@ class Response
         return $this->statusCode;
     }
 
-    public function setStatusCode(int $statusCode) : void
+    public function setStatusCode(int $statusCode) : self
     {
         $this->statusCode = $statusCode;
+        return $this;
     }
 
     public function setContentType(string $value) : self

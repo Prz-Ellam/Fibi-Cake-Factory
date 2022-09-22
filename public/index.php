@@ -2,6 +2,7 @@
 
 use CakeFactory\Controllers\CategoryController;
 use CakeFactory\Controllers\ImageController;
+use CakeFactory\Controllers\ProductController;
 use CakeFactory\Controllers\UserController;
 use CakeFactory\Controllers\WishlistController;
 use Fibi\Core\Application;
@@ -297,7 +298,7 @@ $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 //$app->get('/api/v1/categories', function() {});
 $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
 
-
+$app->post('/api/v1/products', [ new ProductController(), 'create' ]);
 
 
 $app->get('/api/v1/session', [ new UserController(), 'session' ]);
@@ -308,10 +309,6 @@ $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
 
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
 $app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
-$app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
-
-$app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
-
 $app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
 
 

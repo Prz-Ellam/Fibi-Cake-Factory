@@ -65,18 +65,30 @@ function WishlistCard(wishlist) {
 
 }
 
+function getImageHTML(images)
+{
+    var html = '';
+    images.forEach((image, i) => {
+        html += /*html*/`
+            <div class="carousel-item${(i == 0 ? " active" : "")}" data-bs-interval="10000">
+                <div class="ratio ratio-4x3">
+                    <img src="/api/v1/images/${image}" class="card-img-top w-100 h-100">
+                </div>
+            </div>
+        `;
+    });
+
+    return html;
+}
+
 function createWishlistCard(wishlist)
 {
-    return /*html*/`
-    <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
+    return $($.parseHTML(/*html*/`
+    <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch" id="${wishlist.id}">
         <div class="card mx-auto" style="width: 18rem;">
             <div class="carousel slide" data-bs-ride="carousel" role="button">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="10000">
-                        <div class="ratio ratio-4x3">
-                            <img src="assets/img/wishlist.png" class="card-img-top w-100 h-100">
-                        </div>
-                    </div>
+                    ${ getImageHTML(wishlist.images) }
                 </div>
             </div>
             <div class="card-body">
@@ -93,7 +105,7 @@ function createWishlistCard(wishlist)
             </div>
         </div>
     </div>
-    `;
+    `));
 }
 
 
@@ -136,10 +148,12 @@ $.ajax({
             method: 'GET',
             timeout: 0,
             success: function(response) {
-                console.log(response[0]);
-
                 response.forEach(function(element) {
-                    $('#wishlist-container').append(createWishlistCard(element));
+                    const wishlist = createWishlistCard(element);
+                    $('#wishlist-container').append(wishlist);
+                    var carouselDOM = $(wishlist).find('.card .carousel')[0];
+                    var carousel = new bootstrap.Carousel(carouselDOM);
+                    carousel.cycle();
                 });
             }
         });
@@ -256,7 +270,17 @@ $(document).ready(function() {
 
     $('#btn-delete-wishlist').click(function() {
 
-        element.parent().parent().parent().parent().remove();
+        const card = element.parent().parent().parent().parent();
+        const wishlistId = $(card).attr('id');
+        card.remove();
+
+        $.ajax({
+            url: `api/v1/wishlists/${wishlistId}`,
+            method: 'DELETE',
+            success: function(response) {
+                console.log(response);
+            }
+        })
 
         Toast.fire({
             icon: 'success',
@@ -265,9 +289,9 @@ $(document).ready(function() {
 
     });
 
-    $('.btn-red').click(function() {
+    $(document).on('click', '.btn-red', function() {
         element = $(this);
-    })
+    });
 
     
 

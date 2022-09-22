@@ -52,7 +52,8 @@ class UserController extends Controller
             ->setType($imageType)
             ->setSize($imageSize)
             ->setContent($imageContent)
-            ->setMultimediaEntityId(1);
+            ->setMultimediaEntityId($userId)
+            ->setMultimediaEntityType('users');
 
         $imageRepository = new ImageRepository();
         $imageRepository->create($image);

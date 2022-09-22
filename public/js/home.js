@@ -87,19 +87,23 @@ $('#categories-carousel').append(carouselCategoryCard);
 $('#categories-carousel').append(carouselCategoryCard2);
 $('#categories-carousel').append(carouselCategoryCard3);
 
-
 $.ajax({
-    url: 'api/v1/users/8110b075-87fe-41cd-9ba8-291bfe67115f',
+    url: "api/v1/session",
     method: "GET",
+    async: false,
     timeout: 0,
     success: function(response) {
-
-        const url = `api/v1/images/${response['profile_picture']}`;
-
-        $('.nav-link img').attr('src', url);
-
-
-        console.log(response['profile_picture']);
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response['profile_picture']}`;
+                $('.nav-link img').attr('src', url);
+                console.log(response['profile_picture']);
+            }
+        });
     }
 });
 

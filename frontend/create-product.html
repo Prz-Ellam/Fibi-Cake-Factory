@@ -149,7 +149,7 @@
                     <label for="images-transfer" label="form-label" role="button">Imágenes (mínimo 3)</label>
                     <div class="input-group">
                         <label for="images-transfer" role="button" class="btn btn-primary rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir imágenes</label>
-                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="images" id="images" multiple accept="image/*">
+                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="images[]" id="images" multiple accept="image/*">
                         <input type="file" id="images-transfer" class="d-none" multiple accept="image/*">
                     </div>
                     <div class="my-4" style="overflow-x: scroll; width: 100%; white-space: nowrap;" id="image-list">
@@ -160,7 +160,7 @@
                     <label for="videos-transfer" class="form-label" role="button">Videos (mínimo 1)</label>
                     <div class="input-group">
                         <label for="videos-transfer" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir videos</label>
-                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="videos" id="videos" multiple accept="video/*">
+                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="videos[]" id="videos" multiple accept="video/*">
                         <input type="file" id="videos-transfer" class="d-none" multiple accept="video/*">
                     </div>
                     <div class="my-4" style="overflow-x: scroll; width: 100%; white-space: nowrap;" id="video-list">
@@ -171,7 +171,7 @@
                     <label class="form-label tags-label" for="categories">Categorías</label>
                     <button type="button" class="btn btn-orange badge shadow-none ms-2" data-bs-toggle="modal" data-bs-target="#create-category">Crear categoría</button>
                     <div>
-                        <select id="categories" name="categories" multiple="multiple" placeholder="Seleccionar" width="100%">
+                        <select id="categories" name="categories[]" multiple="multiple" placeholder="Seleccionar" width="100%">
                         </select>
                     </div>
                 </div>

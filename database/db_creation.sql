@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS users(
     visibility                  SMALLINT NOT NULL,
     user_role                   INT NOT NULL,
     profile_picture             BINARY(16) NOT NULL,
-    multimedia_type             INT NOT NULL DEFAULT 1,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -36,14 +35,14 @@ CREATE TABLE IF NOT EXISTS user_roles(
 
 -- Products
 CREATE TABLE IF NOT EXISTS products(
-    product_id                  INT NOT NULL AUTO_INCREMENT,
+    product_id                  BINARY(16) NOT NULL,
     name                        VARCHAR(50) NOT NULL,
     description                 VARCHAR(200) NOT NULL,
     is_quotable                 BOOLEAN NOT NULL,
     price                       DECIMAL(15, 2),
     stock                       INT NOT NULL,
     multimedia_type             INT NOT NULL DEFAULT 2,
-    user_id                     INT NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
     approved                    BOOLEAN NOT NULL DEFAULT FALSE,
     approved_by                 INT,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -110,9 +109,9 @@ CREATE TABLE IF NOT EXISTS wishlists(
 
 -- Wishlist Objects
 CREATE TABLE IF NOT EXISTS wishlist_objects(
-    wishlist_object_id          INT NOT NULL AUTO_INCREMENT,
-    product_id                  INT NOT NULL,
-    wishlist_id                 INT NOT NULL,
+    wishlist_object_id          BINARY(16) NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
+    wishlist_id                 BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -122,8 +121,8 @@ CREATE TABLE IF NOT EXISTS wishlist_objects(
 
 -- Shopping Cart
 CREATE TABLE IF NOT EXISTS shopping_carts(
-    shopping_cart_id            INT NOT NULL AUTO_INCREMENT,
-    user_id                     INT NOT NULL,
+    shopping_cart_id            BINARY(16) NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP NOT NULL,
     active                      BOOLEAN DEFAULT TRUE,
@@ -133,10 +132,10 @@ CREATE TABLE IF NOT EXISTS shopping_carts(
 
 -- Shopping Cart Items
 CREATE TABLE IF NOT EXISTS shopping_cart_items(
-    shopping_cart_item_id       INT NOT NULL AUTO_INCREMENT,
+    shopping_cart_item_id       BINARY(16) NOT NULL,
     quantity                    SMALLINT NOT NULL,
-    shopping_cart_id            INT NOT NULL,
-    product_id                  INT NOT NULL,
+    shopping_cart_id            BINARY(16) NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN DEFAULT TRUE,
@@ -146,8 +145,8 @@ CREATE TABLE IF NOT EXISTS shopping_cart_items(
 
 -- Orders 
 CREATE TABLE IF NOT EXISTS orders(
-    order_id                    INT NOT NULL AUTO_INCREMENT,    
-    user_id                     INT NOT NULL,
+    order_id                    BINARY(16) NOT NULL,    
+    user_id                     BINARY(16) NOT NULL,
     phone                       VARCHAR(12) NOT NULL,
     street                      VARCHAR(30) NOT NULL,
     street_number               VARCHAR(30) NOT NULL,
@@ -167,11 +166,11 @@ CREATE TABLE IF NOT EXISTS orders(
 
 -- Shoppings
 CREATE TABLE IF NOT EXISTS shoppings(
-    shopping_id                 INT NOT NULL AUTO_INCREMENT,
+    shopping_id                 BINARY(16) NOT NULL,
     quantity                    SMALLINT NOT NULL,
     amount                      DECIMAL (15, 2) NOT NULL,
-    order_id                    INT NOT NULL,
-    product_id                  INT NOT NULL,
+    order_id                    BINARY(16) NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -181,7 +180,7 @@ CREATE TABLE IF NOT EXISTS shoppings(
 
 -- Multimedia types
 CREATE TABLE IF NOT EXISTS multimedia_types(
-    multimedia_type_id          INT NOT NULL AUTO_INCREMENT,
+    multimedia_type_id          BINARY(16) NOT NULL,
     multimedia_type_name        VARCHAR(30) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
@@ -192,7 +191,7 @@ CREATE TABLE IF NOT EXISTS multimedia_types(
 
 -- Multimedia entities
 CREATE TABLE IF NOT EXISTS multimedia_entities(
-    multimedia_entity_id        INT NOT NULL AUTO_INCREMENT,
+    multimedia_entity_id        BINARY(16) NOT NULL,
     entity_id                   INT NOT NULL,
     entity_type                 INT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -211,7 +210,8 @@ CREATE TABLE IF NOT EXISTS images(
     size                        BIGINT NOT NULL,
     content                     MEDIUMBLOB NOT NULL,
     type                        VARCHAR(30) NOT NULL,
-    multimedia_entity_id        INT NOT NULL,
+    multimedia_entity_id        BINARY(16) NOT NULL,
+    multimedia_entity_type      VARCHAR(50) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS images(
 
 -- Max de LONGBLOB es 4GB pero no aceptaron mucho tampoco, porque 4GB es demasiado
 CREATE TABLE IF NOT EXISTS videos(
-    video_id                    INT NOT NULL AUTO_INCREMENT,
+    video_id                    BINARY(16) NOT NULL,
     video_name                  VARCHAR(255) NOT NULL,
     video_size                  BIGINT NOT NULL,
     video_content               LONGBLOB NOT NULL,
@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS videos(
 
 -- Chats
 CREATE TABLE IF NOT EXISTS chats(
-    chat_id                     INT NOT NULL AUTO_INCREMENT,
+    chat_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN DEFAULT TRUE,
@@ -246,9 +246,9 @@ CREATE TABLE IF NOT EXISTS chats(
 
 -- Chat Participants
 CREATE TABLE IF NOT EXISTS chat_participants(
-    chat_participant_id         INT NOT NULL AUTO_INCREMENT,
-    chat_id                     INT NOT NULL,
-    user_id                     INT NOT NULL,
+    chat_participant_id         BINARY(16) NOT NULL,
+    chat_id                     BINARY(16) NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS chat_participants(
 
 -- Chat Messages
 CREATE TABLE IF NOT EXISTS chat_messages(
-    chat_message_id             INT NOT NULL AUTO_INCREMENT,
+    chat_message_id             BINARY(16) NOT NULL,
     message_content             VARCHAR(255) NOT NULL,
     chat_participant_id         INT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -271,7 +271,7 @@ CREATE TABLE IF NOT EXISTS chat_messages(
 -- Chat files
 -- imagenes, videos, documentos, audios
 CREATE TABLE IF NOT EXISTS chat_files(
-    chat_file_id                INT NOT NULL AUTO_INCREMENT,
+    chat_file_id                BINARY(16) NOT NULL,
     file_content                MEDIUMBLOB NOT NULL,
     chat_participant_id         INT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),

@@ -1,6 +1,7 @@
 
+-- Damos de alta todos los roles de usuario
 INSERT INTO user_roles(name)
-VALUES('superadministrador');
+VALUES('super administrador');
 
 INSERT INTO user_roles(name)
 VALUES('administrador');
@@ -11,8 +12,8 @@ VALUES('vendedor');
 INSERT INTO user_roles(name)
 VALUES('comprador');
 
--- Este es el superadministrador
-INSERT INTO users(...)
+-- Este es el super administrador
+INSERT INTO users()
 VALUES ('admin', 'admin@correo.com', 'admin');
 
 

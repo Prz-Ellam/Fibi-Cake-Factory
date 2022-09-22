@@ -10,7 +10,7 @@ class ChatController extends Controller
 {
     public function sendMessage(Request $request, Response $response)
     {
-
+        $request->getBody("message");
     }
 
     public function getChatMessages(Request $request, Response $response)

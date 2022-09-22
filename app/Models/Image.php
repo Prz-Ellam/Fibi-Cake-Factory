@@ -11,7 +11,8 @@ class Image extends Model
     private ?int $size;
     private mixed $content;
     private ?string $type;
-    private ?int $multimediaEntityId;
+    private ?string $multimediaEntityId;
+    private ?string $multimediaEntityType;
 
     public function getImageId() : ?string
     {
@@ -68,14 +69,25 @@ class Image extends Model
         return $this;
     }
 
-    public function getMultimediaEntityId() : ?int
+    public function getMultimediaEntityId() : ?string
     {
         return $this->multimediaEntityId;
     }
 
-    public function setMultimediaEntityId(?int $multimediaEntityId) : self
+    public function setMultimediaEntityId(?string $multimediaEntityId) : self
     {
         $this->multimediaEntityId = $multimediaEntityId;
+        return $this;
+    }
+
+    public function getMultimediaEntityType() : ?string
+    {
+        return $this->multimediaEntityType;
+    }
+
+    public function setMultimediaEntityType(?string $multimediaEntityType) : self
+    {
+        $this->multimediaEntityType = $multimediaEntityType;
         return $this;
     }
 }

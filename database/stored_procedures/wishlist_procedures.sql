@@ -69,6 +69,7 @@ BEGIN
 END$$
 
 
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_user_wishlists(
@@ -76,13 +77,18 @@ CREATE PROCEDURE sp_get_user_wishlists(
 )
 BEGIN
 
-    SELECT
-        BIN_TO_UUID(wishlist_id) as 'wishlist_id',
-        name,
-        description,
-        visibility
-    FROM
-        wishlists
+    SELECT JSON_ARRAYAGG(JSON_OBJECT(
+    'id',           BIN_TO_UUID(wishlist_id), 
+    'name',         name,
+    'description',  description,
+    'visibility',   visibility,
+    'images',       (SELECT JSON_ARRAYAGG(BIN_TO_UUID(image_id)) 
+                        FROM images 
+                        WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(wishlist_id) AND
+                        multimedia_entity_type = 'wishlists'
+                    )
+    )) as data
+    FROM wishlists
     WHERE
         BIN_TO_UUID(user_id) = _user_id AND
         active = TRUE;

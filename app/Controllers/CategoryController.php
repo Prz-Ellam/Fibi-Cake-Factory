@@ -8,7 +8,7 @@ use CakeFactory\Validators\CategoryValidator;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
-use Ramsey\Uuid\Nonstandard\Uuid;
+use Ramsey\Uuid\Uuid;
 
 class CategoryController
 {

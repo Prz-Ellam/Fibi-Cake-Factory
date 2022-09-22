@@ -25,6 +25,8 @@ class WishlistController extends Controller
      */
     public function create(Request $request, Response $response)
     {
+        // Validar que exista una sección activa
+
         $wishlistId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
@@ -40,14 +42,14 @@ class WishlistController extends Controller
             $imageSize = $image["size"];
             $imageContent = file_get_contents($image["tmp_name"]);
 
-            // 3 - Multimedia type de listas de deseos
             $image = new Image();
             $image->setImageId($imageId)
                 ->setName($imageName)
                 ->setType($imageType)
                 ->setSize($imageSize)
                 ->setContent($imageContent)
-                ->setMultimediaEntityId(3);
+                ->setMultimediaEntityId($wishlistId)
+                ->setMultimediaEntityType('wishlists');
 
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
@@ -76,12 +78,6 @@ class WishlistController extends Controller
 
 
         $response->json(["response" => "Si"]);
-        //$response->json($request->getBody());
-
-
-
-
-
 
         /*
         $clientToken = $request->getHeaders('Authorization');
@@ -125,9 +121,11 @@ class WishlistController extends Controller
      */
     public function update(Request $request, Response $response)
     {
+        $wishlistId = $request->getRouteParams("wishlistId");
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visibility = $request->getBody("visibility");
+        $images = $request->getFileArray("images");
 
         var_dump($request->getFile());
         die;
@@ -154,7 +152,7 @@ class WishlistController extends Controller
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->delete($wishlistId);
 
-        $response->json(["status" => $result]);
+        $response->json(["status" => $wishlistId]);
     }
 
     /**
@@ -170,7 +168,15 @@ class WishlistController extends Controller
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->getUserWishlists($userId);
 
-        $response->json($result);
+        if (is_null($result["data"]))
+        {
+            $response->setStatusCode(404)->json(["status" => "Not found"]);
+            return;
+        }
+
+        $response->json(
+            json_decode($result["data"], true)
+        );
     }
 }
 

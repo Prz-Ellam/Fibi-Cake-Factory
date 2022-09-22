@@ -9,7 +9,7 @@ class ImageRepository
 {
     private MainConnection $connection;
 
-    private const CREATE_IMAGE = "CALL sp_create_image(:imageId, :name, :size, :content, :type, :multimediaEntityId)";
+    private const CREATE_IMAGE = "CALL sp_create_image(:imageId, :name, :size, :content, :type, :multimediaEntityId, :multimediaEntityType)";
     private const GET_IMAGE = "CALL sp_get_image(:imageId)";
 
     public function __construct() {
@@ -24,7 +24,8 @@ class ImageRepository
             "size"                  => $image->getSize(),
             "content"               => $image->getContent(),
             "type"                  => $image->getType(),
-            "multimediaEntityId"    => $image->getMultimediaEntityId()
+            "multimediaEntityId"    => $image->getMultimediaEntityId(),
+            "multimediaEntityType"  => $image->getMultimediaEntityType()
         ]);
 
         return $result > 0;
