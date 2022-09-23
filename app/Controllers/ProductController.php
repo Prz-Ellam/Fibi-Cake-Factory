@@ -10,12 +10,17 @@ use CakeFactory\Repositories\ProductRepository;
 use CakeFactory\Repositories\VideoRepository;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
+use Fibi\Session\PhpSession;
+use LDAP\Result;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class ProductController
 {
     public function create(Request $request, Response $response)
     {
+        var_dump($request->getBody("categories"));
+        die();
+
         $productId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
@@ -76,6 +81,11 @@ class ProductController
             $result = $videoRepository->create($video);
         }
 
+        foreach ($categories as $category)
+        {
+            $productCategoryId = Uuid::uuid4()->toString();
+        }
+
         $product = new Product();
         $product->setProductId($productId)
             ->setName($name)
@@ -90,7 +100,63 @@ class ProductController
         $response->json(($images));
     }
 
+    public function updateProduct(Request $request, Response $response)
+    {
+        $productId = $request->getRouteParams('productId');
+        $name = $request->getBody('name');
+        $description = $request->getBody("description");
+        $typeOfSell = $request->getBody("type-of-sell");
+        $price = $request->getBody("price");
+        $stock = $request->getBody("stock");
+    }
+
+    public function deleteProduct(Request $request, Response $response)
+    {
+        $productId = $request->getRouteParams('productId');
+
+        $productRepository = new ProductRepository();
+        $productRepository->delete($productId);
+    }
+
     public function getUserProducts(Request $request, Response $response)
+    {
+        $userId = (new PhpSession())->get('user_id');
+
+        // TODO: Validar que coincida con la sesión
+
+    }
+
+    public function getRecentProducts(Request $request, Response $response)
+    {
+        
+    }
+
+    public function getPendingProducts(Request $request, Response $response)
+    {
+
+    }
+
+    public function getUserPendingProducts(Request $request, Response $response)
+    {
+
+    }
+
+    public function getDeniedProducts(Request $request, Response $response)
+    {
+
+    }
+
+    public function getUserDeniedProducts(Request $request, Response $response)
+    {
+
+    }
+
+    public function getApproveProducts(Request $request, Response $response)
+    {
+
+    }
+
+    public function getUserApproveProducts(Request $request, Response $response)
     {
         
     }

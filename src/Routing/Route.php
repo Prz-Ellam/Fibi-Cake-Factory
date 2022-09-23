@@ -35,7 +35,7 @@ class Route
         }
     }
 
-    public function getUri()
+    public function getUri() :string
     {
         return $this->uri;
     }

@@ -17,6 +17,7 @@
     ],
     "require": {
         "ramsey/uuid": "^4.5",
-        "firebase/php-jwt": "^6.3"
+        "firebase/php-jwt": "^6.3",
+        "bdelespierre/underscore": "dev-master"
     }
 }

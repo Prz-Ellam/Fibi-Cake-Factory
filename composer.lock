@@ -4,8 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ba896f8312e9b91030e3912062b6bab",
+    "content-hash": "57bfa7ca2d08bbfdd9970ca09d3e1772",
     "packages": [
+        {
+            "name": "bdelespierre/underscore",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bdelespierre/php-underscore.git",
+                "reference": "b64e902aa5fae49b8107c22195ea43b4bb3eab54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bdelespierre/php-underscore/zipball/b64e902aa5fae49b8107c22195ea43b4bb3eab54",
+                "reference": "b64e902aa5fae49b8107c22195ea43b4bb3eab54",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "atoum/atoum": "dev-master"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Underscore": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Delespierre",
+                    "email": "benjamin.delespierre@gmail.com"
+                }
+            ],
+            "description": "Underscore.js port in PHP",
+            "homepage": "https://github.com/bdelespierre/underscore.php",
+            "keywords": [
+                "JS",
+                "php",
+                "underscore",
+                "utility"
+            ],
+            "support": {
+                "issues": "https://github.com/bdelespierre/php-underscore/issues",
+                "source": "https://github.com/bdelespierre/php-underscore/tree/master"
+            },
+            "time": "2020-04-06T10:50:41+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.10.2",
@@ -380,7 +431,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "bdelespierre/underscore": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

@@ -11,7 +11,6 @@ use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class WishlistController extends Controller
@@ -25,19 +24,30 @@ class WishlistController extends Controller
      */
     public function create(Request $request, Response $response)
     {
-        // Validar que exista una sección activa
+        // TODO: Validar que exista una sección activa
 
         $wishlistId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visibility = $request->getBody("visibility");
         $images = $request->getFileArray("images");
-        $userId = (new PhpSession())->get('user_id');
+        $userId = $request->getBody("user-id");
+        if (is_null($userId))
+            $userId = (new PhpSession())->get('user_id');
 
+        // TODO: Las imagenes de listas borradas no deben poder ser accedidas
+        $imagesId = [];
         foreach ($images as $image)
         {
             $imageId = Uuid::uuid4()->toString();
-            $imageName = $image["name"];
+
+            $ext = explode('.', $image["name"])[1];
+
+            //$JWT_SECRET = "3bb515fea33c5a653a5bbdcd20d958c8b7e49a91db0c74e91a04a0faab4f5c3a";
+            //$jwt = JWT::encode([$imageId], $JWT_SECRET, "HS256");
+            
+            $imageName = "$imageId.$ext";
+            //$imageName = $image["name"];
             $imageType = $image["type"];
             $imageSize = $image["size"];
             $imageContent = file_get_contents($image["tmp_name"]);
@@ -58,7 +68,7 @@ class WishlistController extends Controller
             {
                 $response->json(["response" => "No"]);
             }
-
+            $imagesId[] = $imageId;
         }
 
         $wishlist = new Wishlist();
@@ -73,11 +83,19 @@ class WishlistController extends Controller
 
         if ($result === false)
         {
-            $response->json(["response" => "No"]);
+            $response->json(["status" => $result]);
         }
 
-
-        $response->json(["response" => "Si"]);
+        $response->json([
+            "status" => $result,
+            "data" => [
+                "id" => $wishlistId,
+                "name" => $name,
+                "images" => $imagesId,
+                "visibility" => $visibility,
+                "description" => $description
+            ]
+        ]);
 
         /*
         $clientToken = $request->getHeaders('Authorization');
@@ -122,20 +140,67 @@ class WishlistController extends Controller
     public function update(Request $request, Response $response)
     {
         $wishlistId = $request->getRouteParams("wishlistId");
+
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visibility = $request->getBody("visibility");
         $images = $request->getFileArray("images");
+        $userId = $request->getBody("user-id");
+        if (is_null($userId))
+            $userId = (new PhpSession())->get('user_id');
 
-        var_dump($request->getFile());
+        // TODO: El tema de las imagenes
+        
+        foreach ($images as $image)
+        {
+            $imageId = explode(".", $image["name"])[0];
+            $imageName = $image["name"];
+            $imageType = $image["type"];
+            $imageSize = $image["size"];
+            $imageContent = file_get_contents($image["tmp_name"]);
+
+            $image = new Image();
+            $image->setImageId($imageId)
+                ->setName($imageName)
+                ->setType($imageType)
+                ->setSize($imageSize)
+                ->setContent($imageContent)
+                ->setMultimediaEntityId($wishlistId)
+                ->setMultimediaEntityType('wishlists');
+
+            var_dump($image->getName());
+            /*
+            $imageRepository = new ImageRepository();
+            $result = $imageRepository->create($image);
+
+            if ($result === false)
+            {
+                $response->json(["response" => "No"]);
+            }
+            */
+        }
         die;
 
         $wishlist = new Wishlist();
+        $wishlist->setWishlistId($wishlistId)
+            ->setName($name)
+            ->setDescription($description)
+            ->setVisibility($visibility)
+            ->setUserId($userId);
 
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->update($wishlist);
 
-        $response->json(["status" => $result]);
+        $response->json([
+            "status" => $result,
+            "data" => [
+                "id" => $wishlistId,
+                "name" => $name,
+                "images" => [],
+                "visibility" => $visibility,
+                "description" => $description
+            ]
+        ]);
     }
 
     /**
@@ -152,7 +217,9 @@ class WishlistController extends Controller
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->delete($wishlistId);
 
-        $response->json(["status" => $wishlistId]);
+        // TODO: Si result es falso es BAD Request
+
+        $response->json(["status" => $result]);
     }
 
     /**
@@ -164,19 +231,30 @@ class WishlistController extends Controller
      */
     public function getUserWishlists(Request $request, Response $response)
     {
-        $userId = $request->getRouteParams("userId");
-        $wishlistRepository = new WishlistRepository();
-        $result = $wishlistRepository->getUserWishlists($userId);
+        $count = $request->getQuery("count") ?? 12;
+        $page = $request->getQuery("page") ?? 1;
 
-        if (is_null($result["data"]))
+        $offset = floor($count * ($page - 1));
+
+        $userId = $request->getRouteParams("userId");
+
+        // TODO: Validar que coincida con la sesión
+
+        $wishlistRepository = new WishlistRepository();
+        $result = $wishlistRepository->getUserWishlists($userId, $count, $offset);
+
+        if (is_null($result))
         {
             $response->setStatusCode(404)->json(["status" => "Not found"]);
             return;
         }
 
-        $response->json(
-            json_decode($result["data"], true)
-        );
+        foreach ($result as &$element)
+        {
+            $element["images"] = json_decode($element["images"]);
+        }
+
+        $response->json($result);
     }
 }
 

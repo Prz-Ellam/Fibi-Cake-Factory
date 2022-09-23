@@ -9,6 +9,7 @@ use Fibi\Core\Application;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Ramsey\Uuid\Nonstandard\Uuid;
 
 require_once("../vendor/autoload.php");
 
@@ -291,8 +292,8 @@ $app->post('/api/v1/login', [ new UserController(), 'login' ]);
 
 // Categories
 $app->post('/api/v1/categories', [ new CategoryController(), 'create' ]);
-$app->put('/api/v1/categories', [ new CategoryController(), 'update' ]);
-$app->delete('/api/v1/categories', [ new CategoryController(), 'delete' ]);
+$app->post('/api/v1/categories/{categoryId}', [ new CategoryController(), 'update' ]);
+$app->delete('/api/v1/categories/{categoryId}', [ new CategoryController(), 'delete' ]);
 $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 
 //$app->get('/api/v1/categories', function() {});
@@ -305,13 +306,18 @@ $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 
 // Images
 $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
-
+$app->get('/api/v1/files/{fileId}', []);
 
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
-$app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
+$app->post('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
 $app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
 
-
+$app->post('/prueba', function(Request $request, Response $response) {
+    $file = $request->getFile('file');
+    $ext = explode('.', $file["name"])[1];
+    print($file["name"]);
+    die;
+});
 
 $app->run();
 

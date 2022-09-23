@@ -43,10 +43,12 @@ CREATE PROCEDURE sp_get_image(
 BEGIN
 
     SELECT
+        BIN_TO_UUID(image_id) id,
         name,
         size,
         content,
-        type
+        type,
+        created_at
     FROM
         images 
     WHERE

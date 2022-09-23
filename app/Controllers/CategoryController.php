@@ -29,14 +29,47 @@ class CategoryController
         $result = $validator->validate();
 
         $categoryRepository = new CategoryRepository();
-        $categoryRepository->create($category);
+        $result = $categoryRepository->create($category);
 
-        $response->json(["response" => $result]);
+        $response->json([
+            "status" => $result,
+            "data" => [
+                "id" => $categoryId,
+                "name" => $name,
+                "description" => $description
+            ]
+        ]);
     }
 
     public function update(Request $request, Response $response)
     {
+        $categoryId = $request->getRouteParams('categoryId');
+        $name = $request->getBody('name');
+        $description = $request->getBody('description');
+        $userId = $request->getBody("user-id");
+        if (is_null($userId))
+            $userId = (new PhpSession())->get('user_id');
 
+        $category = new Category();
+        $category->setCategoryId($categoryId)
+            ->setName($name)
+            ->setDescription($description)
+            ->setUserId($userId);
+
+        $validator = new CategoryValidator($category);
+        $result = $validator->validate();
+
+        $categoryRepository = new CategoryRepository();
+        $result = $categoryRepository->update($category);
+
+        $response->json([
+            "status" => $result,
+            "data" => [
+                "id" => $categoryId,
+                "name" => $name,
+                "description" => $description
+            ]
+        ]);
     }
 
     public function delete(Request $request, Response $response)

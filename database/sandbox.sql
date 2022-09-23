@@ -80,6 +80,10 @@ SELECT * FROM orders;
 SELECT * FROM reviews;
 
 
+DROP TABLE wishlists;
+DROP TABLE images;
+
+
 
 CALL sp_update_wishlist('6579eafa-bd06-4f5f-8b75-f66b257908a7', 'Adios', 'Mundo', 0);
 

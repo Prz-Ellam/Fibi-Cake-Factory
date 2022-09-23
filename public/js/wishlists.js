@@ -68,6 +68,18 @@ function WishlistCard(wishlist) {
 function getImageHTML(images)
 {
     var html = '';
+
+    if (images.length < 1)
+    {
+        return /*html*/`
+            <div class="carousel-item active" data-bs-interval="10000">
+                <div class="ratio ratio-4x3">
+                    <img src="assets/img/wishlist-default.jpg" class="card-img-top w-100 h-100">
+                </div>
+            </div>
+        `;
+    }
+
     images.forEach((image, i) => {
         html += /*html*/`
             <div class="carousel-item${(i == 0 ? " active" : "")}" data-bs-interval="10000">
@@ -135,6 +147,47 @@ const wishlistCard = /*html*/`
     </div>
 </div>
 `;
+
+$.ajax({
+    url: `api/v1/images/fae3f799-30dd-49f6-ba09-cb1df09c27d7`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response, status, headers) {
+        const contentDisposition = headers.getResponseHeader('content-disposition');
+
+        const filenameRegex = new RegExp(/\"(.+)\"/);
+        const filename = filenameRegex.exec(contentDisposition)[1];
+        const mime = headers.getResponseHeader('content-type');
+        const lastModified = headers.getResponseHeader('last-modified');
+
+        console.log(filename);
+        console.log(mime);
+        console.log(lastModified);
+
+        const file = new File([response], filename, {
+            type: mime,
+            lastModified: new Date(lastModified)
+        });
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+            url: "/prueba",
+            method: "POST",
+            timeout: 0,
+            processData: false,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            data: formData,
+            success: function(response) {
+                console.log(response);
+            }
+        })
+
+        console.log(file);
+    }
+});
 
 $.ajax({
     url: "api/v1/session",
@@ -307,12 +360,15 @@ $(document).ready(function() {
         return canvas.toDataURL("image/png");
         // image compression? 
         // return canvas.toDataURL("image/png", 0.9);
-      };
+    };
 
     var editCard;
+    var wishlistId;
     $(document).on('click', '.edit-wishlist' ,function(){
         
         editCard = $(this).parent().parent();
+        const card = $(editCard).parent().parent();
+        wishlistId = $(card).attr('id');
 
         let a = $(editCard).parent().find('.carousel .carousel-inner');
 
@@ -323,11 +379,13 @@ $(document).ready(function() {
 
         const dataTransfer = new DataTransfer();
         $(a).children('.carousel-item').each(async function() {
+            
+            /*
             const data = await imageToDataURL(this.children[0].children[0].src);
             const type = data.split(';')[0].split(':')[1];
 
             var index = this.children[0].children[0].src.lastIndexOf("/") + 1;
-            var filename = this.children[0].children[0].src.substr(index);
+            var filename = this.children[0].children[0].src;
 
             console.log(type);
             $('#edit-image-list').append(`
@@ -342,9 +400,41 @@ $(document).ready(function() {
                 type: type,
                 lastModified: new Date(),
             });
+            */
 
-            dataTransfer.items.add(file);
-            fileInput.files = dataTransfer.files;
+            $.ajax({
+                url: this.children[0].children[0].src,
+                method: 'GET',
+                timeout: 0,
+                success: (response, status, headers) => {
+                    const contentDisposition = headers.getResponseHeader('content-disposition');
+            
+                    const filenameRegex = new RegExp(/\"(.+)\"/);
+                    const filename = filenameRegex.exec(contentDisposition)[1];
+                    const mime = headers.getResponseHeader('content-type');
+                    const lastModified = headers.getResponseHeader('last-modified');
+                    const id = headers.getResponseHeader('x-image-id');
+
+                    $('#edit-image-list').append(`
+                    <span class="position-relative" id="${id}">
+                        <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute" onclick="$(this).parent().remove()">&times;</button>
+                        <img class="product-mul" src="${this.children[0].children[0].src}">
+                    </span>
+                    `);
+                    i++;
+            
+                    const file = new File([response], filename, {
+                        type: mime,
+                        lastModified: new Date(lastModified),
+                        credits: 'A'
+                    });
+
+                    console.log(file.credits);
+            
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                }
+            });
         })
 
 
@@ -543,8 +633,19 @@ $(document).ready(function() {
             cache: false,
             contentType: false,
             processData: false,
-            success: function(response) {
+            success: function(response, status, headers) {
                 console.log(response);
+
+                const wishlistCard = createWishlistCard(response.data);
+                $('#wishlist-container').append(wishlistCard);
+                var carouselDOM = $(wishlistCard).find('.card .carousel')[0];
+                var carousel = new bootstrap.Carousel(carouselDOM);
+                carousel.cycle();
+
+                $('#add-wishlist-name').val('');
+                $('#add-wishlist-description').val('');
+                $('#add-wishlist-visibility').val('');
+
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu lista de deseos se ha guardado'
@@ -558,17 +659,7 @@ $(document).ready(function() {
             },
             complete: function() {
 
-                const wishlist = new Wishlist(
-                    requestBody.get('name'),
-                    requestBody.get('description'),
-                    requestBody.get('visibility'),
-                    requestBody.getAll('images')
-                );
-
-                $('#wishlist-container').append(WishlistCard(wishlist));
-                $('#add-wishlist-name').val('');
-                $('#add-wishlist-description').val('');
-                $('#add-wishlist-visibility').val('');
+                
                 
             }
         });
@@ -585,8 +676,6 @@ $(document).ready(function() {
         }
 
         const requestBody = new FormData(this);
-        console.log([...requestBody]);
-
         const wishlist = new Wishlist(
             requestBody.get('name'),
             requestBody.get('description'),
@@ -597,6 +686,19 @@ $(document).ready(function() {
         modal = document.getElementById('edit-wishlist');
         modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
+
+        $.ajax({
+            method: 'POST',
+            url: `/api/v1/wishlists/${wishlistId}`,
+            data: requestBody,
+            //dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response, status, headers) {
+                console.log(response);
+            }
+        });
 
         editCard.find('.wishlist-name').text(requestBody.get('name'));
         editCard.find('.wishlist-description').text(requestBody.get('description'));

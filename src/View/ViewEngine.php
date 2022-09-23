@@ -6,10 +6,13 @@ class ViewEngine
 {
     private string $viewDirectory;
     private ?string $mainLayout;
+    private ?string $notFoundView;
 
-    public function __construct(string $viewDirectory) {
+    public function __construct(string $viewDirectory)
+    {
         $this->viewDirectory = $viewDirectory;
         $this->mainLayout = null;
+        $this->notFoundView = null;
     }
 
     /**
@@ -21,6 +24,17 @@ class ViewEngine
     public function setMainLayout(string $mainLayout) : void
     {
         $this->mainLayout = $mainLayout;
+    }
+
+    /**
+     * Establece una vista para error 404
+     *
+     * @param string $notFoundView
+     * @return void
+     */
+    public function setNotFoundView(string $notFoundView) : void
+    {
+        $this->notFoundView = $notFoundView;
     }
 
     /**

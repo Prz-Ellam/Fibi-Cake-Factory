@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS images(
     multimedia_entity_id        BINARY(16) NOT NULL,
     multimedia_entity_type      VARCHAR(50) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
+    modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT images_pk
         PRIMARY KEY (image_id)

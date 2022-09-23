@@ -22,6 +22,17 @@ class VideoRepository
     {
         return true;
     }
+
+    /**
+     * Obtiene el video en base a su ID
+     *
+     * @param string $videoId
+     * @return array
+     */
+    public function getVideo(string $videoId) : array
+    {
+        return [];
+    }
 }
 
 ?>

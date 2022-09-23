@@ -85,7 +85,7 @@ class Request
     {
         if (is_null($key))
         {
-            return $this->body;
+            return $this->body ?? null;
         }
         
         return $this->body[$key] ?? null;
@@ -101,10 +101,10 @@ class Request
     {
         if (is_null($key))
         {
-            return $this->query;
+            return $this->query ?? null;
         }
 
-        return $this->query;
+        return $this->query[$key] ?? null;
     }
 
     public function setQuery(array $query) : self
@@ -168,7 +168,22 @@ class Request
 
     public function getFileArray(string $key)
     {
-        $rawImages = $this->getFile("images");
+        $rawImages = $this->getFile($key);
+
+        if (is_string($rawImages["name"]))
+        {
+            return [ $rawImages ];
+        }
+
+        if (is_null($rawImages["name"]))
+        {
+            return [];
+        }
+
+        if ($rawImages["name"][0] === "")
+        {
+            return [];
+        }
 
         $images = [];
         for ($i = 0; $i < count($rawImages["name"]); $i++)
