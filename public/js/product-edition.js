@@ -1,3 +1,19 @@
+$.ajax({
+    url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        console.log(response);
+
+        $('#name').val(response.name);
+        $('#description').val(response.description);
+        $('#price').val(response.price);
+        $('#stock').val(response.stock);
+    }
+});
+
+
 $(document).ready(function() {
 
     $('#sell').click(function() {

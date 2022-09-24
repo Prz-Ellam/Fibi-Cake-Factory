@@ -149,47 +149,6 @@ const wishlistCard = /*html*/`
 `;
 
 $.ajax({
-    url: `api/v1/images/fae3f799-30dd-49f6-ba09-cb1df09c27d7`,
-    method: 'GET',
-    timeout: 0,
-    success: function(response, status, headers) {
-        const contentDisposition = headers.getResponseHeader('content-disposition');
-
-        const filenameRegex = new RegExp(/\"(.+)\"/);
-        const filename = filenameRegex.exec(contentDisposition)[1];
-        const mime = headers.getResponseHeader('content-type');
-        const lastModified = headers.getResponseHeader('last-modified');
-
-        console.log(filename);
-        console.log(mime);
-        console.log(lastModified);
-
-        const file = new File([response], filename, {
-            type: mime,
-            lastModified: new Date(lastModified)
-        });
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        $.ajax({
-            url: "/prueba",
-            method: "POST",
-            timeout: 0,
-            processData: false,
-            mimeType: "multipart/form-data",
-            contentType: false,
-            data: formData,
-            success: function(response) {
-                console.log(response);
-            }
-        })
-
-        console.log(file);
-    }
-});
-
-$.ajax({
     url: "api/v1/session",
     method: "GET",
     timeout: 0,
@@ -319,8 +278,6 @@ $(document).ready(function() {
 
     var element;
 
-    
-
     $('#btn-delete-wishlist').click(function() {
 
         const card = element.parent().parent().parent().parent();
@@ -346,8 +303,6 @@ $(document).ready(function() {
         element = $(this);
     });
 
-    
-
     async function imageToDataURL(imageUrl) {
         let img = await fetch(imageUrl);
         img = await img.blob();
@@ -362,10 +317,15 @@ $(document).ready(function() {
         // return canvas.toDataURL("image/png", 0.9);
     };
 
+    var editImages = [];
+    var editImageCounter = 0;
     var editCard;
     var wishlistId;
     $(document).on('click', '.edit-wishlist' ,function(){
         
+        editImages = [];
+        editImageCounter = 0;
+
         editCard = $(this).parent().parent();
         const card = $(editCard).parent().parent();
         wishlistId = $(card).attr('id');
@@ -380,32 +340,13 @@ $(document).ready(function() {
         const dataTransfer = new DataTransfer();
         $(a).children('.carousel-item').each(async function() {
             
-            /*
-            const data = await imageToDataURL(this.children[0].children[0].src);
-            const type = data.split(';')[0].split(':')[1];
-
-            var index = this.children[0].children[0].src.lastIndexOf("/") + 1;
-            var filename = this.children[0].children[0].src;
-
-            console.log(type);
-            $('#edit-image-list').append(`
-                    <span class="position-relative" id="image-${i}">
-                        <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute" onclick="$(this).parent().remove()">&times;</button>
-                        <img class="product-mul" src="${data}">
-                    </span>
-            `);
-            i++;
-
-            const file = new File([data], filename, {
-                type: type,
-                lastModified: new Date(),
-            });
-            */
-
             $.ajax({
                 url: this.children[0].children[0].src,
                 method: 'GET',
                 timeout: 0,
+                xhrFields: {
+                    responseType: 'blob' 
+                },
                 success: (response, status, headers) => {
                     const contentDisposition = headers.getResponseHeader('content-disposition');
             
@@ -425,13 +366,19 @@ $(document).ready(function() {
             
                     const file = new File([response], filename, {
                         type: mime,
-                        lastModified: new Date(lastModified),
-                        credits: 'A'
+                        lastModified: new Date(lastModified)
                     });
 
-                    console.log(file.credits);
-            
-                    dataTransfer.items.add(file);
+                    editImages.push({
+                        'id': imageCounter,
+                        'file': file
+                    });
+                    imageCounter++;
+    
+                    const dataTransfer = new DataTransfer();
+                    editImages.forEach((element) => {
+                        dataTransfer.items.add(element.file);
+                    });
                     fileInput.files = dataTransfer.files;
                 }
             });
@@ -510,11 +457,6 @@ $(document).ready(function() {
 
     });
 
-
-
-
-    const editImages = [];
-    var editImageCounter = 0;
     $('#edit-images-transfer').on('change', function(e) {
 
         const files = $(this)[0].files;
@@ -680,7 +622,7 @@ $(document).ready(function() {
             requestBody.get('name'),
             requestBody.get('description'),
             requestBody.get('visibility'),
-            requestBody.getAll('images')
+            requestBody.getAll('images[]')
         );
 
         modal = document.getElementById('edit-wishlist');

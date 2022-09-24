@@ -71,6 +71,46 @@ BEGIN
     
 END$$
 
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_wishlist(
+    IN _wishlist_id             VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(w.wishlist_id) id,
+        w.name,
+        w.description,
+        w.visibility,
+        IF(BIN_TO_UUID(i.image_id) IS NOT NULL, 
+        JSON_ARRAYAGG(BIN_TO_UUID(i.image_id)),
+        JSON_ARRAY()) images
+    FROM
+        wishlists AS w
+    LEFT JOIN
+        images AS i
+    ON
+        BIN_TO_UUID(i.multimedia_entity_id) = BIN_TO_UUID(w.wishlist_id) 
+        AND i.multimedia_entity_type = 'wishlists'
+    WHERE
+        BIN_TO_UUID(w.wishlist_id) = _wishlist_id 
+        AND w.active = TRUE
+    GROUP BY
+        w.wishlist_id,
+        w.name, 
+        w.description, 
+        w.visibility;
+
+END
+
+DELIMITER ;
+
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_user_wishlists(

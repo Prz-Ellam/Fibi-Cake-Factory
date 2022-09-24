@@ -12,6 +12,7 @@ class Video extends Model
     private mixed $content;
     private ?string $type;
     private ?string $multimediaEntityId;
+    private ?string $multimediaEntityType;
 
     public function getVideoId() : ?string
     {
@@ -76,6 +77,17 @@ class Video extends Model
     public function setMultimediaEntityId(?string $multimediaEntityId) : self
     {
         $this->multimediaEntityId = $multimediaEntityId;
+        return $this;
+    }
+
+    public function getMultimediaEntityType() : ?string
+    {
+        return $this->multimediaEntityType;
+    }
+
+    public function setMultimediaEntityType(?string $multimediaEntityType) : self
+    {
+        $this->multimediaEntityType = $multimediaEntityType;
         return $this;
     }
 }

@@ -11,6 +11,7 @@ class ImageRepository
 
     private const CREATE_IMAGE = "CALL sp_create_image(:imageId, :name, :size, :content, :type, :multimediaEntityId, :multimediaEntityType)";
     private const GET_IMAGE = "CALL sp_get_image(:imageId)";
+    private const DELETE_MULTIMEDIA_ENTITY_IMAGES = "CALL sp_delete_multimedia_entity_images(:multimedia_entity_id, :multimedia_entity_type)";
 
     public function __construct() {
         $this->connection = new MainConnection();
@@ -40,9 +41,14 @@ class ImageRepository
         return $result;
     }
 
-    public function getLastInsertId() : ?int
+    public function deleteMultimediaEntityImages(string $multimediaEntityId, string $multimediaEntityType)
     {
-        return $this->connection->getLastInsertId();
+        $result = $this->connection->executeNonQuery(self::DELETE_MULTIMEDIA_ENTITY_IMAGES, [
+            "multimedia_entity_id"      => $multimediaEntityId,
+            "multimedia_entity_type"    => $multimediaEntityType
+        ]);
+
+        return $result > 0;
     }
 }
 

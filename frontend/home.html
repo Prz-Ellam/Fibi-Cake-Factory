@@ -59,61 +59,25 @@
     </div>
 </section>
 
-    <div class="modal fade" id="select-wishlist" tabindex="-1" aria-labelledby="select-wishlist-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <form class="modal-content" id="add-wishlists">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="select-wishlist-label">¿A qué listas de deseos quieres añadir?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <img src="./assets/img/E001S000031.jpg" class="img-fluid" alt="lay" style="max-width: 128px">
-                                Navideños
-                            </span>
-                            <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <img src="./assets/img/E001S000031.jpg" class="img-fluid" alt="lay" style="max-width: 128px">
-                                Cumpleaños
-                            </span>
-                            <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <img src="./assets/img/E001S000031.jpg" class="img-fluid" alt="lay" style="max-width: 128px">
-                                Baby shower
-                            </span>
-                            <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <img src="./assets/img/E001S000031.jpg" class="img-fluid" alt="lay" style="max-width: 128px">
-                                Para año nuevo
-                            </span>
-                            <input class="custom-control-input form-check-input me-1" type="checkbox" value="" aria-label="...">
-                        </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <img src="./assets/img/E001S000031.jpg" class="img-fluid" alt="lay" style="max-width: 128px">
-                                Para Rex
-                        </span>
-                        <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
-                    </li>
-
-                    <nav aria-label="Page navigation" class="mt-4 text-center d-flex justify-content-center">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Anterior</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Siguiente</a></li>
-                        </ul>
-                    </nav>
+<div class="modal fade" id="select-wishlist" tabindex="-1" aria-labelledby="select-wishlist-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" id="add-wishlists">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="select-wishlist-label">¿A qué listas de deseos quieres añadir?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="wishlists-list">
                 </ul>
+                <nav aria-label="Page navigation" class="mt-4 text-center d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Anterior</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Siguiente</a></li>
+                    </ul>
+                </nav>
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary rounded-1 shadow-none" data-bs-dismiss="modal">Cancelar</button>

@@ -4,6 +4,7 @@ use CakeFactory\Controllers\CategoryController;
 use CakeFactory\Controllers\ImageController;
 use CakeFactory\Controllers\ProductController;
 use CakeFactory\Controllers\UserController;
+use CakeFactory\Controllers\VideoController;
 use CakeFactory\Controllers\WishlistController;
 use Fibi\Core\Application;
 use Fibi\Http\Request;
@@ -297,10 +298,10 @@ $app->delete('/api/v1/categories/{categoryId}', [ new CategoryController(), 'del
 $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 
 //$app->get('/api/v1/categories', function() {});
-$app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
 
 $app->post('/api/v1/products', [ new ProductController(), 'create' ]);
-
+$app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
+$app->get('/api/v1/products/{productId}', [ new ProductController(), 'getProduct' ]);
 
 $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 
@@ -308,15 +309,25 @@ $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
 $app->get('/api/v1/files/{fileId}', []);
 
+$app->get('/api/v1/videos/{videoId}', [ new VideoController(), 'getVideo' ]);
+
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
 $app->post('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
 $app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
+$app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWishlist' ]);
+$app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
 
 $app->post('/prueba', function(Request $request, Response $response) {
     $file = $request->getFile('file');
     $ext = explode('.', $file["name"])[1];
     print($file["name"]);
     die;
+});
+
+$app->get('/sitio-malvado', function(Request $request, Response $response) {
+    $cookies = $request->getQuery("cookie");
+
+    $response->text("Me robe tus cookies pendejo: " . $cookies);
 });
 
 $app->run();

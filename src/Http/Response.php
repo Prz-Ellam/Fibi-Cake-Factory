@@ -66,7 +66,7 @@ class Response
         return $this;
     }
     
-    public function json(array $content) : self
+    public function json(array|object $content) : self
     {
         $this->setContentType("application/json")
                 ->setBody(json_encode($content));

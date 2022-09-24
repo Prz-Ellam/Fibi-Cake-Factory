@@ -107,6 +107,42 @@ $.ajax({
     }
 });
 
+function WishlistItem(wishlist)
+{
+    return /*html*/`
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+            <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
+            ${wishlist.name}
+            </span>
+        <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
+    </li>
+    `;
+}
+
+$.ajax({
+    url: "api/v1/session",
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response) {
+        console.log(response.id);
+
+        $.ajax({
+            url: `api/v1/users/${response.id}/wishlists`,
+            method: 'GET',
+            timeout: 0,
+            success: function(response) {
+                response.forEach(function(wishlist) {
+                    $('#wishlists-list').append(WishlistItem(wishlist));
+                });
+            }
+        });
+    }
+});
+
+
+
 
 $(document).ready(function()
 {

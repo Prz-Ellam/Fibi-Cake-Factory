@@ -79,16 +79,23 @@ SELECT * FROM shopping_carts;
 SELECT * FROM orders;
 SELECT * FROM reviews;
 
+SELECT BIN_TO_UUID(video_id) FROM videos;
 
 DROP TABLE wishlists;
 DROP TABLE images;
 
+TRUNCATE TABLE videos;
+TRUNCATE TABLE products;
+
+SELECT BIN_TO_UUID(image_id), multimedia_entity_type FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = '168c5a97-5612-4c30-aec2-5bd979009706';
 
 
 CALL sp_update_wishlist('6579eafa-bd06-4f5f-8b75-f66b257908a7', 'Adios', 'Mundo', 0);
 
 
+SELECT BIN_TO_UUID(image_id), name FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = 'f6244906-5528-439b-bc2b-cccc61b30c8c';
 
+SELECT BIN_TO_UUID(video_id), name FROM videos WHERE BIN_TO_UUID(multimedia_entity_id) = 'f6244906-5528-439b-bc2b-cccc61b30c8c';
 
 
 

@@ -10,6 +10,7 @@ class Product
     private ?int $typeOfSell;
     private ?int $stock;
     private ?float $price;
+    private ?string $userId;
 
     public function getProductId() : ?string
     {
@@ -74,6 +75,17 @@ class Product
     public function setStock(?int $stock) : self
     {
         $this->stock = $stock;
+        return $this;
+    }
+
+    public function getUserId() : ?string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?string $userId) : self
+    {
+        $this->userId = $userId;
         return $this;
     }
 }

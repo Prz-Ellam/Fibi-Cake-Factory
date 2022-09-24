@@ -4,13 +4,43 @@ const productCard = /*html*/`
         <h5 class="fw-bold text-brown mb-0">$298.00</h5>
         <p class="text-brown">Tentación de frutas</p>
         <div class="d-flex justify-content-center">
-            <a href="/edit-product" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
+            <a href="/update-product" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
             <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
         </div>
     </div>
 `;
 
-for (let i = 0; i < 12; i++) $('#products-container').append(productCard);
+function ProductCard(product)
+{
+    var fmt = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    return /*html*/`
+    <div class="col-lg-4 col-md-6 col-sm-12 text-center p-5" id="${product.id}">
+        <a href="/product?search=${product.id}"><img src="api/v1/images/${product.images[2]}" class="img-fluid p-3"></a>
+        <h5 class="fw-bold text-brown mb-0">${fmt.format(product.price)}</h5>
+        <p class="text-brown">${product.name}</p>
+        <div class="d-flex justify-content-center">
+            <a href="/update-product?search=${product.id}" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
+            <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
+        </div>
+    </div>
+    `;
+}
+
+$.ajax({
+    url: "/api/v1/products",
+    method: "GET",
+    timeout: 0,
+    success: function(response)
+    {
+        response.forEach(function(product) {
+            $('#products-container').append(ProductCard(product));
+        });
+    }
+});
 
 $(document).ready(function() {
 

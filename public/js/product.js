@@ -1,3 +1,29 @@
+console.log(new URLSearchParams(window.location.search).get("search"));
+
+$.ajax({
+    url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        console.log(response);
+        const product = response;
+
+        var fmt = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+
+        $('#name').text(product.name);
+        $('#category').text(' A');
+        $('#price').text(fmt.format(product.price));
+        $('#description').text(product.description);
+        $('#zoom').attr('src', 'api/v1/images/' + product.images[0]);
+        $('.mini-zoom').attr('src', 'api/v1/images/' + product.images[0]);
+
+    }
+});
+
 $(document).ready(function() {
 
     $('.sellers').owlCarousel({
@@ -135,7 +161,12 @@ $(document).ready(function() {
                     <i class="rating-star far fa-star" value="5"></i>
                 </span>
                 <p class="mb-0">${text}</p>
-                <small>${new Date().toUTCString()}</small><br>
+                <small>${new Date().toLocaleString('en-US', 
+                { 
+                    timeZone: 'CST',
+                    dateStyle: 'full',
+                    timeStyle: 'full',
+                })}</small><br>
                 <span class="badge bg-primary" role="button">Editar</span>
                 <span class="badge bg-danger" role="button">Eliminar</span>
             </div>

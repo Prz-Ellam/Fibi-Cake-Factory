@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS products(
     multimedia_type             INT NOT NULL DEFAULT 2,
     user_id                     BINARY(16) NOT NULL,
     approved                    BOOLEAN NOT NULL DEFAULT FALSE,
-    approved_by                 INT,
+    approved_by                 BINARY(16),
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS categories(
 
 -- Products Categories
 CREATE TABLE IF NOT EXISTS products_categories(
-    product_category_id         INT NOT NULL AUTO_INCREMENT,
-    product_id                  INT NOT NULL,
-    category_id                 INT NOT NULL,
+    product_category_id         BINARY(16) NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
+    category_id                 BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -222,11 +222,12 @@ CREATE TABLE IF NOT EXISTS images(
 -- Max de LONGBLOB es 4GB pero no aceptaron mucho tampoco, porque 4GB es demasiado
 CREATE TABLE IF NOT EXISTS videos(
     video_id                    BINARY(16) NOT NULL,
-    video_name                  VARCHAR(255) NOT NULL,
-    video_size                  BIGINT NOT NULL,
-    video_content               LONGBLOB NOT NULL,
-    video_type                  VARCHAR(30) NOT NULL,
-    multimedia_entity_id        INT NOT NULL,
+    name                        VARCHAR(255) NOT NULL,
+    size                        BIGINT NOT NULL,
+    content                     LONGBLOB NOT NULL,
+    type                        VARCHAR(30) NOT NULL,
+    multimedia_entity_id        BINARY(16) NOT NULL,
+    multimedia_entity_type      VARCHAR(50) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,

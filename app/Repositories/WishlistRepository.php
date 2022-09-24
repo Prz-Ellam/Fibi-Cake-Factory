@@ -12,7 +12,7 @@ class WishlistRepository
     private const UPDATE_WISHLIST = "CALL sp_update_wishlist(:wishlistId, :name, :description, :visibility)";
     private const DELETE_WISHLIST = "CALL sp_delete_wishlist(:wishlistId)";
     private const GET_USER_WISHLISTS = "CALL sp_get_user_wishlists(:userId, :count, :offset)";
-    private const GET_WISHLIST = "";
+    private const GET_WISHLIST = "CALL sp_get_wishlist(:wishlistId)";
 
     public function __construct() {
         $this->connection = new MainConnection();
@@ -51,6 +51,15 @@ class WishlistRepository
         ]);
 
         return $result > 0;
+    }
+
+    public function getWishlist(string $wishlistId)
+    {
+        $result = $this->connection->executeReader(self::GET_WISHLIST, [
+            "wishlistId"        => $wishlistId
+        ]);
+
+        return $result;
     }
 
     public function getUserWishlists(string $userId, int $count, int $offset) : array

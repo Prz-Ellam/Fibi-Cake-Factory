@@ -150,10 +150,12 @@ class WishlistController extends Controller
             $userId = (new PhpSession())->get('user_id');
 
         // TODO: El tema de las imagenes
-        
+        $imageRepository = new ImageRepository();
+        $imageRepository->deleteMultimediaEntityImages($wishlistId, 'wishlists');
+        $imagesId = [];
         foreach ($images as $image)
         {
-            $imageId = explode(".", $image["name"])[0];
+            $imageId = Uuid::uuid4()->toString();
             $imageName = $image["name"];
             $imageType = $image["type"];
             $imageSize = $image["size"];
@@ -168,18 +170,17 @@ class WishlistController extends Controller
                 ->setMultimediaEntityId($wishlistId)
                 ->setMultimediaEntityType('wishlists');
 
-            var_dump($image->getName());
-            /*
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
 
             if ($result === false)
             {
                 $response->json(["response" => "No"]);
+                return;
             }
-            */
+
+            $imagesId[] = $imageId;
         }
-        die;
 
         $wishlist = new Wishlist();
         $wishlist->setWishlistId($wishlistId)
@@ -196,7 +197,7 @@ class WishlistController extends Controller
             "data" => [
                 "id" => $wishlistId,
                 "name" => $name,
-                "images" => [],
+                "images" => $imagesId,
                 "visibility" => $visibility,
                 "description" => $description
             ]
@@ -220,6 +221,14 @@ class WishlistController extends Controller
         // TODO: Si result es falso es BAD Request
 
         $response->json(["status" => $result]);
+    }
+
+    public function getWishlist(Request $request, Response $response)
+    {
+        $wishlistId = $request->getRouteParams("wishlistId");
+        $wishlistRepository = new WishlistRepository();
+        $result = $wishlistRepository->getWishlist($wishlistId);
+        $response->json($result);
     }
 
     /**
