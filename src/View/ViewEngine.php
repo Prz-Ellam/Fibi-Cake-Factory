@@ -51,6 +51,9 @@ class ViewEngine
 
         $footer = $this->getContentLayout("footer");
         $contentView = str_replace("@footer", $footer ,$contentView);
+
+        $navbar = $this->getContentLayout("navbar");
+        $contentView = str_replace("@navbar", $navbar, $contentView);
         
         if (is_null($contentLayout) || $contentLayout === "")
         {
