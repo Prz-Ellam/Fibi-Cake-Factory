@@ -48,6 +48,9 @@ class ViewEngine
     {
         $contentLayout = $this->getContentLayout($layout ?? $this->mainLayout ?? null);
         $contentView = $this->getContentView($view ?? null);
+
+        $footer = $this->getContentLayout("footer");
+        $contentView = str_replace("@footer", $footer ,$contentView);
         
         if (is_null($contentLayout) || $contentLayout === "")
         {
