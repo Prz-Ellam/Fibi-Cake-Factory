@@ -302,7 +302,10 @@ $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 $app->post('/api/v1/products', [ new ProductController(), 'create' ]);
 $app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
 $app->get('/api/v1/products/{productId}', [ new ProductController(), 'getProduct' ]);
+$app->post('/api/v1/products/{productId}', [ new ProductController(), 'update']);
 $app->delete('/api/v1/products/{productId}', [ new ProductController(), 'delete' ]);
+$app->get('/api/v1/users/{userId}/products', [ new ProductController(), 'getUserProducts' ]);
+$app->get('/api/v1/products/action/recents', [ new ProductController(), 'getRecentProducts' ]);
 
 $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 

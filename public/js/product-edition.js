@@ -253,13 +253,10 @@ $(document).ready(function() {
         }
 
         const requestBody = new FormData(this);
-        console.log([...requestBody]);
-        return;
         $.ajax({
+            url: `api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
             method: 'POST',
-            url: 'api/v1/products',
             data: requestBody,
-            //dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,

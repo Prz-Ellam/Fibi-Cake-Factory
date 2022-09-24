@@ -11,9 +11,11 @@ class ProductRepository
 {
     private MainConnection $connection;
     private const CREATE_PRODUCT = "CALL sp_create_product(:productId, :name, :description, :isQuotable, :price, :stock, :userId)";
+    private const UPDATE_PRODUCT = "CALL sp_update_product(:productId, :name, :description, :isQuotable, :price, :stock)";
     private const DELETE_PRODUCT = "CALL sp_delete_product(:productId)";
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
     private const GET_PRODUCT = "CALL sp_get_product(:productId)";
+    private const GET_RECENT_PRODUCTS = "CALL sp_get_recent_products()";
 
     public function __construct() {
         $this->connection = new MainConnection();
@@ -36,8 +38,16 @@ class ProductRepository
 
     public function update(Product $product) : bool
     {
+        $result = $this->connection->executeNonQuery(self::UPDATE_PRODUCT, [
+            "productId"     => $product->getProductId(),
+            "name"          => $product->getName(),
+            "description"   => $product->getDescription(),
+            "isQuotable"    => $product->getTypeOfSell(),
+            "price"         => $product->getPrice(),
+            "stock"         => $product->getStock()
+        ]);
 
-        return false;
+        return $result > 0;
     }
 
     public function delete(string $productId) : bool
@@ -64,6 +74,12 @@ class ProductRepository
             "userId" => $userId
         ]);
 
+        return $result;
+    }
+
+    public function getRecentProducts()
+    {
+        $result = $this->connection->executeReader(self::GET_RECENT_PRODUCTS, []);
         return $result;
     }
 }

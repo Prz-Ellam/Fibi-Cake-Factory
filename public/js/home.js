@@ -67,21 +67,35 @@ const carouselCategoryCard3 = /*html*/`
 </div>
 `;
 
+function CarouselCard(product)
+{
+    return /*html*/`
+    <div class="item">
+        <div class="text-center car-prueba p-4 m-4 rounded">
+            <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
+            <h5 class="fw-bold mb-0">${product.price}</h5>
+            <p>${product.name}</p>
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
+                <button class="btn btn-danger shadow-none rounded-1 add-wishlist" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
 
 $('#recomendations').append(carouselCard);
 $('#sellers').append(carouselCard);
-$('#stars').append(carouselCard);
-$('#recents').append(carouselCard);
+//$('#stars').append(carouselCard);
 
 $('#recomendations').append(carouselCard2);
 $('#sellers').append(carouselCard2);
-$('#stars').append(carouselCard2);
-$('#recents').append(carouselCard2);
+//$('#stars').append(carouselCard2);
 
 $('#recomendations').append(carouselCard3);
 $('#sellers').append(carouselCard3);
-$('#stars').append(carouselCard3);
-$('#recents').append(carouselCard3);
+//$('#stars').append(carouselCard3);
 
 $('#categories-carousel').append(carouselCategoryCard);
 $('#categories-carousel').append(carouselCategoryCard2);
@@ -103,6 +117,19 @@ $.ajax({
                 $('.nav-link img').attr('src', url);
                 console.log(response['profile_picture']);
             }
+        });
+    }
+});
+
+$.ajax({
+    url: `api/v1/products/action/recents`,
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        response.forEach(function(product) 
+        {
+            $('#recents').append(CarouselCard(product));
         });
     }
 });

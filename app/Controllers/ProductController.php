@@ -128,7 +128,7 @@ class ProductController
         $response->json([$result]);
     }
 
-    public function updateProduct(Request $request, Response $response)
+    public function update(Request $request, Response $response)
     {
         $productId = $request->getRouteParams('productId');
         $name = $request->getBody('name');
@@ -136,6 +136,36 @@ class ProductController
         $typeOfSell = $request->getBody("type-of-sell");
         $price = $request->getBody("price");
         $stock = $request->getBody("stock");
+
+        $images = $request->getFileArray("images");
+        $videos = $request->getFileArray("videos");
+
+        // Validar que esto existe realmente en la BD
+        $categories = $request->getBody("categories");
+
+        $product = new Product();
+        $product
+            ->setProductId($productId)
+            ->setName($name)
+            ->setDescription($description)
+            ->setTypeOfSell($typeOfSell)
+            ->setPrice($price)
+            ->setStock($stock);
+    
+        $productRepository = new ProductRepository();
+        $result = $productRepository->update($product);
+    
+        $response->json([
+            "status" => $result,
+            "data" => [
+                "id" => $productId,
+                "name" => $name,
+                "description" => $description,
+                "typeOfSell" => $typeOfSell,
+                "price" => $price,
+                "stock" => $stock
+            ]
+        ]);
     }
 
     public function delete(Request $request, Response $response)
@@ -152,17 +182,21 @@ class ProductController
 
     public function getUserProducts(Request $request, Response $response)
     {
-        $userId = (new PhpSession())->get('user_id');
+        //$userId = (new PhpSession())->get('user_id');
+        $userId = $request->getRouteParams("userId");
 
         // TODO: Validar que coincida con la sesión
 
         $productRepository = new ProductRepository();
         $result = $productRepository->getUserProducts($userId);
 
-        $response->json([
-            "data" => $result
-        ]);
+        foreach ($result as &$element)
+        {
+            $element["images"] = json_decode($element["images"]);
+            $element["videos"] = json_decode($element["videos"]);
+        }
 
+        $response->json($result);
     }
 
     public function getProduct(Request $request, Response $response)
@@ -204,7 +238,16 @@ class ProductController
 
     public function getRecentProducts(Request $request, Response $response)
     {
-        
+        $productRepository = new ProductRepository();
+        $result = $productRepository->getRecentProducts();
+
+        foreach ($result as &$element)
+        {
+            $element["images"] = json_decode($element["images"]);
+            $element["videos"] = json_decode($element["videos"]);
+        }
+
+        $response->json($result);
     }
 
     public function getPendingProducts(Request $request, Response $response)

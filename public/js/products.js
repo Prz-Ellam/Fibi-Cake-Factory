@@ -31,16 +31,27 @@ function ProductCard(product)
 }
 
 $.ajax({
-    url: "/api/v1/products",
+    url: "api/v1/session",
     method: "GET",
     timeout: 0,
-    success: function(response)
-    {
-        response.forEach(function(product) {
-            $('#products-container').append(ProductCard(product));
+    success: function(response) {
+        console.log(response.id);
+
+        $.ajax({
+            url: `/api/v1/users/${response.id}/products`,
+            method: 'GET',
+            timeout: 0,
+            success: function(response)
+            {
+                response.forEach(function(product) {
+                    $('#products-container').append(ProductCard(product));
+                });
+            }
         });
+
     }
 });
+
 
 $(document).ready(function() {
 

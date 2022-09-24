@@ -1,4 +1,24 @@
 $.ajax({
+    url: "api/v1/session",
+    method: "GET",
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response['profile_picture']}`;
+                $('.nav-link img').attr('src', url);
+                console.log(response['profile_picture']);
+            }
+        });
+    }
+});
+
+$.ajax({
     url: 'api/v1/categories',
     method: 'GET',
     timeout: 0,
