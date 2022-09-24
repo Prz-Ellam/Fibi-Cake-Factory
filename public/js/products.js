@@ -65,16 +65,26 @@ $(document).ready(function() {
 
     $('#btn-delete-product').click(function(e) {
 
-        element.parent().parent().remove();
+        const obj = element.parent().parent();
+        const id = $(obj).attr('id');
+        obj.remove();
 
-        Toast.fire({
-            icon: 'success',
-            title: 'Tu producto ha sido eliminado'
+        $.ajax({
+            url: `/api/v1/products/${id}`,
+            method: 'DELETE',
+            timeout: 0,
+            success: function(response)
+            {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Tu producto ha sido eliminado'
+                });
+            }
         });
 
     });
 
-    $('.btn-red').click(function() {
+    $(document).on('click', '.btn-red', function() {
         element = $(this);
     })
 

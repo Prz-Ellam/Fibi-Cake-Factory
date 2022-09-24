@@ -302,6 +302,7 @@ $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 $app->post('/api/v1/products', [ new ProductController(), 'create' ]);
 $app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
 $app->get('/api/v1/products/{productId}', [ new ProductController(), 'getProduct' ]);
+$app->delete('/api/v1/products/{productId}', [ new ProductController(), 'delete' ]);
 
 $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 
@@ -322,12 +323,6 @@ $app->post('/prueba', function(Request $request, Response $response) {
     $ext = explode('.', $file["name"])[1];
     print($file["name"]);
     die;
-});
-
-$app->get('/sitio-malvado', function(Request $request, Response $response) {
-    $cookies = $request->getQuery("cookie");
-
-    $response->text("Me robe tus cookies pendejo: " . $cookies);
 });
 
 $app->run();

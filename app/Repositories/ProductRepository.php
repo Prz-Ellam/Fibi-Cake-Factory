@@ -11,6 +11,7 @@ class ProductRepository
 {
     private MainConnection $connection;
     private const CREATE_PRODUCT = "CALL sp_create_product(:productId, :name, :description, :isQuotable, :price, :stock, :userId)";
+    private const DELETE_PRODUCT = "CALL sp_delete_product(:productId)";
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
     private const GET_PRODUCT = "CALL sp_get_product(:productId)";
 
@@ -41,8 +42,11 @@ class ProductRepository
 
     public function delete(string $productId) : bool
     {
-        
-        return false;
+        $result = $this->connection->executeNonQuery(self::DELETE_PRODUCT, [
+            "productId"     => $productId
+        ]);
+
+        return $result > 0;
     }
 
     public function getProduct(string $productId)

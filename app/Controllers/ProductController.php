@@ -138,12 +138,16 @@ class ProductController
         $stock = $request->getBody("stock");
     }
 
-    public function deleteProduct(Request $request, Response $response)
+    public function delete(Request $request, Response $response)
     {
         $productId = $request->getRouteParams('productId');
 
         $productRepository = new ProductRepository();
-        $productRepository->delete($productId);
+        $result = $productRepository->delete($productId);
+
+        // TODO: Si result es falso es BAD Request
+
+        $response->json(["status" => $result]);
     }
 
     public function getUserProducts(Request $request, Response $response)

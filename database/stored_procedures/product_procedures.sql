@@ -38,6 +38,26 @@ DELIMITER ;
 
 DELIMITER $$
 
+CREATE PROCEDURE sp_delete_product(
+    IN _product_id              VARCHAR(36)
+)
+BEGIN
+
+    UPDATE
+        products
+    SET
+        active          = FALSE 
+        AND modified_at = NOW()
+    WHERE
+        BIN_TO_UUID(product_id) = _product_id;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+
 CREATE PROCEDURE sp_get_user_products(
     IN _user_id                 VARCHAR(36)
 )
@@ -64,7 +84,8 @@ BEGIN
     ON
         BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
     WHERE
-        BIN_TO_UUID(user_id) = _user_id
+        BIN_TO_UUID(p.user_id) = _user_id
+        AND p.active = TRUE
     GROUP BY
         p.product_id, 
         p.name, 
@@ -107,7 +128,8 @@ BEGIN
     ON
         BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
     WHERE
-        BIN_TO_UUID(product_id) = _product_id
+        BIN_TO_UUID(p.product_id) = _product_id
+        AND p.active = TRUE
     GROUP BY
         p.product_id, 
         p.name, 
