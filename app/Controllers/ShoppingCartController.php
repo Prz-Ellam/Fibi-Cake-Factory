@@ -16,6 +16,9 @@ class ShoppingCartController extends Controller
         $userId = $session->get('user_id');
 
         $shoppingCartRepository = new ShoppingCartRepository();
+        $shoppingCartId = $shoppingCartRepository->getUserCart($userId);
+
+        return $shoppingCartId;
     }
 }
 

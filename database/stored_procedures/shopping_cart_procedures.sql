@@ -39,3 +39,22 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_user_shopping_cart(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(shopping_cart_id) id
+    FROM
+        shopping_carts
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id;
+
+END $$
+DELIMITER ;

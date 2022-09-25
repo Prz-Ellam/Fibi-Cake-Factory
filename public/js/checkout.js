@@ -1,3 +1,21 @@
+$.ajax({
+    url: `api/v1/shopping-cart`,
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        response.forEach(function(shoppingCartItem) 
+        {
+            $('#shipping').append(/*html*/`
+            <div class="d-flex justify-content-between">
+                <p>${shoppingCartItem.name}</p>
+                <p>${shoppingCartItem.price * shoppingCartItem.quantity}</p>
+            </div>
+            `);
+        });
+    }
+});
+
 $(document).ready(function() {
 
     $.validator.addMethod('email5322', function(value, element) {

@@ -56,3 +56,28 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_shopping_cart_items(
+    IN _shopping_cart_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(sci.shopping_cart_item_id) id,
+        BIN_TO_UUID(p.product_id) product_id,
+        p.name,
+        sci.quantity,
+        p.price
+    FROM
+        shopping_cart_items AS sci
+    INNER JOIN
+        products AS p
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(sci.product_id);
+
+END $$
+DELIMITER ;

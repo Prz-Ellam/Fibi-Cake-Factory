@@ -1,3 +1,27 @@
+$.ajax({
+    url: `api/v1/shopping-cart`,
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        response.forEach(function(shoppingCartItem) 
+        {
+            $('#table-body').append(/*html*/`
+            <tr role="button">
+                <td></td>
+                <td><img src="assets/img/IMG001.jpg" class="me-3" height="100"></td>
+                <td scope="row">${shoppingCartItem.name}</td>
+                <td scope="row">$<span>${shoppingCartItem.price}</span> M.N</td>
+                <td scope="row"><input type="number" value="${shoppingCartItem.quantity}" min="1" max="100" class="form-control shadow-none w-50 quantity rounded-1"></td>
+                <td scope="row">$${shoppingCartItem.price * shoppingCartItem.quantity}</td>
+                <td scope="row"><button class="btn btn-red shadow-none rounded-1"><i class="fa fa-trash"></i></button></td>
+            </tr>
+            `);
+            console.log(shoppingCartItem);
+        });
+    }
+});
+
 $(document).ready(function()
 {
     const table = $('#shopping-cart-id').DataTable({

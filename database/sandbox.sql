@@ -7,6 +7,8 @@ VALUES ('a@a.com', 'admin', 1, CURDATE(), 'elrod', 'perez', '123', 1, 1);
 
 SELECT BIN_TO_UUID(user_id), email FROM users;
 
+SELECT BIN_TO_UUID(shopping_cart_item_id), BIN_TO_UUID(product_id) FROM shopping_cart_items;
+
 
 SELECT JSON_ARRAYAGG(JSON_OBJECT(
     'wishlist_id',  BIN_TO_UUID(wishlist_id), 

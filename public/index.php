@@ -3,9 +3,13 @@
 use CakeFactory\Controllers\CategoryController;
 use CakeFactory\Controllers\ImageController;
 use CakeFactory\Controllers\ProductController;
+use CakeFactory\Controllers\ShoppingCartController;
+use CakeFactory\Controllers\ShoppingCartItemController;
 use CakeFactory\Controllers\UserController;
 use CakeFactory\Controllers\VideoController;
 use CakeFactory\Controllers\WishlistController;
+use CakeFactory\Controllers\WishlistObjectController;
+use CakeFactory\Models\WishlistObject;
 use Fibi\Core\Application;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
@@ -309,6 +313,11 @@ $app->get('/api/v1/products/action/recents', [ new ProductController(), 'getRece
 
 $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 
+
+$app->post('/api/v1/shopping-cart-item', [ new ShoppingCartItemController(), 'addItem' ]);
+$app->get('/api/v1/shopping-cart', [ new ShoppingCartItemController(), 'getShoppingCartItems' ]);
+
+
 // Images
 $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
 $app->get('/api/v1/files/{fileId}', []);
@@ -320,6 +329,8 @@ $app->post('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update
 $app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
 $app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWishlist' ]);
 $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
+
+$app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'addObject' ]);
 
 $app->post('/prueba', function(Request $request, Response $response) {
     $file = $request->getFile('file');

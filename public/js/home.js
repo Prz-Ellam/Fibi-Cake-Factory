@@ -76,15 +76,17 @@ function CarouselCard(product)
 
     return /*html*/`
     <div class="item">
-        <div class="text-center car-prueba p-4 m-4 rounded">
+        <form class="text-center car-prueba p-4 m-4 rounded" id="add-cart">
+            <input type="hidden" name="product-id" value="${product.id}">
+            <input type="hidden" name="quantity" value="1">
             <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
             <h5 class="fw-bold price mb-0">${fmt.format(product.price)}</h5>
             <p>${product.name}</p>
             <div class="d-flex justify-content-center">
-                <button class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
-                <button class="btn btn-danger shadow-none rounded-1 add-wishlist" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
+                <button type="submit" class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
+                <button type="button" class="btn btn-danger shadow-none rounded-1 add-wishlist" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
             </div>
-        </div>
+        </form>
     </div>
     `;
 }
@@ -107,8 +109,8 @@ $('#categories-carousel').append(carouselCategoryCard2);
 $('#categories-carousel').append(carouselCategoryCard3);
 
 $.ajax({
-    url: "api/v1/session",
-    method: "GET",
+    url: 'api/v1/session',
+    method: 'GET',
     async: false,
     timeout: 0,
     success: function(response) {
@@ -147,7 +149,7 @@ function WishlistItem(wishlist)
             <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
             ${wishlist.name}
             </span>
-        <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
+        <input class="custom-control-input form-check-input shadow-none me-1" name="wishlists[]" type="checkbox" value="${wishlist.id}" aria-label="...">
     </li>
     `;
 }
@@ -190,11 +192,25 @@ $(document).ready(function()
         }
     });
 
-    $('.add-cart').click(function() {
-        Toast.fire({
-            icon: 'success',
-            title: 'Tu producto ha sido añadido al carrito'
+    $(document).on('submit', '#add-cart', function(event) {
+
+        event.preventDefault();
+
+        $.ajax({
+            url: "api/v1/shopping-cart-item",
+            method: 'POST',
+            data: $(this).serialize(),
+            timeout: 0,
+            success: function(response) {
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Tu producto ha sido añadido al carrito'
+                });
+                
+            }
         });
+
     });
 
     $('#start-shop').click(function() {
@@ -204,12 +220,23 @@ $(document).ready(function()
     });
 
     $('#add-wishlists').submit(function(event) {
+
         event.preventDefault();
 
         modal = document.getElementById('select-wishlist');
         modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
+        $.ajax({
+            url: `api/v1/wishlist-objects`,
+            method: 'POST',
+            timeout: 0,
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log(response);
+            }
+        });
+        
         Toast.fire({
             icon: 'success',
             title: 'Tu producto ha sido añadido a las listas de deseos'
