@@ -1,3 +1,8 @@
+import '../vendor/node_modules/jquery/dist/jquery.min.js';
+import '../vendor/node_modules/jquery-validation/dist/jquery.validate.min.js';
+import '../vendor/node_modules/bootstrap/dist/js/bootstrap.min.js';
+import 'https://kit.fontawesome.com/48ce36e499.js';
+
 $(document).ready(function() {
 
     // Actual date

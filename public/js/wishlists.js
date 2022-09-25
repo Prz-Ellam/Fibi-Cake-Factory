@@ -1,3 +1,5 @@
+
+
 class Wishlist
 {
     constructor(name, description, visibility, images)
@@ -111,7 +113,7 @@ function createWishlistCard(wishlist)
                     /*html*/`<p class="text-brown wishlist-visibility" value="2"><i class="fas fa-lock"></i> Privada</p>`
                 }
                 <div class="d-flex justify-content-start">
-                    <a href="/edit-product" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
+                    <a href="#" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
                     <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-wishlist">Eliminar</a>
                 </div>
             </div>
@@ -268,7 +270,10 @@ $(document).ready(function() {
 
     $(document).on('click', '.ratio', function() {
 
-        window.location.href = '/wishlist';
+        const id = $(this).parent().parent().parent().parent().parent().attr('id');
+        console.log(id);
+
+        window.location.href = `/wishlist?search=${id}`;
 
     });
 

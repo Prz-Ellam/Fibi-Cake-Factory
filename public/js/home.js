@@ -219,6 +219,11 @@ $(document).ready(function()
 
     });
 
+    $(document).on('click', '.add-wishlist', function() {
+        console.log($(this).parent().parent().find('[name="product-id"]').val());
+        $('#wishlist-product-id').val($(this).parent().parent().find('[name="product-id"]').val());
+    });
+
     $('#add-wishlists').submit(function(event) {
 
         event.preventDefault();
@@ -226,6 +231,8 @@ $(document).ready(function()
         modal = document.getElementById('select-wishlist');
         modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
+
+        console.log($(this).serialize());
 
         $.ajax({
             url: `api/v1/wishlist-objects`,

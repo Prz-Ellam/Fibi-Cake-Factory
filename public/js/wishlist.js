@@ -1,3 +1,15 @@
+$.ajax({
+    url: `/api/v1/wishlist-objects/${new URLSearchParams(window.location.search).get("search") || '0'}`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        response.forEach((wishlistObject) => {
+            console.log(wishlistObject);
+        });
+    }
+});
+
 $(document).ready(function() {
 
     $('#wishlist-table').DataTable({

@@ -13,8 +13,7 @@ class WishlistObjectController extends Controller
 {
     public function addObject(Request $request, Response $response)
     {
-        $productId = $request->getBody("product");
-        $userId = $request->getBody("user");
+        $productId = $request->getBody("product-id");
         $wishlists = $request->getBody("wishlists");
 
         foreach ($wishlists as $wishlistId)
@@ -30,7 +29,10 @@ class WishlistObjectController extends Controller
             $wishlistObjectRepository = new WishlistObjectRepository();
             $result = $wishlistObjectRepository->create($wishlistObject);
 
-
+            if ($result === false)
+            {
+                $response->text("no");return;
+            }
         }
 
         // TODO: Text acepte null tambien
@@ -43,6 +45,15 @@ class WishlistObjectController extends Controller
 
         $wishlistObjectRepository = new WishlistObjectRepository();
         
+    }
+
+    public function getWishlistObjects(Request $request, Response $response)
+    {
+        $wishlistId = $request->getRouteParams('wishlistId');
+
+        $wishlistObjectRepository = new WishlistObjectRepository();
+        $result = $wishlistObjectRepository->getWishlistObjects($wishlistId);
+        $response->json($result);
     }
 }
 

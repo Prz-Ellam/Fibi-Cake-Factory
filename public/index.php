@@ -331,6 +331,7 @@ $app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWish
 $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
 
 $app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'addObject' ]);
+$app->get('/api/v1/wishlist-objects/{wishlistId}', [ new WishlistObjectController(), 'getWishlistObjects' ]);
 
 $app->post('/prueba', function(Request $request, Response $response) {
     $file = $request->getFile('file');
