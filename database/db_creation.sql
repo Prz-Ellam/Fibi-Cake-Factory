@@ -78,17 +78,28 @@ CREATE TABLE IF NOT EXISTS products_categories(
 );
 
 -- Comments
-CREATE TABLE IF NOT EXISTS reviews(
-    review_id                   INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS comments(
+    comment_id                  BINARY(16) NOT NULL UNIQUE,
     message                     VARCHAR(255) NOT NULL,
-    rate                        SMALLINT NOT NULL,
-    product_id                  INT NOT NULL,
-    user_id                     INT NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT reviews_pk
-        PRIMARY KEY (review_id)
+    CONSTRAINT comments_pk
+        PRIMARY KEY (comment_id)
+);
+
+CREATE TABLE IF NOT EXISTS rates(
+    rate_id                     BINARY(16) NOT NULL UNIQUE,
+    rate                        SMALLINT NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
+    user_id                     BINARY(16) NOT NULL,
+    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified_at                 TIMESTAMP,
+    active                      BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT rates_pk
+        PRIMARY KEY (rate_id)
 );
 
 
@@ -119,33 +130,36 @@ CREATE TABLE IF NOT EXISTS wishlist_objects(
         PRIMARY KEY (wishlist_object_id)
 );
 
+
+
 -- Shopping Cart
+-- TODO: trigger para que solo un carrito tenga el cart_status TRUE
 CREATE TABLE IF NOT EXISTS shopping_carts(
-    shopping_cart_id            BINARY(16) NOT NULL,
+    shopping_cart_id            BINARY(16) NOT NULL UNIQUE,
     user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP NOT NULL,
-    active                      BOOLEAN DEFAULT TRUE,
+    modified_at                 TIMESTAMP,
+    active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT shopping_carts_pk
         PRIMARY KEY (shopping_cart_id)
 );
 
 -- Shopping Cart Items
 CREATE TABLE IF NOT EXISTS shopping_cart_items(
-    shopping_cart_item_id       BINARY(16) NOT NULL,
-    quantity                    SMALLINT NOT NULL,
+    shopping_cart_item_id       BINARY(16) NOT NULL UNIQUE,
     shopping_cart_id            BINARY(16) NOT NULL,
     product_id                  BINARY(16) NOT NULL,
+    quantity                    SMALLINT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
-    active                      BOOLEAN DEFAULT TRUE,
+    active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT shopping_cart_items_pk
         PRIMARY KEY (shopping_cart_item_id)
 );
 
 -- Orders 
 CREATE TABLE IF NOT EXISTS orders(
-    order_id                    BINARY(16) NOT NULL,    
+    order_id                    BINARY(16) NOT NULL UNIQUE,    
     user_id                     BINARY(16) NOT NULL,
     phone                       VARCHAR(12) NOT NULL,
     street                      VARCHAR(30) NOT NULL,
@@ -166,11 +180,11 @@ CREATE TABLE IF NOT EXISTS orders(
 
 -- Shoppings
 CREATE TABLE IF NOT EXISTS shoppings(
-    shopping_id                 BINARY(16) NOT NULL,
-    quantity                    SMALLINT NOT NULL,
-    amount                      DECIMAL (15, 2) NOT NULL,
+    shopping_id                 BINARY(16) NOT NULL UNIQUE,
     order_id                    BINARY(16) NOT NULL,
     product_id                  BINARY(16) NOT NULL,
+    quantity                    SMALLINT NOT NULL,
+    amount                      DECIMAL (15, 2) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -237,7 +251,7 @@ CREATE TABLE IF NOT EXISTS videos(
 
 -- Chats
 CREATE TABLE IF NOT EXISTS chats(
-    chat_id                     BINARY(16) NOT NULL,
+    chat_id                     BINARY(16) NOT NULL UNIQUE,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN DEFAULT TRUE,
@@ -247,7 +261,7 @@ CREATE TABLE IF NOT EXISTS chats(
 
 -- Chat Participants
 CREATE TABLE IF NOT EXISTS chat_participants(
-    chat_participant_id         BINARY(16) NOT NULL,
+    chat_participant_id         BINARY(16) NOT NULL UNIQUE,
     chat_id                     BINARY(16) NOT NULL,
     user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -259,9 +273,9 @@ CREATE TABLE IF NOT EXISTS chat_participants(
 
 -- Chat Messages
 CREATE TABLE IF NOT EXISTS chat_messages(
-    chat_message_id             BINARY(16) NOT NULL,
+    chat_message_id             BINARY(16) NOT NULL UNIQUE,
+    chat_participant_id         BINARY(16) NOT NULL,
     message_content             VARCHAR(255) NOT NULL,
-    chat_participant_id         INT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
@@ -273,8 +287,8 @@ CREATE TABLE IF NOT EXISTS chat_messages(
 -- imagenes, videos, documentos, audios
 CREATE TABLE IF NOT EXISTS chat_files(
     chat_file_id                BINARY(16) NOT NULL,
+    chat_participant_id         BINARY(16) NOT NULL,
     file_content                MEDIUMBLOB NOT NULL,
-    chat_participant_id         INT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,

@@ -2,20 +2,11 @@
 
 namespace CakeFactory\Repositories;
 
-use Fibi\Http\Controller;
-use Fibi\Http\Request;
-use Fibi\Http\Response;
-
-class ShoppingCartRepository extends Controller
+class ShoppingCartRepository
 {
-    public function addItem(Request $request, Response $response)
+    public function getUserCart(string $userId) : array
     {
-
-    }
-
-    public function removeItem(Request $request, Response $response)
-    {
-        
+        return [];
     }
 }
 

@@ -89,16 +89,37 @@ class Application
         $responseEmitter->emitResponse($response);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function get(string $uri, Closure|array $action)
     {
         $this->router->get($uri, $action);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function post(string $uri, Closure|array $action)
     {
         $this->router->post($uri, $action);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function put(string $uri, Closure|array $action)
     {
         $this->router->put($uri, $action);

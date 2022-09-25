@@ -69,11 +69,16 @@ const carouselCategoryCard3 = /*html*/`
 
 function CarouselCard(product)
 {
+    var fmt = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
     return /*html*/`
     <div class="item">
         <div class="text-center car-prueba p-4 m-4 rounded">
             <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
-            <h5 class="fw-bold mb-0">${product.price}</h5>
+            <h5 class="fw-bold price mb-0">${fmt.format(product.price)}</h5>
             <p>${product.name}</p>
             <div class="d-flex justify-content-center">
                 <button class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>

@@ -2,20 +2,20 @@
 
 namespace CakeFactory\Controllers;
 
+use CakeFactory\Repositories\ShoppingCartRepository;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
+use Fibi\Session\PhpSession;
 
 class ShoppingCartController extends Controller
 {
-    public function addItem(Request $request, Response $response)
+    public function getUserCart(Request $request, Response $response)
     {
+        $session = new PhpSession();
+        $userId = $session->get('user_id');
 
-    }
-
-    public function removeItem(Request $request, Response $response)
-    {
-        
+        $shoppingCartRepository = new ShoppingCartRepository();
     }
 }
 

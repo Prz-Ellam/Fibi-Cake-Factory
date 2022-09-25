@@ -6,6 +6,7 @@ use CakeFactory\Models\Image;
 use CakeFactory\Models\User;
 use CakeFactory\Repositories\AuthRepository;
 use CakeFactory\Repositories\ImageRepository;
+use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
 use CakeFactory\Validators\UserValidator;
 use Fibi\Http\Controller;
@@ -91,6 +92,8 @@ class UserController extends Controller
             $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
+
+        $shoppingCartRepository = new ShoppingCartRepository();
 
         $response->json(["response" => "Si"]);
     }
@@ -194,6 +197,7 @@ class UserController extends Controller
 
         $response->json(["id" => $userId]);
     }
+    
 }
 
 ?>

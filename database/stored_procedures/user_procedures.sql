@@ -17,30 +17,30 @@ CREATE PROCEDURE sp_create_user(
 BEGIN
 
     INSERT INTO users(
-            user_id,
-            email, 
-            username, 
-            first_name, 
-            last_name, 
-            birth_date, 
-            password, 
-            gender, 
-            visibility, 
-            user_role, 
-            profile_picture
+        user_id,
+        email, 
+        username, 
+        first_name, 
+        last_name, 
+        birth_date, 
+        password, 
+        gender, 
+        visibility, 
+        user_role, 
+        profile_picture
     )
     VALUES(
-            UUID_TO_BIN(_user_id),
-            _email, 
-            _username, 
-            _first_name, 
-            _last_name, 
-            _birth_date, 
-            _password, 
-            _gender, 
-            _visibility, 
-            _user_role, 
-            UUID_TO_BIN(_profile_picture)
+        UUID_TO_BIN(_user_id),
+        _email, 
+        _username, 
+        _first_name, 
+        _last_name, 
+        _birth_date, 
+        _password, 
+        _gender, 
+        _visibility, 
+        _user_role, 
+        UUID_TO_BIN(_profile_picture)
     );
 
 END$$
@@ -64,16 +64,48 @@ CREATE PROCEDURE sp_get_user(
 BEGIN
 
     SELECT
-            BIN_TO_UUID(profile_picture) as 'profile_picture'
+        BIN_TO_UUID(profile_picture) as 'profile_picture'
     FROM
-            users
+        users
     WHERE
-            BIN_TO_UUID(user_id) = _user_id;
+        BIN_TO_UUID(user_id) = _user_id;
 
 END $$
 
 DELIMITER ;
 
-CREATE PROCEDURE sp_is_email_available();
 
-CREATE PROCEDURE sp_is_username_available();
+
+DELIMITER $$
+CREATE PROCEDURE sp_email_exists(
+    IN _email           VARCHAR(255)
+)
+BEGIN
+
+    SELECT
+        IF(COUNT(email) > 0, TRUE, FALSE)
+    FROM
+        users
+    WHERE
+        email = _email;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+CREATE PROCEDURE sp_username_exists(
+    IN _username            VARCHAR(18)
+)
+BEGIN
+
+    SELECT
+        IF(COUNT(username) > 0, TRUE, FALSE)
+    FROM
+        users
+    WHERE
+        username = _username;
+
+END $$
+DELIMITER ;
