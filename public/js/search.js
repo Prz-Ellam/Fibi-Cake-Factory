@@ -10,10 +10,7 @@ const productSearchCard = /*html*/`
 </div>
 `;
 
-for (let i = 0; i < 12; i++)
-{
-    $('#product-search-container').append(productSearchCard);
-}
+// $('#product-search-container').append(productSearchCard);
 
 function WishlistItem(wishlist)
 {
@@ -100,6 +97,5 @@ $(document).ready(function() {
             title: 'El producto ha sido añadido a las listas de deseos'
         })
     });
-
 
 });

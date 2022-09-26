@@ -41,20 +41,14 @@
 
                     <div class="container mb-2" style="width: 256px">
                         <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner rounded-1">
-                                <div class="carousel-item active">
-                                    <img src="assets/img/wishlist.png" class="d-block w-100" style="max-width: 256px;" alt="...">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="assets/img/pyramid.jpg" class="d-block w-100" style="width: 256px;" alt="...">
-                                </div>
+                            <div class="carousel-inner rounded-1" id="wishlist-images">
                             </div>
                         </div>
                     </div>
                     <div class="text-center mb-4">
                         <div>
-                            <h2>Nombre de la lista</h2>
-                            <p>Descripción de la lista</p>
+                            <h2 id="wishlist-name"></h2>
+                            <p id="wishlist-description"></p>
                         </div>
                     </div>
 
@@ -71,17 +65,8 @@
                                 <th>Eliminar</th>
                             </tr>
                         </thead>
-                        <tbody class="align-middle">
-                            <tr>
-                                <td></td>
-                                <td><img src="assets/img/IMG001.jpg" width="100" role="button"></td>
-                                <td>Tentación de fresas</td>
-                                <td>Está caro</td>
-                                <td>$90.00</td>
-                                <td>2</td>
-                                <td><button class="btn btn-orange shadow-none rounded-1 add-cart"><i class="fa fa-shopping-cart"></i> Agregar al carrito</button></td>
-                                <td><button class="btn btn-red shadow-none rounded-1"><i class="fa fa-trash"></i></button></td>
-                            </tr>
+                        <tbody class="align-middle" id="table-body">
+                            
                         </tbody>
                     </table>
                 </div>

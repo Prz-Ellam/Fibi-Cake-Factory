@@ -1,18 +1,27 @@
+var fmt = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
 $.ajax({
     url: `api/v1/shopping-cart`,
     method: 'GET',
     async: false,
     timeout: 0,
     success: function(response) {
+        let total = 0;
         response.forEach(function(shoppingCartItem) 
         {
             $('#shipping').append(/*html*/`
             <div class="d-flex justify-content-between">
                 <p>${shoppingCartItem.name}</p>
-                <p>${shoppingCartItem.price * shoppingCartItem.quantity}</p>
+                <p>${fmt.format(shoppingCartItem.price * shoppingCartItem.quantity)} M.N</p>
             </div>
             `);
+            total += shoppingCartItem.price * shoppingCartItem.quantity;
         });
+        $('#subtotal').text(`${fmt.format(total)} M.N`);
+        $('#total').text(`${fmt.format(total)} M.N`);
     }
 });
 
@@ -198,6 +207,29 @@ $(document).ready(function() {
         console.log([...new FormData(this)]);
 
         console.log('Enviando el msform');
+
+        $.ajax({
+            url: '/api/v1/checkout',
+            method: 'POST',
+            timeout: 0,
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log(response);
+
+                Swal.fire({
+                    title: '¡Gracias por su compra!',
+                    text: '¡Que tenga un bonito día! ',
+                    icon: 'success',
+                    html:
+                    '<h4>¡Qué tenga un bonito día! <i class="fas fa-smile"></i><h4>',
+                    confirmButtonText : 'Ok',
+                    //confirmButtonClassName: 'no-border',
+                    confirmButtonColor: '#FF5E1F',
+                    showCloseButton: true
+                });
+
+            }
+        });
 
     });
 

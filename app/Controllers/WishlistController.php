@@ -227,7 +227,10 @@ class WishlistController extends Controller
     {
         $wishlistId = $request->getRouteParams("wishlistId");
         $wishlistRepository = new WishlistRepository();
-        $result = $wishlistRepository->getWishlist($wishlistId);
+        $result = $wishlistRepository->getWishlist($wishlistId)[0];
+
+        $result["images"] = json_decode($result["images"]);
+
         $response->json($result);
     }
 

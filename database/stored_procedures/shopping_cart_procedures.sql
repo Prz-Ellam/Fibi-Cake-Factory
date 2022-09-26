@@ -24,7 +24,7 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE sp_delete_shopping_cart(
-    IN _user_id                 VARCHAR(36)
+    IN _shopping_cart_id            VARCHAR(36)
 )
 BEGIN
 
@@ -33,7 +33,7 @@ BEGIN
     SET
         active = FALSE
     WHERE
-        BIN_TO_UUID(_user_id) = _user_id
+        BIN_TO_UUID(shopping_cart_id) = _shopping_cart_id
         AND active = TRUE;
 
 END $$
@@ -54,7 +54,8 @@ BEGIN
     FROM
         shopping_carts
     WHERE
-        BIN_TO_UUID(user_id) = _user_id;
+        BIN_TO_UUID(user_id) = _user_id
+        AND active = TRUE;
 
 END $$
 DELIMITER ;

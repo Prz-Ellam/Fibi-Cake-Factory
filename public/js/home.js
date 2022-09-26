@@ -203,6 +203,8 @@ $(document).ready(function()
             timeout: 0,
             success: function(response) {
 
+                console.log(response);
+
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu producto ha sido añadido al carrito'

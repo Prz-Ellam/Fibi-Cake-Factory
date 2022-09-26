@@ -2,6 +2,7 @@
 
 use CakeFactory\Controllers\CategoryController;
 use CakeFactory\Controllers\ImageController;
+use CakeFactory\Controllers\OrderController;
 use CakeFactory\Controllers\ProductController;
 use CakeFactory\Controllers\ShoppingCartController;
 use CakeFactory\Controllers\ShoppingCartItemController;
@@ -315,6 +316,7 @@ $app->get('/api/v1/session', [ new UserController(), 'session' ]);
 
 
 $app->post('/api/v1/shopping-cart-item', [ new ShoppingCartItemController(), 'addItem' ]);
+$app->delete('/api/v1/shopping-cart-items/{shoppingCartItemId}', [ new ShoppingCartItemController(), 'removeItem' ]);
 $app->get('/api/v1/shopping-cart', [ new ShoppingCartItemController(), 'getShoppingCartItems' ]);
 
 
@@ -332,6 +334,9 @@ $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUs
 
 $app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'addObject' ]);
 $app->get('/api/v1/wishlist-objects/{wishlistId}', [ new WishlistObjectController(), 'getWishlistObjects' ]);
+$app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObjectController(), 'deleteObject' ]);
+
+$app->post('/api/v1/checkout', [ new OrderController(), 'checkout' ]);
 
 $app->post('/prueba', function(Request $request, Response $response) {
     $file = $request->getFile('file');

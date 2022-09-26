@@ -10,6 +10,7 @@ class ShoppingCartItemRepository
     private MainConnection $connection;
     private const ADD_SHOPPING_CART_ITEM = "CALL sp_add_shopping_cart_item(:shoppingCartItemId, :shoppingCartId, :productId, :quantity)";
     private const GET_SHOPPING_CART_ITEMS = "CALL sp_get_shopping_cart_items(:shoppingCartId)";
+    private const REMOVE_SHOPPING_CART_ITEM = "CALL sp_delete_shopping_cart_item(:shoppingCartItemId)";
 
     public function __construct() {
         $this->connection = new MainConnection();
@@ -31,6 +32,15 @@ class ShoppingCartItemRepository
     {
         $result = $this->connection->executeReader(self::GET_SHOPPING_CART_ITEMS, [
             "shoppingCartId"        => $shoppingCartId
+        ]);
+
+        return $result;
+    }
+
+    public function removeShoppingCartItem(string $shoppingCartItemId)
+    {
+        $result = $this->connection->executeNonQuery(self::REMOVE_SHOPPING_CART_ITEM, [
+            "shoppingCartItemId"        => $shoppingCartItemId
         ]);
 
         return $result;

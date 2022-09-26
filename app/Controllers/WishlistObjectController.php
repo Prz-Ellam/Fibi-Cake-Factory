@@ -41,10 +41,12 @@ class WishlistObjectController extends Controller
 
     public function deleteObject(Request $request, Response $response)
     {
-        //$wishlistObjectId;
+        $wishlistObjectId = $request->getRouteParams("wishlistObjectId");
 
         $wishlistObjectRepository = new WishlistObjectRepository();
+        $result = $wishlistObjectRepository->delete($wishlistObjectId);
         
+        $response->text($result);
     }
 
     public function getWishlistObjects(Request $request, Response $response)

@@ -59,13 +59,21 @@ CREATE PROCEDURE sp_get_wishlist_objects(
 BEGIN
 
     SELECT
-        BIN_TO_UUID(wishlist_object_id) id,
-        BIN_TO_UUID(wishlist_id) wishlist_id
+        BIN_TO_UUID(wo.wishlist_object_id) id,
+        BIN_TO_UUID(wo.wishlist_id) wishlist_id,
+        p.name,
+        p.description,
+        p.price,
+        p.stock
     FROM
-        wishlist_objects
+        wishlist_objects AS wo
+    INNER JOIN
+        products AS p
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(wo.product_id)
     WHERE
-        BIN_TO_UUID(wishlist_id) = _wishlist_id
-        AND active = TRUE;
+        BIN_TO_UUID(wo.wishlist_id) = _wishlist_id
+        AND wo.active = TRUE;
 
 END $$
 DELIMITER ;

@@ -43,7 +43,12 @@ class ShoppingCartItemController extends Controller
 
     public function removeItem(Request $request, Response $response)
     {
-        $productId = $request->getBody("product");
+        $shoppingCartItemId = $request->getRouteParams("shoppingCartItemId");
+
+        $shoppingCartItemRepository = new ShoppingCartItemRepository();
+        $result = $shoppingCartItemRepository->removeShoppingCartItem($shoppingCartItemId);
+
+        $response->text($result);
     }
 
     public function getShoppingCartItems(Request $request, Response $response)
