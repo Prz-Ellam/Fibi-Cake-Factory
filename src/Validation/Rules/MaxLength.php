@@ -2,11 +2,28 @@
 
 namespace Fibi\Validation\Rules;
 
-class MaxLength 
+class MaxLength implements RuleValidation
 {
-    public static function isValid(string $field, array $data) : bool
+    private int $maxlength;
+    private string $message;
+
+    public function __construct(int $maxlength, ?string $message = null) {
+        
+    }
+
+    public function isValid(mixed $input) : bool
     {
-        return strlen($data[$field]) < 25;
+        return false;
+    }
+
+    public function message() : string
+    {
+        return "";
+    }
+
+    public function valid(mixed $input) : bool
+    {
+        return strlen($input) < $this->length;
     }
 }
 

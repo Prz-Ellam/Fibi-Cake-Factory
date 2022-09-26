@@ -3,20 +3,46 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Email;
+use Fibi\Validation\Rules\Required;
 
 class User extends Model
 {
+    #[Required]
     private ?string $userId;
+
+    #[Required]
+    #[Email]
     private ?string $email;
+
+    #[Required]
     private ?string $username;
+
+    #[Required]
     private ?string $birthDate;
+
+    #[Required]
     private ?string $firstName;
+
+    #[Required]
     private ?string $lastName;
+
+    #[Required]
     private ?int $visibility;
+
+    #[Required]
     private ?string $gender;
+
+    #[Required]
     private ?string $password;
+
+    #[Required]
     private ?string $confirmPassword;
+
+    #[Required]
     private ?int $userRole;
+
+    #[Required]
     private ?string $profilePicture;
 
     public function getUserId() : ?string

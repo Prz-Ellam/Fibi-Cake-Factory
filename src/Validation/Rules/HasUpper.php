@@ -2,11 +2,13 @@
 
 namespace Fibi\Validation\Rules;
 
-class Phone implements RuleValidation
+class HasUpper implements RuleValidation
 {
+    private string $message;
+    
     public function isValid(mixed $input) : bool
     {
-        return false;
+        return preg_match("/[a-z]/", $input);
     }
 
     public function message() : string

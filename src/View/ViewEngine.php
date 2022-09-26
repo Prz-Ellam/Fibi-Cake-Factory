@@ -54,6 +54,9 @@ class ViewEngine
 
         $navbar = $this->getContentLayout("navbar");
         $contentView = str_replace("@navbar", $navbar, $contentView);
+
+        $sidebar = $this->getContentLayout("admin-sidebar");
+        $contentView = str_replace("@sidebar", $sidebar, $contentView);
         
         if (is_null($contentLayout) || $contentLayout === "")
         {

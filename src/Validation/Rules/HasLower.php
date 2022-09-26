@@ -2,11 +2,14 @@
 
 namespace Fibi\Validation\Rules;
 
-class Phone implements RuleValidation
+class HasLower implements RuleValidation
 {
+    private const REGEX = "/[a-z]/";
+    private string $message;
+
     public function isValid(mixed $input) : bool
     {
-        return false;
+        return preg_match("/[a-z]/", $input);
     }
 
     public function message() : string

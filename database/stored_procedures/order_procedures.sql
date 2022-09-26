@@ -32,3 +32,27 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+-- TODO: Bajar la cantidad de productos en la BD
+
+
+
+SELECT 
+    s.created_at,
+    p.name,
+    p.price,
+    p.stock
+FROM
+    shoppings AS s
+INNER JOIN
+    products AS p
+ON
+    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)
+LEFT JOIN
+    products_categories AS pc
+ON
+    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id);
+
+
+

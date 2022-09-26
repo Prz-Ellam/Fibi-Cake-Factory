@@ -2,8 +2,10 @@
 
 namespace Fibi\Validation\Rules;
 
-class Phone implements RuleValidation
+class Date implements RuleValidation
 {
+    private string $message;
+
     public function isValid(mixed $input) : bool
     {
         return false;

@@ -2,8 +2,10 @@
 
 namespace Fibi\Validation\Rules;
 
-class Phone implements RuleValidation
+class CreditCard implements RuleValidation
 {
+    private string $message;
+
     public function isValid(mixed $input) : bool
     {
         return false;

@@ -89,8 +89,22 @@ $app->get('/home', function(Request $request, Response $response) {
         return;
     }
 
+    if (true)
+    {
+        $response->view('admin-dashboard', 'auth-layout');
+        return;
+    }
+
     $response->view('home');
 
+});
+
+$app->get('/users', function(Request $request, Response $response) {
+    $response->view('users', 'auth-layout');
+});
+
+$app->get('/categories', function(Request $request, Response $response) {
+    $response->view('categories', 'auth-layout');
 });
 
 $app->get('/product', function(Request $request, Response $response) {
