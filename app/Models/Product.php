@@ -2,14 +2,22 @@
 
 namespace CakeFactory\Models;
 
-class Product
+use Fibi\Model\Model;
+
+class Product implements Model
 {
     private ?string $productId;
+
     private ?string $name;
+
     private ?string $description;
+
     private ?int $typeOfSell;
+
     private ?int $stock;
+
     private ?float $price;
+    
     private ?string $userId;
 
     public function getProductId() : ?string
@@ -87,6 +95,17 @@ class Product
     {
         $this->userId = $userId;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

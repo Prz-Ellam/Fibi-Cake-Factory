@@ -2,12 +2,49 @@
 
 namespace CakeFactory\Models;
 
-class Wishlist
+use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
+
+class Wishlist implements Model
 {
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $wishlistId;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $name;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $description;
-    private ?int $visibility;
+
+    /**
+     * Undocumented variable
+     *
+     * @var integer|null
+     */
+    #[Required]
+    private ?int $visible;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $userId;
 
     public function getWishlistId() : ?string
@@ -45,12 +82,12 @@ class Wishlist
 
     public function getVisibility() : ?int
     {
-        return $this->visibility;
+        return $this->visible;
     }
 
-    public function setVisibility(?int $visibility) : self
+    public function setVisibility(?int $visible) : self
     {
-        $this->visibility = $visibility;
+        $this->visible = $visible;
         return $this;
     }
 
@@ -69,6 +106,11 @@ class Wishlist
     {
         $members = get_object_vars($this);
         return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

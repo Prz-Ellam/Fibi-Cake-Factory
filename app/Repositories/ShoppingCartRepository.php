@@ -3,23 +3,18 @@
 namespace CakeFactory\Repositories;
 
 use CakeFactory\Models\ShoppingCart;
+use Fibi\Database\DB;
 use Fibi\Database\MainConnection;
 
 class ShoppingCartRepository
 {
-    private MainConnection $connection;
     private const CREATE = "CALL sp_create_shopping_cart(:shoppingCartId, :userId)";
     private const GET_USER_CART = "CALL sp_get_user_shopping_cart(:userId)";
     private const DELETE_SHOPPING_CART = "CALL sp_delete_shopping_cart(:shoppingCartId)";
 
-    public function __construct()
-    {
-        $this->connection = new MainConnection();
-    }
-
     public function create(ShoppingCart $shoppingCart)
     {
-        $result = $this->connection->executeNonQuery(self::CREATE, [
+        $result = DB::executeNonQuery(self::CREATE, [
             "shoppingCartId"    => $shoppingCart->getShoppingCartId(),
             "userId"            => $shoppingCart->getUserId()
         ]);
@@ -29,7 +24,7 @@ class ShoppingCartRepository
 
     public function getUserCart(string $userId) : ?string
     {
-        $result = $this->connection->executeReader(self::GET_USER_CART, [
+        $result = DB::executeReader(self::GET_USER_CART, [
             "userId"    => $userId
         ]);
 
@@ -43,7 +38,7 @@ class ShoppingCartRepository
 
     public function delete(string $shoppingCartId) : bool
     {
-        $result = $this->connection->executeNonQuery(self::DELETE_SHOPPING_CART, [
+        $result = DB::executeNonQuery(self::DELETE_SHOPPING_CART, [
             "shoppingCartId"    => $shoppingCartId
         ]);
 

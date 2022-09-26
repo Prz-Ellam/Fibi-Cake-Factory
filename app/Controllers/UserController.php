@@ -8,13 +8,13 @@ use CakeFactory\Repositories\AuthRepository;
 use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
-use CakeFactory\Validators\UserValidator;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Request\PhpCookie;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
 use Fibi\Session\Session;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Uuid;
 use Firebase\JWT\JWT;
 
@@ -35,7 +35,7 @@ class UserController extends Controller
         $birthDate = $request->getBody('birth-date');
         $firstName = $request->getBody('first-name');
         $lastName = $request->getBody('last-name');
-        $visibility = $request->getBody('visibility');
+        $visible = $request->getBody('visibility');
         $gender = $request->getBody('gender');
         $password = password_hash($request->getBody('password'), PASSWORD_DEFAULT);
         $confirmPassword = $request->getBody('confirm-password');
@@ -67,17 +67,17 @@ class UserController extends Controller
             ->setBirthDate($birthDate)
             ->setFirstName($firstName)
             ->setLastName($lastName)
-            ->setVisibility($visibility)
+            ->setVisibility($visible)
             ->setGender($gender)
             ->setPassword($password)
-            ->setConfirmPassword($confirmPassword)
             ->setUserRole(4)
             ->setProfilePicture($imageId);
 
-        $validator = new UserValidator($user);
-        $result = $validator->validate();
+        $validator = new Validator($user);
+        $results = $validator->validate();
 
-        if ($result === false)
+
+        if ($results !== [])
         {
             // Errors
             $response->json(["response" => "No"])->setStatusCode(400);

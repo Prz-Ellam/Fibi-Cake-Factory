@@ -4,33 +4,46 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 
-class ChatParticipant implements Model
+class Rate implements Model
 {
-    private ?string $chatParticipantId;
+    private ?string $rateId;
 
-    private ?string $chatId;
-    
+    private ?int $rate;
+
+    private ?string $productId;
+
     private ?string $userId;
 
-    public function getChatParticipantId() : ?string
+    public function getRateId() : ?string
     {
-        return $this->chatParticipantId;
+        return $this->rateId;
     }
 
-    public function setChatParticipantId(?string $chatParticipantId) : self
+    public function setRateId(?string $rateId) : self
     {
-        $this->chatParticipantId = $chatParticipantId;
+        $this->rateId = $rateId;
         return $this;
     }
 
-    public function getChatId() : ?string
+    public function getRate() : ?int
     {
-        return $this->chatId;
+        return $this->rate;
     }
 
-    public function setChatId(?string $chatId) : self
+    public function setRate(?int $rate) : self
     {
-        $this->chatId = $chatId;
+        $this->rate = $rate;
+        return $this;
+    }
+
+    public function getProductId() : ?string
+    {
+        return $this->productId;
+    }
+
+    public function setProductId(?string $productId) : self
+    {
+        $this->productId = $productId;
         return $this;
     }
 

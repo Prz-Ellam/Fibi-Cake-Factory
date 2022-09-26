@@ -4,11 +4,14 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 
-class ShoppingCartItem extends Model
+class ShoppingCartItem implements Model
 {
     private ?string $shoppingCartItemId;
+
     private ?string $shoppingCartId;
+
     private ?string $productId;
+    
     private ?int $quantity;
 
     public function getShoppingCartItemId() : ?string
@@ -53,6 +56,17 @@ class ShoppingCartItem extends Model
     {
         $this->quantity= $quantity;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

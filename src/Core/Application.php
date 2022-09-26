@@ -3,6 +3,7 @@
 namespace Fibi\Core;
 
 use Closure;
+use Fibi\Database\DatabaseDriver;
 use Fibi\Http\Request;
 use Fibi\Http\RequestBuilder;
 use Fibi\Http\Response;
@@ -37,6 +38,13 @@ class Application
     public ViewEngine $viewEngine;
 
     /**
+     * El controlador de la base de datos
+     *
+     * @var DatabaseDriver
+     */
+    public DatabaseDriver $database;
+
+    /**
      * Instancia de la aplicación
      *
      * @var self
@@ -49,6 +57,7 @@ class Application
         $this->request = RequestBuilder::createFromPhpServer();
         $this->viewEngine = new ViewEngine(__DIR__ . "//..//..//frontend");
         $this->viewEngine->setMainLayout("main");
+        $this->database = new DatabaseDriver();
     }
 
     /**
@@ -87,6 +96,7 @@ class Application
 
         $responseEmitter = new ResponseEmitter();
         $responseEmitter->emitResponse($response);
+        $this->database->close();
     }
 
     /**

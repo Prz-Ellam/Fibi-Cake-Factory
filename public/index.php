@@ -10,11 +10,13 @@ use CakeFactory\Controllers\UserController;
 use CakeFactory\Controllers\VideoController;
 use CakeFactory\Controllers\WishlistController;
 use CakeFactory\Controllers\WishlistObjectController;
+use CakeFactory\Models\Category;
 use CakeFactory\Models\WishlistObject;
 use Fibi\Core\Application;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 require_once("../vendor/autoload.php");
@@ -89,7 +91,7 @@ $app->get('/home', function(Request $request, Response $response) {
         return;
     }
 
-    if (true)
+    if (false)
     {
         $response->view('admin-dashboard', 'auth-layout');
         return;
@@ -352,11 +354,21 @@ $app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObject
 
 $app->post('/api/v1/checkout', [ new OrderController(), 'checkout' ]);
 
-$app->post('/prueba', function(Request $request, Response $response) {
-    $file = $request->getFile('file');
-    $ext = explode('.', $file["name"])[1];
-    print($file["name"]);
+
+$app->get('/prueba', function(Request $request, Response $response) {
+    
+    $category = new Category();
+    $category
+            ->setCategoryId(Uuid::uuid4()->toString())
+            ->setName("A")
+            ->setDescription("Pasteles deliciosos")
+            ->setUserId(Uuid::uuid4()->toString());
+
+    $validator = new Validator($category);
+    var_dump($validator->validate());
+
     die;
+
 });
 
 $app->run();

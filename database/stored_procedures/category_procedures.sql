@@ -1,3 +1,4 @@
+USE cake_factory;
 
 DELIMITER $$
 

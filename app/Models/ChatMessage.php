@@ -3,11 +3,30 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
-class ChatMessage extends Model
+class ChatMessage implements Model
 {
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $chatMessageId;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     private ?string $chatParticipantId;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     private ?string $messageContent;
 
     public function getChatMessageId() : ?string
@@ -41,6 +60,17 @@ class ChatMessage extends Model
     {
         $this->messageContent = $messageContent;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

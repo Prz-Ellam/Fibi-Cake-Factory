@@ -33,9 +33,14 @@ abstract class DbConnection
         
     }
 
+    public function close()
+    {
+        $this->pdo = null;
+    }
+
     public function __destruct()
     {
-        //$this->pdo = null;
+        
     }
 }
 

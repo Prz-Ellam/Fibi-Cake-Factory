@@ -6,42 +6,94 @@ use Fibi\Model\Model;
 use Fibi\Validation\Rules\Email;
 use Fibi\Validation\Rules\Required;
 
-class User extends Model
+class User implements Model
 {
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $userId;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     #[Email]
     private ?string $email;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $username;
 
-    #[Required]
-    private ?string $birthDate;
-
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $firstName;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $lastName;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
+    private ?string $birthDate;
+
+    /**
+     * Undocumented variable
+     *
+     * @var integer|null
+     */
     #[Required]
     private ?int $visibility;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $gender;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $password;
 
-    #[Required]
-    private ?string $confirmPassword;
-
+    /**
+     * Undocumented variable
+     *
+     * @var integer|null
+     */
     #[Required]
     private ?int $userRole;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
     #[Required]
     private ?string $profilePicture;
 
@@ -144,17 +196,6 @@ class User extends Model
         return $this;
     }
 
-    public function getConfirmPassword() : ?string
-    {
-        return $this->confirmPassword;
-    }
-
-    public function setConfirmPassword(?string $confirmPassword) : self
-    {
-        $this->confirmPassword = $confirmPassword;
-        return $this;
-    }
-
     public function getUserRole() : ?int
     {
         return $this->userRole;
@@ -177,12 +218,16 @@ class User extends Model
         return $this;
     }
 
-    public function toObject()
+    public function toObject() : array
     {
         $members = get_object_vars($this);
         return json_decode(json_encode($members), true);
     }
 
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
+    }
 }
 
 ?>

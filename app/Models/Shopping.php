@@ -2,12 +2,18 @@
 
 namespace CakeFactory\Models;
 
-class Shopping
+use Fibi\Model\Model;
+
+class Shopping implements Model
 {
     private ?string $shoppingId;
+
     private ?string $orderId;
+
     private ?string $productId;
+
     private ?int $quantity;
+    
     private ?float $amount;
 
     public function getShoppingId() : ?string
@@ -65,6 +71,16 @@ class Shopping
         return $this;
     }
 
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
+    }
 }
 
 ?>

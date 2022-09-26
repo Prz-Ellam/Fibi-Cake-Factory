@@ -3,12 +3,10 @@
 namespace CakeFactory\Repositories;
 
 use CakeFactory\Models\User;
-use Fibi\Database\MainConnection;
+use Fibi\Database\DB;
 
 class UserRepository
 {
-    private MainConnection $connection;
-
     private const CREATE_USER = "CALL sp_create_user(:userId, :email, :username, :firstName, 
         :lastName, :birthDate, :password, :gender, :visibility, :userRole, :profilePicture)";
     private const UPDATE_USER = "CALL sp_update_user(?)";
@@ -17,13 +15,9 @@ class UserRepository
     private const LOGIN = "CALL login(:loginOrEmail, :password)";
     private const GET_USER = "CALL sp_get_user(:userId)";
 
-    public function __construct() {
-        $this->connection = new MainConnection();
-    }
-
     public function create(User $user) : bool
     {
-        $result = $this->connection->executeNonQuery(self::CREATE_USER, [
+        $result = DB::executeNonQuery(self::CREATE_USER, [
             "userId"            => $user->getUserId(),
             "email"             => $user->getEmail(),
             "username"          => $user->getUsername(),
@@ -42,7 +36,7 @@ class UserRepository
 
     public function update(User $user) : bool
     {
-        $this->connection->executeNonQuery(self::UPDATE_USER, []);
+        DB::executeNonQuery(self::UPDATE_USER, []);
         return true;
     }
 
@@ -53,7 +47,7 @@ class UserRepository
 
     public function getUser(string $userId) : array
     {
-        $result = $this->connection->executeReader(self::GET_USER, [
+        $result = DB::executeReader(self::GET_USER, [
             "userId" => $userId
         ]);
 

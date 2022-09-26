@@ -2,9 +2,10 @@
 
 namespace Fibi\Database;
 
+use PDO;
 use PDOException;
 
-class MainConnection extends DbConnection
+class DatabaseDriver extends DbConnection
 {
     public function beginTransaction()
     {
@@ -23,7 +24,7 @@ class MainConnection extends DbConnection
      * @param array $parameters
      * @return integer
      */
-    public function executeNonQuery(string $query, array $parameters) : int
+    public function executeNonQuery(string $query, array $parameters = []) : int
     {
         try
         {
@@ -39,13 +40,13 @@ class MainConnection extends DbConnection
         }
     }
 
-    public function executeReader(string $query, array $parameters) : array
+    public function executeReader(string $query, array $parameters = []) : array
     {
         try
         {
             $statement = $this->pdo->prepare($query);
             $statement->execute($parameters);
-            return $statement->fetchAll();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
         catch (PDOException $ex)
         {
@@ -53,10 +54,6 @@ class MainConnection extends DbConnection
         }
     }
 
-    public function getLastInsertId() : ?int
-    {
-        return (int)$this->pdo->lastInsertId();
-    }
 }
 
 ?>

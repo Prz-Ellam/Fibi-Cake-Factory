@@ -4,14 +4,20 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 
-class Order extends Model
+class Order implements Model
 {
     private ?string $orderId;
+
     private ?string $userId;
+
     private ?string $phone;
+
     private ?string $address;
+
     private ?string $city;
+
     private ?string $state;
+    
     private ?string $postalCode;
 
     public function getOrderId() : ?string
@@ -91,10 +97,15 @@ class Order extends Model
         return $this;
     }
 
-    public function toObject() : array|null
+    public function toObject() : array
     {
         $members = get_object_vars($this);
         return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 
 

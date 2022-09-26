@@ -2,7 +2,7 @@
 
 namespace Fibi\Model;
 
-abstract class Model
+interface Model
 {
     /**
      * Expone los miembros del modelo en formato de arreglo
@@ -16,6 +16,10 @@ abstract class Model
         return json_decode(json_encode($members), true);
     }
     */
+
+    public function toObject() : array;
+
+    public static function getProperties() : array;
 }
 
 ?>

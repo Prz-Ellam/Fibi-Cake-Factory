@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS users(
 
 -- User roles
 CREATE TABLE IF NOT EXISTS user_roles(
-    user_role_id                INT NOT NULL AUTO_INCREMENT,
+    user_role_id                BINARY(16) NOT NULL UNIQUE,
     name                        VARCHAR(50) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS user_roles(
 
 -- Products
 CREATE TABLE IF NOT EXISTS products(
-    product_id                  BINARY(16) NOT NULL,
+    product_id                  BINARY(16) NOT NULL UNIQUE,
     name                        VARCHAR(50) NOT NULL,
     description                 VARCHAR(200) NOT NULL,
     is_quotable                 BOOLEAN NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS products(
 
 -- Categories
 CREATE TABLE IF NOT EXISTS categories(
-    category_id                 BINARY(16) NOT NULL,
+    category_id                 BINARY(16) NOT NULL UNIQUE,
     name                        VARCHAR(50) NOT NULL,
     description                 VARCHAR(200),
     user_id                     BINARY(16) NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS categories(
 
 -- Products Categories
 CREATE TABLE IF NOT EXISTS products_categories(
-    product_category_id         BINARY(16) NOT NULL,
+    product_category_id         BINARY(16) NOT NULL UNIQUE,
     product_id                  BINARY(16) NOT NULL,
     category_id                 BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS comments(
         PRIMARY KEY (comment_id)
 );
 
+-- Rates
 CREATE TABLE IF NOT EXISTS rates(
     rate_id                     BINARY(16) NOT NULL UNIQUE,
     rate                        SMALLINT NOT NULL,
@@ -101,13 +102,12 @@ CREATE TABLE IF NOT EXISTS rates(
         PRIMARY KEY (rate_id)
 );
 
-
 -- Wishlists
 CREATE TABLE IF NOT EXISTS wishlists(
-    wishlist_id                 BINARY(16) NOT NULL,
+    wishlist_id                 BINARY(16) NOT NULL UNIQUE,
     name                        VARCHAR(50) NOT NULL,
     description                 VARCHAR(200) NOT NULL,
-    visibility                  INT NOT NULL,
+    visible                     BOOLEAN NOT NULL,
     user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS wishlists(
 
 -- Wishlist Objects
 CREATE TABLE IF NOT EXISTS wishlist_objects(
-    wishlist_object_id          BINARY(16) NOT NULL,
+    wishlist_object_id          BINARY(16) NOT NULL UNIQUE,
     product_id                  BINARY(16) NOT NULL,
     wishlist_id                 BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -127,8 +127,6 @@ CREATE TABLE IF NOT EXISTS wishlist_objects(
     CONSTRAINT wishlist_objects_pk
         PRIMARY KEY (wishlist_object_id)
 );
-
-
 
 -- Shopping Cart
 -- TODO: trigger para que solo un carrito tenga el cart_status TRUE
@@ -187,7 +185,7 @@ CREATE TABLE IF NOT EXISTS shoppings(
 
 -- Multimedia types
 CREATE TABLE IF NOT EXISTS multimedia_types(
-    multimedia_type_id          BINARY(16) NOT NULL,
+    multimedia_type_id          BINARY(16) NOT NULL UNIQUE,
     multimedia_type_name        VARCHAR(30) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
@@ -198,7 +196,7 @@ CREATE TABLE IF NOT EXISTS multimedia_types(
 
 -- Multimedia entities
 CREATE TABLE IF NOT EXISTS multimedia_entities(
-    multimedia_entity_id        BINARY(16) NOT NULL,
+    multimedia_entity_id        BINARY(16) NOT NULL UNIQUE,
     entity_id                   INT NOT NULL,
     entity_type                 INT NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -211,6 +209,7 @@ CREATE TABLE IF NOT EXISTS multimedia_entities(
 );
 
 -- Max de tamaño es 16MB pero solo admitiremos archivos de 8MB o menos, como discord
+-- Images
 CREATE TABLE IF NOT EXISTS images(
     image_id                    BINARY(16) NOT NULL UNIQUE,
     name                        VARCHAR(255) NOT NULL,
@@ -227,8 +226,9 @@ CREATE TABLE IF NOT EXISTS images(
 );
 
 -- Max de LONGBLOB es 4GB pero no aceptaron mucho tampoco, porque 4GB es demasiado
+-- Videos
 CREATE TABLE IF NOT EXISTS videos(
-    video_id                    BINARY(16) NOT NULL,
+    video_id                    BINARY(16) NOT NULL UNIQUE,
     name                        VARCHAR(255) NOT NULL,
     size                        BIGINT NOT NULL,
     content                     LONGBLOB NOT NULL,
@@ -279,7 +279,7 @@ CREATE TABLE IF NOT EXISTS chat_messages(
 -- Chat files
 -- imagenes, videos, documentos, audios
 CREATE TABLE IF NOT EXISTS chat_files(
-    chat_file_id                BINARY(16) NOT NULL,
+    chat_file_id                BINARY(16) NOT NULL UNIQUE,
     chat_participant_id         BINARY(16) NOT NULL,
     file_content                MEDIUMBLOB NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),

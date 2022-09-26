@@ -3,12 +3,39 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
-class Category extends Model
+class Category implements Model
 {
+    /**
+     * UUID con el identificador de la categoría
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $categoryId;
+
+    /**
+     * Nombre de la categoría
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $name;
+
+    /**
+     * Descripcion de la categoría
+     *
+     * @var string|null
+     */
     private ?string $description;
+
+    /**
+     * UUID del identificador del usuario que creó la categoría
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $userId;
 
     public function getCategoryId() : ?string
@@ -55,10 +82,15 @@ class Category extends Model
         return $this;
     }
 
-    public function toObject()
+    public function toObject() : array
     {
         $members = get_object_vars($this);
         return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

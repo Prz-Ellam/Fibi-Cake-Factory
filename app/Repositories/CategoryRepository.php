@@ -3,23 +3,18 @@
 namespace CakeFactory\Repositories;
 
 use CakeFactory\Models\Category;
-use Fibi\Database\MainConnection;
+use Fibi\Database\DB;
 
 class CategoryRepository
 {
-    private MainConnection $connection;
-    private const CREATE_CATEGORY = "CALL sp_create_category(:categoryId, :name, :description, :userId)";
-    private const UPDATE_CATEGORY = "CALL sp_update_category(:categoryId, :name, :description)";
-    private const DELETE_CATEGORY = "CALL sp_delete_category(:categoryId)";
+    private const CREATE = "CALL sp_create_category(:categoryId, :name, :description, :userId)";
+    private const UPDATE = "CALL sp_update_category(:categoryId, :name, :description)";
+    private const DELETE = "CALL sp_delete_category(:categoryId)";
     private const GET_CATEGORIES = "CALL sp_get_categories()";
-
-    public function __construct() {
-        $this->connection = new MainConnection();
-    }
 
     public function create(Category $category) : bool
     {
-        $result = $this->connection->executeNonQuery(self::CREATE_CATEGORY, [
+        $result = DB::executeNonQuery(self::CREATE, [
             "categoryId"        => $category->getCategoryId(),
             "name"              => $category->getName(),
             "description"       => $category->getDescription(),
@@ -31,7 +26,7 @@ class CategoryRepository
 
     public function update(Category $category) : bool
     {
-        $result = $this->connection->executeNonQuery(self::UPDATE_CATEGORY, [
+        $result = DB::executeNonQuery(self::UPDATE, [
             "categoryId"        => $category->getCategoryId(),
             "name"              => $category->getName(),
             "description"       => $category->getDescription()
@@ -42,7 +37,7 @@ class CategoryRepository
 
     public function delete(Category $category) : bool
     {
-        $result = $this->connection->executeNonQuery(self::UPDATE_CATEGORY, [
+        $result = DB::executeNonQuery(self::DELETE, [
             "categoryId"        => $category->getCategoryId()
         ]);
 
@@ -51,7 +46,7 @@ class CategoryRepository
 
     public function getCategories()
     {
-        $result = $this->connection->executeReader(self::GET_CATEGORIES, []);
+        $result = DB::executeReader(self::GET_CATEGORIES, []);
         return $result;
     }
 }

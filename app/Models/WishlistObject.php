@@ -3,11 +3,32 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
-class WishlistObject extends Model
+class WishlistObject implements Model
 {
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $wishlistObjectId;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $wishlistId;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
     private ?string $productId;
 
     public function getWishlistObjectId() : ?string
@@ -41,6 +62,17 @@ class WishlistObject extends Model
     {
         $this->productId = $productId;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

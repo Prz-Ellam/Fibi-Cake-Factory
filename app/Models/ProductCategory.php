@@ -2,10 +2,14 @@
 
 namespace CakeFactory\Models;
 
-class ProductCategory
+use Fibi\Model\Model;
+
+class ProductCategory implements Model
 {
     private ?string $productCategoryId;
+
     private ?string $productId;
+    
     private ?string $categoryId;
 
     public function getProductCategoryId()
@@ -39,6 +43,18 @@ class ProductCategory
     {
         $this->categoryId = $categoryId;
         return $this;
+    }
+
+    // TODO: array|null
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

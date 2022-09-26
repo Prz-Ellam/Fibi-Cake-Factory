@@ -4,14 +4,20 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 
-class Image extends Model
+class Image implements Model
 {
     private ?string $imageId;
+
     private ?string $name;
+
     private ?int $size;
+
     private mixed $content;
+
     private ?string $type;
+
     private ?string $multimediaEntityId;
+    
     private ?string $multimediaEntityType;
 
     public function getImageId() : ?string
@@ -89,6 +95,17 @@ class Image extends Model
     {
         $this->multimediaEntityType = $multimediaEntityType;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

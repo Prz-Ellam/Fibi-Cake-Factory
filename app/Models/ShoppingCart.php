@@ -2,9 +2,12 @@
 
 namespace CakeFactory\Models;
 
-class ShoppingCart
+use Fibi\Model\Model;
+
+class ShoppingCart implements Model
 {
     private ?string $shoppingCartId;
+    
     private ?string $userId;
 
     public function getShoppingCartId() : ?string
@@ -27,6 +30,17 @@ class ShoppingCart
     {
         $this->userId = $userId;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 

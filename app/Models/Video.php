@@ -3,15 +3,29 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
-class Video extends Model
+class Video implements Model
 {
+    #[Required]
     private ?string $videoId;
+
+    #[Required]
     private ?string $name;
+
+    #[Required]
     private ?int $size;
+
+    #[Required]
     private mixed $content;
+
+    #[Required]
     private ?string $type;
+
+    #[Required]
     private ?string $multimediaEntityId;
+
+    #[Required]
     private ?string $multimediaEntityType;
 
     public function getVideoId() : ?string
@@ -89,6 +103,17 @@ class Video extends Model
     {
         $this->multimediaEntityType = $multimediaEntityType;
         return $this;
+    }
+
+    public function toObject() : array
+    {
+        $members = get_object_vars($this);
+        return json_decode(json_encode($members), true);
+    }
+
+    public static function getProperties() : array
+    {
+        return array_keys(get_class_vars(self::class));
     }
 }
 
