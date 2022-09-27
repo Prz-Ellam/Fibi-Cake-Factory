@@ -2,8 +2,12 @@
 
 namespace Fibi\Validation;
 
+use ReflectionClass;
 use ReflectionProperty;
 
+/**
+ * Recibe un objeto y lo valida de acuerdo a sus atributos
+ */
 class Validator
 {
     private object $instance;
@@ -14,9 +18,13 @@ class Validator
     {
         $this->instance = $instance;
         $this->status = null;
-        //$this->validate();    
     }
 
+    /**
+     * Valida el objeto y sus reglas
+     *
+     * @return array Lista de las reglas no cumplidas
+     */
     public function validate() : array
     {
         // Obtiene las propiedades de una clase
@@ -31,8 +39,9 @@ class Validator
 
             foreach ($attributes as $attribute)
             {
-                $attributeName = $attribute->getName();
                 $attributeInstance = $attribute->newInstance();
+                $class = new ReflectionClass($attributeInstance);
+                $attributeName = $class->getShortName();
                 $status = $attributeInstance->isValid($values[$property]);
 
                 if ($status === false)

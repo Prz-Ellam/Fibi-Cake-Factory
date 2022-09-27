@@ -5,18 +5,30 @@ namespace Fibi\Database;
 use PDO;
 use PDOException;
 
+/**
+ * Se encarga de la conexión a la base de datos
+ */
 abstract class DbConnection
 {
+    /**
+     * PHP Database Object se encargara de todas las ejecuciones y llamadas
+     * a la base de datos
+     *
+     * @var PDO
+     */
     protected PDO $pdo;
 
-    public function __construct() {
-
-        $protocol = "mysql";
-        $host = "localhost";
-        $port = 3306;
-        $database = "cake_factory";
-        $username = "root";
-        $password = "admin";
+    /**
+     * Conecta PHP a la base de datos
+     */
+    public function __construct() 
+    {
+        $protocol = $_ENV["PROTOCOL"];
+        $host = $_ENV["HOST"];
+        $port = $_ENV["PORT"];
+        $database = $_ENV["DATABASE"];
+        $username = $_ENV["DB_USERNAME"];
+        $password = $_ENV["DB_PASSWORD"];
 
         $dsn = "$protocol:host=$host;port=$port;dbname=$database;charset=utf8";
 
@@ -33,14 +45,14 @@ abstract class DbConnection
         
     }
 
-    public function close()
+    /**
+     * Cierra la conexión de la base de datos
+     *
+     * @return void
+     */
+    public function close() : void
     {
         $this->pdo = null;
-    }
-
-    public function __destruct()
-    {
-        
     }
 }
 

@@ -11,7 +11,7 @@ use CakeFactory\Controllers\VideoController;
 use CakeFactory\Controllers\WishlistController;
 use CakeFactory\Controllers\WishlistObjectController;
 use CakeFactory\Models\Category;
-use CakeFactory\Models\WishlistObject;
+use Dotenv\Dotenv;
 use Fibi\Core\Application;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
@@ -20,6 +20,9 @@ use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 require_once("../vendor/autoload.php");
+
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
 
 $app = Application::app();
 
@@ -459,7 +462,7 @@ $app->put('/prueba', function (Request $request, Response $response) {
     }
     $GLOBALS[ '_PUT' ] = $data;
 
-    var_dump($_PUT);
+    var_dump($_FILES);
     die;
 
 });

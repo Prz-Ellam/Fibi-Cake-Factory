@@ -1,29 +1,56 @@
 <?php
 
-namespace Fibi\Http;
+namespace Fibi\Helpers;
 
-use Fibi\Http\Request;
-
-abstract class RequestBuilder
+class BodyParser
 {
-    public static function createFromPhpServer() : Request
+    private string $method;
+    private string $contentType;
+    private string $body;
+
+    public function parse(string $method, string $contentType, string $body)
     {
-        return (new Request())
-            ->setUri(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH))
-            ->setMethod(HttpMethod::from($_SERVER["REQUEST_METHOD"]))
-            ->setBody($_POST)
-            ->setQuery($_GET)
-            ->setHeaders(getallheaders())
-            ->setFiles($_FILES);
+        $this->method = $method;
+        $this->contentType = $contentType;
+        $this->body = $body;
     }
 
-    private static function parsePut(  ) {
+    /**
+     * Obtiene la informacion del php://input y la convierte en un arreglo asociativo
+     *
+     * @return void
+     */
+    public function fromURLEncode()
+    {
+        //parse_str();
+    }
+
+    /**
+     * Obtiene la informacion del php://input y la convierte en un arreglo asociativo
+     *
+     * @return void
+     */
+    public function fromJson()
+    {
+
+    }
+
+    /**
+     * Obtiene la informacion del php://input y la convierte en un arreglo asociativo
+     *
+     * @return void
+     */
+    public function fromFormData() : array
+    {
+        if ($this->method === "POST")
+        {
+            return $_POST;
+        }
+
         global $_PUT;
 
         /* PUT data comes in on the stdin stream */
         $putdata = fopen("php://input", "r");
-
-        var_dump($putdata);die;
 
         /* Open a file for writing */
         // $fp = fopen("myputfile.ext", "w");
@@ -44,7 +71,7 @@ abstract class RequestBuilder
         if(empty($boundary)){
             parse_str($raw_data,$data);
             $GLOBALS[ '_PUT' ] = $data;
-            return;
+            return $_PUT;
         }
 
         // Fetch each part
@@ -115,14 +142,8 @@ abstract class RequestBuilder
 
         }
         $GLOBALS[ '_PUT' ] = $data;
-        var_dump($data);
-        die;
-        return;
-    }
 
-    public static function createFromMockup() : Request|null
-    {
-        return null;
+        return $_PUT;
     }
 }
 

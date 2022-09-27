@@ -9,20 +9,20 @@ class DatabaseDriver extends DbConnection
 {
     public function beginTransaction()
     {
-
+        $this->pdo->beginTransaction();
     }
 
     public function endTransaction()
     {
-
+        $this->pdo->commit();
     }
 
     /**
-     * Ejecuta una sentencia de base de datos
+     * Ejecuta una instrucción de base de datos de tipo insercion
      *
      * @param string $query
      * @param array $parameters
-     * @return integer
+     * @return integer Cantidad de registros que fueron afectos
      */
     public function executeNonQuery(string $query, array $parameters = []) : int
     {
@@ -36,10 +36,18 @@ class DatabaseDriver extends DbConnection
         }
         catch (PDOException $ex)
         {
+            
             die($ex->getMessage());
         }
     }
 
+    /**
+     * Ejecuta una instrucción de base de datos de tipo lectura
+     *
+     * @param string $query
+     * @param array $parameters
+     * @return array Datos obtenidos
+     */
     public function executeReader(string $query, array $parameters = []) : array
     {
         try

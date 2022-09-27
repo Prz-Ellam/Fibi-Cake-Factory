@@ -12,6 +12,16 @@ use Ramsey\Uuid\Uuid;
 
 class CategoryController
 {
+    /**
+     * Crea una categoria
+     * endpoint: POST api/v1/categories
+     * Creado por: Eliam Rodriguez Perez
+     * Creado: 2022-09-26
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function create(Request $request, Response $response)
     {
         $categoryId = Uuid::uuid4()->toString();
@@ -19,14 +29,33 @@ class CategoryController
         $description = $request->getBody('description');
         $userId = (new PhpSession())->get('user_id');
 
+        if (is_null($userId))
+        {
+            $response->setStatusCode(401)->json([
+                "status" => "Not authorized"
+            ]);
+            return;
+        }
+
         $category = new Category();
-        $category->setCategoryId($categoryId)
+        $category
+            ->setCategoryId($categoryId)
             ->setName($name)
             ->setDescription($description)
             ->setUserId($userId);
 
         $validator = new Validator($category);
         $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if ($status === false)
+        {
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => $feedback
+            ]);
+            return;
+        }
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->create($category);
@@ -41,8 +70,16 @@ class CategoryController
         ]);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function update(Request $request, Response $response)
     {
+        // TODO: Solo un usuario administrador puede actualizar
         $categoryId = $request->getRouteParams('categoryId');
         $name = $request->getBody('name');
         $description = $request->getBody('description');
@@ -72,8 +109,16 @@ class CategoryController
         ]);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function delete(Request $request, Response $response)
     {
+        // TODO: Solo un usuario administrador puede eliminar
         $categoryId = $request->getRouteParams("categoryId");
 
         // Validar el category Id

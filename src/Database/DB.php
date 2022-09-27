@@ -15,4 +15,9 @@ class DB
     {
         return Application::app()->database->executeReader($query, $parameters);
     }
+
+    public static function beginTransaction()
+    {
+        return Application::app()->database->beginTransaction();
+    }
 }

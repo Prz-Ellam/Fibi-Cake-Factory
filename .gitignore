@@ -7,3 +7,4 @@ public/*.webp
 public/*.js
 public/*.html
 vendor
+.env
