@@ -15,6 +15,14 @@ class ProductRepository
     private const GET_RECENT_PRODUCTS = "CALL sp_get_recent_products()";
     // GET_ALL_BY_CATEGORY
     // GET_ALL_BY_USER
+    // GET_ALL_BY_USER_APPROVE
+    // GET_ALL_BY_ADMIN_APPROVE
+    // GET_ALL_BY_RATE
+    // GET_ALL_BY_PRICE
+    // GET_ALL_BY_USER_FAVORITES
+    // GET_ALL_BY_USER_RECOMENDATIONS
+    // APPROVE_PRODUCT (:userId)
+    // DENIED_PRODUCT (:userId)
 
     public function create(Product $product) : bool
     {

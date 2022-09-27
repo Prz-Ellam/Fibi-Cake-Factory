@@ -4,7 +4,6 @@ namespace CakeFactory\Controllers;
 
 use CakeFactory\Models\Category;
 use CakeFactory\Repositories\CategoryRepository;
-use CakeFactory\Validators\CategoryValidator;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
@@ -27,7 +26,7 @@ class CategoryController
             ->setUserId($userId);
 
         $validator = new Validator($category);
-        $result = $validator->validate();
+        $feedback = $validator->validate();
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->create($category);
@@ -57,8 +56,8 @@ class CategoryController
             ->setDescription($description)
             ->setUserId($userId);
 
-        $validator = new CategoryValidator($category);
-        $result = $validator->validate();
+        $validator = new Validator($category);
+        $feedback = $validator->validate();
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->update($category);
@@ -75,7 +74,16 @@ class CategoryController
 
     public function delete(Request $request, Response $response)
     {
+        $categoryId = $request->getRouteParams("categoryId");
 
+        // Validar el category Id
+
+        $categoryRepository = new CategoryRepository();
+        $result = $categoryRepository->delete($categoryId);
+
+        $response->json([
+            "status" => $result
+        ]);
     }
 
     public function getCategories(Request $request, Response $response)

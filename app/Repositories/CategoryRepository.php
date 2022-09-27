@@ -12,6 +12,7 @@ class CategoryRepository
     private const UPDATE = "CALL sp_update_category(:categoryId, :name, :description)";
     private const DELETE = "CALL sp_delete_category(:categoryId)";
     private const GET_ALL = "CALL sp_get_categories()";
+    private const GET_ALL_BY_PRODUCT = "";
 
     public function create(Category $category) : bool
     {
@@ -27,11 +28,10 @@ class CategoryRepository
         return $result > 0;
     }
 
-    public function delete(Category $category) : bool
+    public function delete(string $categoryId) : bool
     {
-        $parameters = Parser::SP(self::DELETE);
         $result = DB::executeNonQuery(self::DELETE, [
-            "categoryId"        => $category->getCategoryId()
+            "categoryId"        => $categoryId
         ]);
 
         return $result > 0;
@@ -41,6 +41,11 @@ class CategoryRepository
     {
         $result = DB::executeReader(self::GET_ALL);
         return $result;
+    }
+
+    public function getAllByProduct(string $productId) : array
+    {
+        return [];
     }
 }
 

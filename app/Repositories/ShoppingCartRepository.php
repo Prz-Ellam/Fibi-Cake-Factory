@@ -9,8 +9,8 @@ use Fibi\Database\MainConnection;
 class ShoppingCartRepository
 {
     private const CREATE = "CALL sp_create_shopping_cart(:shoppingCartId, :userId)";
-    private const GET_USER_CART = "CALL sp_get_user_shopping_cart(:userId)";
     private const DELETE = "CALL sp_delete_shopping_cart(:shoppingCartId)";
+    private const GET_CART_BY_USER = "CALL sp_get_user_shopping_cart(:userId)";
 
     public function create(ShoppingCart $shoppingCart)
     {
@@ -24,7 +24,7 @@ class ShoppingCartRepository
 
     public function getUserCart(string $userId) : ?string
     {
-        $result = DB::executeReader(self::GET_USER_CART, [
+        $result = DB::executeReader(self::GET_CART_BY_USER, [
             "userId"    => $userId
         ]);
 

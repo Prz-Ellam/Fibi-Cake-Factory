@@ -7,11 +7,10 @@ use Fibi\Database\DB;
 
 class UserRepository
 {
-    private const CREATE = "CALL sp_create_user(:userId, :email, :username, :firstName, 
-        :lastName, :birthDate, :password, :gender, :visibility, :userRole, :profilePicture)";
-    private const UPDATE_USER = "CALL sp_update_user(?)";
+    private const CREATE = "CALL sp_create_user(:userId, :email, :username, :firstName, :lastName, :birthDate, :password, :gender, :visibility, :userRole, :profilePicture)";
+    private const UPDATE = "CALL sp_update_user(?)";
     private const UPDATE_USER_PASSWORD = "CALL sp_update_user_password(?)";
-    private const DELETE_USER = "CALL sp_delete_user(?)";
+    private const DELETE = "CALL sp_delete_user(?)";
     private const LOGIN = "CALL login(:loginOrEmail, :password)";
     private const GET_USER = "CALL sp_get_user(:userId)";
     // GET_ALL
@@ -38,12 +37,13 @@ class UserRepository
 
     public function update(User $user) : bool
     {
-        DB::executeNonQuery(self::UPDATE_USER, []);
+        DB::executeNonQuery(self::UPDATE, []);
         return true;
     }
 
     public function delete(int $id) : bool
     {
+        DB::executeNonQuery(self::DELETE, []);
         return true;
     }
 

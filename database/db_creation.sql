@@ -3,6 +3,8 @@ CREATE DATABASE IF NOT EXISTS cake_factory;
 USE cake_factory;
 
 -- Users
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE IF NOT EXISTS users(
     user_id                     BINARY(16) NOT NULL UNIQUE,
     email                       VARCHAR(255) NOT NULL UNIQUE,
@@ -13,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users(
     password                    VARCHAR(255) NOT NULL,
     gender                      SMALLINT NOT NULL,
     visible                     BOOLEAN NOT NULL,
-    user_role                   INT NOT NULL,
+    user_role                   BINARY(16) NOT NULL,
     profile_picture             BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP DEFAULT NOW(),

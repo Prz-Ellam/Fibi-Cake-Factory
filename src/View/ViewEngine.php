@@ -74,7 +74,7 @@ class ViewEngine
      */
     public function getContentView(string $view) : string
     {
-        return $this->getFileOutput("$this->viewDirectory\\$view.html");
+        return $this->getFileOutput("$this->viewDirectory\\$view.php");
     }
 
     /**
@@ -90,7 +90,7 @@ class ViewEngine
             return "";
         }
 
-        return $this->getFileOutput("$this->viewDirectory\\layouts\\$layout.html");
+        return $this->getFileOutput("$this->viewDirectory\\layouts\\$layout.php");
     }
 
     /**

@@ -52,7 +52,6 @@ class WishlistObjectController extends Controller
     public function getWishlistObjects(Request $request, Response $response)
     {
         $wishlistId = $request->getRouteParams('wishlistId');
-
         $wishlistObjectRepository = new WishlistObjectRepository();
         $result = $wishlistObjectRepository->getWishlistObjects($wishlistId);
         $response->json($result);

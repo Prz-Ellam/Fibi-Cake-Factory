@@ -8,8 +8,9 @@ use Fibi\Database\DB;
 class ShoppingCartItemRepository
 {
     private const CREATE = "CALL sp_add_shopping_cart_item(:shoppingCartItemId, :shoppingCartId, :productId, :quantity)";
-    private const GET_SHOPPING_CART_ITEMS = "CALL sp_get_shopping_cart_items(:shoppingCartId)";
+    private const UPDATE = "";
     private const DELETE = "CALL sp_delete_shopping_cart_item(:shoppingCartItemId)";
+    private const GET_ALL_BY_SHOPPING_CART = "CALL sp_get_shopping_cart_items(:shoppingCartId)";
     // GET_ALL_BY_SHOPPING_CART
 
     public function addShoppingCartItem(ShoppingCartItem $shoppingCartItem)
@@ -26,7 +27,7 @@ class ShoppingCartItemRepository
 
     public function getShoppingCartItems(string $shoppingCartId)
     {
-        $result = DB::executeReader(self::GET_SHOPPING_CART_ITEMS, [
+        $result = DB::executeReader(self::GET_ALL_BY_SHOPPING_CART, [
             "shoppingCartId"        => $shoppingCartId
         ]);
 

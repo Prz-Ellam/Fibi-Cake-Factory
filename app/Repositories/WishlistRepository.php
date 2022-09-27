@@ -11,16 +11,14 @@ class WishlistRepository
     private const CREATE = "CALL sp_create_wishlist(:wishlistId, :name, :description, :visibility, :userId)";
     private const UPDATE = "CALL sp_update_wishlist(:wishlistId, :name, :description, :visibility)";
     private const DELETE = "CALL sp_delete_wishlist(:wishlistId)";
-    // Tambien un filtro por publicas o privadas
-    // GET_ALL_BY_USER
-    private const GET_USER_WISHLISTS = "CALL sp_get_user_wishlists(:userId, :count, :offset)";
-    private const GET_WISHLIST = "CALL sp_get_wishlist(:wishlistId)";
+    private const GET_ALL_BY_USER = "CALL sp_get_user_wishlists(:userId, :count, :offset)";
+    private const GET_ALL_BY_USER_PUBLIC = "CALL get_all_by_user_public(:userId, :count, :offset)";
+    private const GET_ONE = "CALL sp_get_wishlist(:wishlistId)";
 
     public function create(Wishlist $wishlist)
     {
         $parameters = Parser::SP(self::CREATE);
         $result = DB::executeNonQuery(self::CREATE, $wishlist->toObject($parameters));
-
         return $result > 0;
     }
 
@@ -48,7 +46,7 @@ class WishlistRepository
 
     public function getWishlist(string $wishlistId)
     {
-        $result = DB::executeReader(self::GET_WISHLIST, [
+        $result = DB::executeReader(self::GET_ONE, [
             "wishlistId"        => $wishlistId
         ]);
 
@@ -57,7 +55,7 @@ class WishlistRepository
 
     public function getUserWishlists(string $userId, int $count, int $offset) : array
     {
-        $result = DB::executeReader(self::GET_USER_WISHLISTS, [
+        $result = DB::executeReader(self::GET_ALL_BY_USER, [
             "userId"        => $userId,
             "count"         => $count,
             "offset"        => $offset

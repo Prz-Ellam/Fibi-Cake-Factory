@@ -8,7 +8,7 @@ use Fibi\Database\DB;
 class VideoRepository
 {
     private const CREATE_VIDEO = "CALL sp_create_video(:videoId, :name, :size, :content, :type, :multimediaEntityId, :multimediaEntityType)";
-    private const GET_VIDEO = "CALL sp_get_video(:videoId)";
+    private const GET_ONE = "CALL sp_get_video(:videoId)";
 
     public function create(Video $video) : bool
     {
@@ -38,7 +38,7 @@ class VideoRepository
      */
     public function getVideo(string $videoId) : array
     {
-        $result = DB::executeReader(self::GET_VIDEO, [
+        $result = DB::executeReader(self::GET_ONE, [
             "videoId"               => $videoId
         ]);
         

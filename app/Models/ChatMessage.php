@@ -8,7 +8,7 @@ use Fibi\Validation\Rules\Required;
 class ChatMessage implements Model
 {
     /**
-     * Undocumented variable
+     * UUID con el ID del mensaje de chat
      *
      * @var string|null
      */

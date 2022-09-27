@@ -10,7 +10,6 @@ use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
-use Firebase\JWT\JWT;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class WishlistController extends Controller

@@ -2,16 +2,19 @@
 
 namespace Fibi\Validation;
 
-use ReflectionClass;
 use ReflectionProperty;
 
 class Validator
 {
     private object $instance;
+    private array $feedback;
+    private ?bool $status;
 
     public function __construct(object $instance)
     {
-        $this->instance = $instance;    
+        $this->instance = $instance;
+        $this->status = null;
+        //$this->validate();    
     }
 
     public function validate() : array
@@ -40,7 +43,27 @@ class Validator
             }
         }
 
+        if (count($results) === 0)
+        {
+            $this->status = true;
+        }
+        else
+        {
+            $this->status = false;
+        }
+
         return $results;
+    }
+
+    /**
+     * Devuelve null si aun no se ha hecho la validacion
+     * En caso de haberse hecho regresa true si todo esta correcto y false si hubo errores
+     *
+     * @return boolean|null
+     */
+    public function getStatus() : ?bool
+    {
+        return $this->status;
     }
 }
 
