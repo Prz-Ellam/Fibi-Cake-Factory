@@ -28,8 +28,9 @@ class ValidatorApiTest extends TestCase
         $this->assertEquals(false, $result);
     }
 
-    public function testCategory()
-    {
+    //public function testCategory()
+    //{
+        /*
         $category = new Category();
         $category
             ->setCategoryId(Uuid::uuid4()->toString())
@@ -37,6 +38,6 @@ class ValidatorApiTest extends TestCase
             ->setDescription("Pasteles deliciosos")
             ->setUserId(Uuid::uuid4()->toString());
 
-        
-    }
+        */
+    //}
 }

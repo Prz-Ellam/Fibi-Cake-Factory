@@ -45,6 +45,13 @@ class Application
     public DatabaseDriver $database;
 
     /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    public array $middlewares;
+
+    /**
      * Instancia de la aplicación
      *
      * @var self
@@ -143,6 +150,11 @@ class Application
     public function delete(string $uri, Closure|array $action)
     {
         $this->router->delete($uri, $action);
+    }
+
+    public function addMiddleware(Closure|array $action)
+    {
+        $this->middlewares[] = $action;
     }
 }
 

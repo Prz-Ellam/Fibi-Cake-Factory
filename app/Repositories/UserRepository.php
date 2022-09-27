@@ -7,17 +7,19 @@ use Fibi\Database\DB;
 
 class UserRepository
 {
-    private const CREATE_USER = "CALL sp_create_user(:userId, :email, :username, :firstName, 
+    private const CREATE = "CALL sp_create_user(:userId, :email, :username, :firstName, 
         :lastName, :birthDate, :password, :gender, :visibility, :userRole, :profilePicture)";
     private const UPDATE_USER = "CALL sp_update_user(?)";
     private const UPDATE_USER_PASSWORD = "CALL sp_update_user_password(?)";
     private const DELETE_USER = "CALL sp_delete_user(?)";
     private const LOGIN = "CALL login(:loginOrEmail, :password)";
     private const GET_USER = "CALL sp_get_user(:userId)";
+    // GET_ALL
+    // SEARCH
 
     public function create(User $user) : bool
     {
-        $result = DB::executeNonQuery(self::CREATE_USER, [
+        $result = DB::executeNonQuery(self::CREATE, [
             "userId"            => $user->getUserId(),
             "email"             => $user->getEmail(),
             "username"          => $user->getUsername(),

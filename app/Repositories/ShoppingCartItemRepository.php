@@ -7,13 +7,14 @@ use Fibi\Database\DB;
 
 class ShoppingCartItemRepository
 {
-    private const ADD_SHOPPING_CART_ITEM = "CALL sp_add_shopping_cart_item(:shoppingCartItemId, :shoppingCartId, :productId, :quantity)";
+    private const CREATE = "CALL sp_add_shopping_cart_item(:shoppingCartItemId, :shoppingCartId, :productId, :quantity)";
     private const GET_SHOPPING_CART_ITEMS = "CALL sp_get_shopping_cart_items(:shoppingCartId)";
-    private const REMOVE_SHOPPING_CART_ITEM = "CALL sp_delete_shopping_cart_item(:shoppingCartItemId)";
+    private const DELETE = "CALL sp_delete_shopping_cart_item(:shoppingCartItemId)";
+    // GET_ALL_BY_SHOPPING_CART
 
     public function addShoppingCartItem(ShoppingCartItem $shoppingCartItem)
     {
-        $result = DB::executeNonQuery(self::ADD_SHOPPING_CART_ITEM, [
+        $result = DB::executeNonQuery(self::CREATE, [
             "shoppingCartItemId"        => $shoppingCartItem->getShoppingCartItemId(),
             "shoppingCartId"            => $shoppingCartItem->getShoppingCartId(),
             "productId"                 => $shoppingCartItem->getProductId(),
@@ -34,7 +35,7 @@ class ShoppingCartItemRepository
 
     public function removeShoppingCartItem(string $shoppingCartItemId)
     {
-        $result = DB::executeNonQuery(self::REMOVE_SHOPPING_CART_ITEM, [
+        $result = DB::executeNonQuery(self::DELETE, [
             "shoppingCartItemId"        => $shoppingCartItemId
         ]);
 

@@ -8,6 +8,7 @@ use CakeFactory\Validators\CategoryValidator;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Uuid;
 
 class CategoryController
@@ -25,7 +26,7 @@ class CategoryController
             ->setDescription($description)
             ->setUserId($userId);
 
-        $validator = new CategoryValidator($category);
+        $validator = new Validator($category);
         $result = $validator->validate();
 
         $categoryRepository = new CategoryRepository();

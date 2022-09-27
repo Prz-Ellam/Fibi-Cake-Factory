@@ -10,7 +10,7 @@ class ShoppingCartRepository
 {
     private const CREATE = "CALL sp_create_shopping_cart(:shoppingCartId, :userId)";
     private const GET_USER_CART = "CALL sp_get_user_shopping_cart(:userId)";
-    private const DELETE_SHOPPING_CART = "CALL sp_delete_shopping_cart(:shoppingCartId)";
+    private const DELETE = "CALL sp_delete_shopping_cart(:shoppingCartId)";
 
     public function create(ShoppingCart $shoppingCart)
     {
@@ -38,7 +38,7 @@ class ShoppingCartRepository
 
     public function delete(string $shoppingCartId) : bool
     {
-        $result = DB::executeNonQuery(self::DELETE_SHOPPING_CART, [
+        $result = DB::executeNonQuery(self::DELETE, [
             "shoppingCartId"    => $shoppingCartId
         ]);
 

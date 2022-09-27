@@ -4,15 +4,17 @@ namespace CakeFactory\Repositories;
 
 use CakeFactory\Models\WishlistObject;
 use Fibi\Database\DB;
+use Fibi\Helpers\Parser;
 
 class WishlistObjectRepository
 {
     private const CREATE = "CALL sp_add_wishlist_object(:wishlistObjectId, :wishlistId, :productId)";
-    private const GET_WISHLIST_OBJECTS = "CALL sp_get_wishlist_objects(:wishlistId)";
+    private const GET_ALL_BY_WISHLIST_OBJECTS = "CALL sp_get_wishlist_objects(:wishlistId)";
     private const DELETE = "CALL sp_delete_wishlist_object(:wishlistObjectId)";
 
     public function create(WishlistObject $wishlistObject)
     {
+        $parameters = Parser::SP(self::CREATE);
         $result = DB::executeNonQuery(self::CREATE, [
             "wishlistObjectId"      => $wishlistObject->getWishlistObjectId(),
             "wishlistId"            => $wishlistObject->getWishlistId(),
@@ -33,7 +35,7 @@ class WishlistObjectRepository
 
     public function getWishlistObjects(string $wishlistId)
     {
-        $result = DB::executeReader(self::GET_WISHLIST_OBJECTS, [
+        $result = DB::executeReader(self::GET_ALL_BY_WISHLIST_OBJECTS, [
             "wishlistId"            => $wishlistId
         ]);
 
