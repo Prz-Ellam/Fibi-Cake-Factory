@@ -100,11 +100,85 @@ SELECT BIN_TO_UUID(image_id), name FROM images WHERE BIN_TO_UUID(multimedia_enti
 SELECT BIN_TO_UUID(video_id), name FROM videos WHERE BIN_TO_UUID(multimedia_entity_id) = 'f6244906-5528-439b-bc2b-cccc61b30c8c';
 
 
+SELECT *, BIN_TO_UUID(user_id) user_id FROM users;
+'516a3887-06b1-4203-ad59-07dc13d1e0fe' -- user 1
+'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb' -- user 2
+
+SELECT * FROM chat_participants WHERE BIN_TO_UUID(chat_id) =
+'c332f2ed-3edf-11ed-8be6-6018950ce9af' -- chat id
+
+
+
+SELECT *, BIN_TO_UUID(chat_id) chat_id FROM chats;
+
+SELECT *, BIN_TO_UUID(chat_participant_id) chat_participant_id FROM chat_participants;
+
+SELECT *, BIN_TO_UUID(chat_message_id) chat_message_id,
+BIN_TO_UUID(chat_participant_id) chat_participant_id
+FROM chat_messages;
+
+
+CALL sp_create_chat(UUID());
+
+CALL sp_create_chat_participant(UUID(), 'c332f2ed-3edf-11ed-8be6-6018950ce9af', '516a3887-06b1-4203-ad59-07dc13d1e0fe');
+CALL sp_create_chat_participant(UUID(), 'c332f2ed-3edf-11ed-8be6-6018950ce9af', 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb');
+
+
+CALL sp_create_chat_message(UUID(), '6f8a6e76-3ee0-11ed-8be6-6018950ce9af', 'Hola como estas');
+CALL sp_create_chat_message(UUID(), '72ba36bd-3ee0-11ed-8be6-6018950ce9af', 'Hola muy bien, y tu?');
+
+
+CALL sp_get_messages_from_chat('c332f2ed-3edf-11ed-8be6-6018950ce9af');
+
+
+
+SELECT
+    BIN_TO_UUID(c.chat_id) id,
+    COUNT(BIN_TO_UUID(cp.chat_participant_id))
+    --SUM(BIN_TO_UUID(cp.chat_participant_id)) participant_id
+FROM
+    chats AS c
+INNER JOIN
+    chat_participants AS cp
+ON
+    c.chat_id = cp.chat_id
+GROUP BY
+    c.chat_id
+HAVING
+    COUNT(BIN_TO_UUID(cp.chat_participant_id)) > 1;
+
+WHERE
+    BIN_TO_UUID(cp.user_id) = '516a3887-06b1-4203-ad59-07dc13d1e0fe'
+    OR BIN_TO_UUID(cp.user_id) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb';
+
+
+-- Checa si dos usuarios ya tienen un chat
+SELECT
+    BIN_TO_UUID(c.chat_id) id,
+    COUNT(BIN_TO_UUID(cp.chat_participant_id)) >= 2
+FROM
+    chats AS c
+INNER JOIN
+    chat_participants AS cp
+ON
+    c.chat_id = cp.chat_id
+WHERE
+    BIN_TO_UUID(c.chat_id) = 'c332f2ed-3edf-11ed-8be6-6018950ce9af'
+    AND (BIN_TO_UUID(cp.user_id) = '516a3887-06b1-4203-ad59-07dc13d1e0fe'
+    OR BIN_TO_UUID(cp.user_id) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb')
+GROUP BY
+    c.chat_id;
 
 
 
 
 
+
+
+
+
+
+SELECT * FROM orders;
 
 
 
