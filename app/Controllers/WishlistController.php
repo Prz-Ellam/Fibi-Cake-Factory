@@ -16,6 +16,7 @@ class WishlistController extends Controller
 {
     /**
      * Crea una lista de deseos
+     * POST api/v1/wishlists
      *
      * @param Request $request
      * @param Response $response
@@ -141,12 +142,19 @@ class WishlistController extends Controller
         $wishlistId = $request->getRouteParams("wishlistId");
 
         $name = $request->getBody("name");
+
+
+        var_dump($name);
+        die;
+
         $description = $request->getBody("description");
         $visibility = $request->getBody("visibility");
         $images = $request->getFileArray("images");
         $userId = $request->getBody("user-id");
         if (is_null($userId))
             $userId = (new PhpSession())->get('user_id');
+
+        
 
         // TODO: El tema de las imagenes
         $imageRepository = new ImageRepository();

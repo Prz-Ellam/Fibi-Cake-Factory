@@ -6,7 +6,7 @@ use Fibi\Core\Application;
 
 class DB
 {
-    public static function executeNonQuery(string $query, array $parameters = []) : int
+    public static function executeNonQuery(string $query, array $parameters = []) : int|string
     {
         return Application::app()->database->executeNonQuery($query, $parameters);
     }

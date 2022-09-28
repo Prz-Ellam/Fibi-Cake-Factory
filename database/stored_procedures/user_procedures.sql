@@ -54,7 +54,54 @@ CREATE PROCEDURE sp_update_user_password();
 
 CREATE PROCEDURE sp_delete_user();
 
-CREATE PROCEDURE sp_get_users();
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_users(
+    IN _search              VARCHAR(255)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(user_id),
+        email,
+        username
+    FROM
+        users
+    WHERE
+        username LIKE CONCAT('%', _search, '%');
+
+END $$
+DELIMITER ;
+
+
+CALL sp_get_users_except('', '1');
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_users_except(
+    IN _search              VARCHAR(255),
+    IN _user_id             VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(user_id) id,
+        email,
+        username
+    FROM
+        users
+    WHERE
+        username LIKE CONCAT('%', _search, '%')
+        AND BIN_TO_UUID(user_id) <> _user_id;
+
+END $$
+DELIMITER ;
+
+
+
 
 DELIMITER $$
 

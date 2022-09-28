@@ -3,13 +3,17 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
 class ChatParticipant implements Model
 {
+    #[Required]
     private ?string $chatParticipantId;
 
+    #[Required]
     private ?string $chatId;
     
+    #[Required]
     private ?string $userId;
 
     public function getChatParticipantId() : ?string

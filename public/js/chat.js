@@ -14,6 +14,16 @@ for (let i = 0; i < 8; i++)
     $('#chats-container').append(chatComponent);
 }
 
+
+$.ajax({
+    url: '/api/v1/users?exclude=516a3887-06b1-4203-ad59-07dc13d1e0fe',
+    method: 'GET',
+    timeout: 0,
+    success: function(response) {
+        console.log(response);
+    }
+});
+
 $(document).ready(function() {
 
     $('#send-message').click(function() {

@@ -4,34 +4,34 @@ namespace Fibi\Http;
 
 class PhpRequestBuilder extends RequestBuilder
 {
-    public function buildUri()
+    public function buildUri() : self
     {
-
+        return $this;
     }
 
-    public function buildMethod()
+    public function buildMethod() : self
     {
-
+        return $this;
     }
 
-    public function buildBody()
+    public function buildBody() : self
     {
-
+        return $this;
     }
 
-    public function buildQuery()
+    public function buildQuery() : self
     {
-
+        return $this;
     }
 
-    public function buildHeaders()
+    public function buildHeaders() : self
     {
-
+        return $this;
     }
 
-    public function buildFiles()
+    public function buildFiles() : self
     {
-
+        return $this;
     }
 }
 

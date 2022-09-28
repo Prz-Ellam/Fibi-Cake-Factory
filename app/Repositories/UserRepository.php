@@ -13,6 +13,7 @@ class UserRepository
     private const DELETE = "CALL sp_delete_user(?)";
     private const LOGIN = "CALL login(:loginOrEmail, :password)";
     private const GET_USER = "CALL sp_get_user(:userId)";
+    private const GET_ALL_EXCEPT = "CALL sp_get_users_except(:search, :userId)";
     // GET_ALL
     // SEARCH
 
@@ -53,6 +54,15 @@ class UserRepository
             "userId" => $userId
         ]);
 
+        return $result;
+    }
+
+    public function getAllExcept(string $userId, string $search = "") : array
+    {
+        $result = DB::executeReader(self::GET_ALL_EXCEPT, [
+            "userId" => $userId,
+            "search" => $search
+        ]);
         return $result;
     }
 

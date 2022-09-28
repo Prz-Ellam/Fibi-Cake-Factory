@@ -3,21 +3,29 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
 class Order implements Model
 {
+    #[Required]
     private ?string $orderId;
 
+    #[Required]
     private ?string $userId;
 
+    #[Required]
     private ?string $phone;
 
+    #[Required]
     private ?string $address;
 
+    #[Required]
     private ?string $city;
 
+    #[Required]
     private ?string $state;
     
+    #[Required]
     private ?string $postalCode;
 
     public function getOrderId() : ?string

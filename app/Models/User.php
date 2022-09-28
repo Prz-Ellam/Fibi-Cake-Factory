@@ -6,10 +6,13 @@ use Fibi\Model\Model;
 use Fibi\Validation\Rules\Email;
 use Fibi\Validation\Rules\Required;
 
+/**
+ * Usuario de la aplicación
+ */
 class User implements Model
 {
     /**
-     * Undocumented variable
+     * El identificador global unico del usuario en la base de datos
      *
      * @var string|null
      */
@@ -17,7 +20,7 @@ class User implements Model
     private ?string $userId;
 
     /**
-     * Undocumented variable
+     * Correo electrónico del usuario
      *
      * @var string|null
      */

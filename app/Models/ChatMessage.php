@@ -20,6 +20,7 @@ class ChatMessage implements Model
      *
      * @var string|null
      */
+    #[Required]
     private ?string $chatParticipantId;
 
     /**
@@ -27,6 +28,7 @@ class ChatMessage implements Model
      *
      * @var string|null
      */
+    #[Required]
     private ?string $messageContent;
 
     public function getChatMessageId() : ?string

@@ -11,19 +11,17 @@ abstract class RequestBuilder
         return (new Request())
             ->setUri(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH))
             ->setMethod(HttpMethod::from($_SERVER["REQUEST_METHOD"]))
-            ->setBody($_POST)
+            ->setBody(($_SERVER["REQUEST_METHOD"] === "POST") ? $_POST : self::parsePut())
             ->setQuery($_GET)
             ->setHeaders(getallheaders())
             ->setFiles($_FILES);
     }
 
-    private static function parsePut(  ) {
+    private static function parsePut(  ) : array {
         global $_PUT;
 
         /* PUT data comes in on the stdin stream */
         $putdata = fopen("php://input", "r");
-
-        var_dump($putdata);die;
 
         /* Open a file for writing */
         // $fp = fopen("myputfile.ext", "w");
@@ -44,7 +42,7 @@ abstract class RequestBuilder
         if(empty($boundary)){
             parse_str($raw_data,$data);
             $GLOBALS[ '_PUT' ] = $data;
-            return;
+            return $data;
         }
 
         // Fetch each part
@@ -115,14 +113,42 @@ abstract class RequestBuilder
 
         }
         $GLOBALS[ '_PUT' ] = $data;
-        var_dump($data);
-        die;
-        return;
+        return $data;
     }
 
     public static function createFromMockup() : Request|null
     {
         return null;
+    }
+
+    public function buildUri() : self
+    {
+        return $this;
+    }
+
+    public function buildMethod() : self
+    {
+        return $this;
+    }
+
+    public function buildBody() : self
+    {
+        return $this;
+    }
+
+    public function buildQuery() : self
+    {
+        return $this;
+    }
+
+    public function buildHeaders() : self
+    {
+        return $this;
+    }
+
+    public function buildFiles() : self
+    {
+        return $this;
     }
 }
 

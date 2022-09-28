@@ -4,6 +4,7 @@ namespace CakeFactory\Repositories;
 
 use CakeFactory\Models\Product;
 use Fibi\Database\DB;
+use Fibi\Helpers\Parser;
 
 class ProductRepository
 {
@@ -26,6 +27,7 @@ class ProductRepository
 
     public function create(Product $product) : bool
     {
+        $parameters = Parser::SP(self::CREATE);
         $result = DB::executeNonQuery(self::CREATE, [
             "productId"     => $product->getProductId(),
             "name"          => $product->getName(),
@@ -41,6 +43,7 @@ class ProductRepository
 
     public function update(Product $product) : bool
     {
+        $parameters = Parser::SP(self::UPDATE);
         $result = DB::executeNonQuery(self::UPDATE, [
             "productId"     => $product->getProductId(),
             "name"          => $product->getName(),

@@ -8,7 +8,7 @@ use Fibi\Http\Response;
 
 class ChatController extends Controller
 {
-    public function sendMessage(Request $request, Response $response)
+    public function create(Request $request, Response $response)
     {
         $request->getBody("message");
     }

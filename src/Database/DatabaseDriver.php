@@ -24,7 +24,7 @@ class DatabaseDriver extends DbConnection
      * @param array $parameters
      * @return integer Cantidad de registros que fueron afectos
      */
-    public function executeNonQuery(string $query, array $parameters = []) : int
+    public function executeNonQuery(string $query, array $parameters = []) : int|string
     {
         try
         {
@@ -36,7 +36,6 @@ class DatabaseDriver extends DbConnection
         }
         catch (PDOException $ex)
         {
-            
             die($ex->getMessage());
         }
     }

@@ -32,23 +32,27 @@ class UserController extends Controller
         $userId = Uuid::uuid4()->toString();
         $email = $request->getBody('email');
         $username = $request->getBody('username');
-        $birthDate = $request->getBody('birth-date');
-        $firstName = $request->getBody('first-name');
-        $lastName = $request->getBody('last-name');
+        $birthDate = $request->getBody('birthDate');
+        $firstName = $request->getBody('firstName');
+        $lastName = $request->getBody('lastName');
         $visible = $request->getBody('visibility');
         $gender = $request->getBody('gender');
-        $password = password_hash($request->getBody('password'), PASSWORD_DEFAULT);
-        $confirmPassword = $request->getBody('confirm-password');
-        $profilePicture = $request->getFile('profile-picture');
+        //$password = password_hash($request->getBody('password'), PASSWORD_DEFAULT);
+        $password = $request->getBody('password');
+        $confirmPassword = $request->getBody('confirmPassword');
+        $profilePicture = $request->getFile('profilePicture');
+
 
         $imageId = Uuid::uuid4()->toString();
-        $imageName = $profilePicture["name"];
-        $imageType = $profilePicture["type"];
-        $imageSize = $profilePicture["size"];
-        $imageContent = file_get_contents($profilePicture["tmp_name"]);
+        $imageName = $profilePicture["name"] ?? null;
+        $imageType = $profilePicture["type"] ?? null;
+        $imageSize = $profilePicture["size"] ?? null;
+        $fileStatus = file_exists($profilePicture["tmp_name"] ?? null);
+        $imageContent = ($fileStatus) ? file_get_contents($profilePicture["tmp_name"]) : null;
 
         $image = new Image();
-        $image->setImageId($imageId)
+        $image
+            ->setImageId($imageId)
             ->setName($imageName)
             ->setType($imageType)
             ->setSize($imageSize)
@@ -56,8 +60,22 @@ class UserController extends Controller
             ->setMultimediaEntityId($userId)
             ->setMultimediaEntityType('users');
 
+        $validator = new Validator($image);
+        $results = $validator->validate();
+
+        if ($results !== [])
+        {
+            // Errors
+            $response->json(["response" => "La imagen esta mal"])->setStatusCode(400);
+            return;
+        }
+
+
         $imageRepository = new ImageRepository();
-        $imageRepository->create($image);
+        $result = $imageRepository->create($image);
+
+
+
 
         // 4 - Comprador
         $user = new User();
@@ -80,7 +98,7 @@ class UserController extends Controller
         if ($results !== [])
         {
             // Errors
-            $response->json(["response" => "No"])->setStatusCode(400);
+            $response->json(["response" => $results])->setStatusCode(400);
             return;
         }
 
@@ -196,6 +214,18 @@ class UserController extends Controller
         $userId = $session->get('user_id');
 
         $response->json(["id" => $userId]);
+    }
+
+    public function getAll(Request $request, Response $response) : void
+    {
+        // https://developer.wordpress.org/rest-api/reference/posts/#list-posts
+        $search = $request->getQuery('search');
+        $id = $request->getQuery('exclude') ?? "";
+
+        $userRepository = new UserRepository();
+        $users = $userRepository->getAllExcept($id);
+
+        $response->json($users);
     }
     
 }

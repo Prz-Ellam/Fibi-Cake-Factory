@@ -91,7 +91,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: 'api/v1/login',
+            url: 'api/v1/session',
             data: $(this).serialize(),
             success: function(response) {
                 // Debe devolver el token

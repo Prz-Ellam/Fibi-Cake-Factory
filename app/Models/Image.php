@@ -3,21 +3,29 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
 
 class Image implements Model
 {
+    #[Required]
     private ?string $imageId;
 
+    #[Required]
     private ?string $name;
 
+    #[Required]
     private ?int $size;
 
+    #[Required]
     private mixed $content;
 
+    #[Required]
     private ?string $type;
 
+    #[Required]
     private ?string $multimediaEntityId;
     
+    #[Required]
     private ?string $multimediaEntityType;
 
     public function getImageId() : ?string

@@ -52,7 +52,7 @@ abstract class DbConnection
      */
     public function close() : void
     {
-        $this->pdo = null;
+        //$this->pdo = null;
     }
 }
 

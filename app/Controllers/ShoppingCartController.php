@@ -18,7 +18,7 @@ class ShoppingCartController extends Controller
         $shoppingCartRepository = new ShoppingCartRepository();
         $shoppingCartId = $shoppingCartRepository->getUserCart($userId);
 
-        return $shoppingCartId;
+        $response->json([$shoppingCartId]);
     }
 }
 

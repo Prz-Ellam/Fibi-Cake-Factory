@@ -1,6 +1,7 @@
 <?php
 
 use CakeFactory\Controllers\CategoryController;
+use CakeFactory\Controllers\ChatMessageController;
 use CakeFactory\Controllers\ImageController;
 use CakeFactory\Controllers\OrderController;
 use CakeFactory\Controllers\ProductController;
@@ -30,7 +31,6 @@ $uri = $_SERVER["REQUEST_URI"];
 if ($uri[strlen($uri) - 1] === "/")
 {
     header("Location: " . substr($uri, 0, strlen($uri) - 1));
-    echo "A";
 }
 
 $app->get('/', function(Request $request, Response $response) {
@@ -315,12 +315,22 @@ $app->get('/search', function(Request $request, Response $response) {
 });
 
 // API
-$app->get('/api/v1/users', function() {});
+$app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
 $app->post('/api/v1/users', [ new UserController(), 'create' ]);
 $app->put('/api/v1/users', function() {});
 $app->get('/api/v1/users/{userId}', [ new UserController(), 'getUser' ]);
+$app->delete('/api/v1/users/{userId}', function() {});
 
-$app->post('/api/v1/login', [ new UserController(), 'login' ]);
+// Wishlists
+$app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
+$app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
+$app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
+$app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWishlist' ]);
+$app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
+
+
+
+$app->post('/api/v1/session', [ new UserController(), 'login' ]);
 
 // Categories
 $app->post('/api/v1/categories', [ new CategoryController(), 'create' ]);
@@ -352,17 +362,18 @@ $app->get('/api/v1/files/{fileId}', []);
 
 $app->get('/api/v1/videos/{videoId}', [ new VideoController(), 'getVideo' ]);
 
-$app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
-$app->post('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
-$app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
-$app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWishlist' ]);
-$app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
 
 $app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'addObject' ]);
 $app->get('/api/v1/wishlist-objects/{wishlistId}', [ new WishlistObjectController(), 'getWishlistObjects' ]);
 $app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObjectController(), 'deleteObject' ]);
 
 $app->post('/api/v1/checkout', [ new OrderController(), 'checkout' ]);
+
+
+$app->post('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'create' ]);
+$app->get('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'getAllByChat' ]);
+
+
 
 $app->put('/prueba', function (Request $request, Response $response) {
 

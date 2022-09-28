@@ -14,42 +14,42 @@ class Request
     private string $uri;
 
     /**
-     * Contiene el método Http
+     * Contiene el método Http que fue solicitado
      *
      * @var HttpMethod
      */
     private HttpMethod $method;
 
     /**
-     * Undocumented variable
+     * Arreglo asociativo con el cuerpo de la petición
      *
      * @var array<string, string>
      */
     private array $body;
 
     /**
-     * Undocumented variable
+     * Arreglo asociativo con los query params de la petición
      *
      * @var array<string, string>
      */
     private array $query;
 
     /**
-     * Undocumented variable
+     * Arreglo asociativo con las cabeceras de la petición
      *
      * @var array<string, string>
      */
     private array $headers;
 
     /**
-     * Undocumented variable
+     * Ruta solicitada
      *
      * @var Route|null
      */
     private ?Route $route;
 
     /**
-     * Arreglos de archivos
+     * Arreglos asociativo con los archivos de la petición
      *
      * @var array
      */

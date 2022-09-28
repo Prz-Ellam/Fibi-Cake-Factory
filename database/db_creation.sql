@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS videos(
 CREATE TABLE IF NOT EXISTS chats(
     chat_id                     BINARY(16) NOT NULL UNIQUE,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
+    modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN DEFAULT TRUE,
     CONSTRAINT chats_pk
         PRIMARY KEY (chat_id)
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS chat_participants(
     chat_id                     BINARY(16) NOT NULL,
     user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
+    modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT chat_participants_pk
         PRIMARY KEY (chat_participant_id)
@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS chat_messages(
     chat_participant_id         BINARY(16) NOT NULL,
     message_content             VARCHAR(255) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
+    modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT chat_messages_pk
         PRIMARY KEY (chat_message_id)

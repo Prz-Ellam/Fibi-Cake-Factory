@@ -63,6 +63,11 @@ class WishlistRepository
 
         return $result;
     }
+
+    public function getUserWishlistsPubli(string $userId, int $count, int $offset) : array
+    {
+        return [];
+    }
 }
 
 ?>
