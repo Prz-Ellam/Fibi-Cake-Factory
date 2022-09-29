@@ -1,7 +1,21 @@
 $.ajax({
+    url: '/api/v1/categories',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response)
+    {
+        response.forEach((element) => {
+            $('#categories').append(`<option value="${element.id}">${element.name}</option>`);
+        });
+    }
+});
+
+$.ajax({
     url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
     method: 'GET',
     timeout: 0,
+    async: false,
     success: function(response)
     {
         console.log(response);
@@ -10,6 +24,10 @@ $.ajax({
         $('#description').val(response.description);
         $('#price').val(response.price);
         $('#stock').val(response.stock);
+
+        response.categories.forEach((element) => {
+            $(`[value="${element.id}"`).attr('selected', '');
+        });
     }
 });
 

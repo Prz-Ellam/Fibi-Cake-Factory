@@ -10,14 +10,21 @@ use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ProductCategoryRepository;
 use CakeFactory\Repositories\ProductRepository;
 use CakeFactory\Repositories\VideoRepository;
+use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
-use LDAP\Result;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
-class ProductController
+class ProductController extends Controller
 {
+    /**
+     * Crea un producto
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function create(Request $request, Response $response)
     {
         $productId = Uuid::uuid4()->toString();
@@ -30,7 +37,7 @@ class ProductController
         $images = $request->getFileArray("images");
         $videos = $request->getFileArray("videos");
 
-        // Validar que esto existe realmente en la BD
+        // TODO: Validar que esto existe realmente en la BD
         $categories = $request->getBody("categories");
 
         $userId = $request->getBody("user-id");
@@ -128,6 +135,13 @@ class ProductController
         $response->json([$result]);
     }
 
+    /**
+     * Actualiza un producto
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function update(Request $request, Response $response)
     {
         $productId = $request->getRouteParams('productId');
@@ -168,6 +182,13 @@ class ProductController
         ]);
     }
 
+    /**
+     * Elimina un producto
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function delete(Request $request, Response $response)
     {
         $productId = $request->getRouteParams('productId');
@@ -180,6 +201,13 @@ class ProductController
         $response->json(["status" => $result]);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function getUserProducts(Request $request, Response $response)
     {
         //$userId = (new PhpSession())->get('user_id');
@@ -192,32 +220,60 @@ class ProductController
 
         foreach ($result as &$element)
         {
-            $element["images"] = json_decode($element["images"]);
-            $element["videos"] = json_decode($element["videos"]);
+            $element["categories"] = json_decode($element["categories"], true);
+            foreach ($element["categories"] as &$category)
+            {
+                $category = json_decode($category, true);
+            }
+            
+            $element["images"] = explode(',', $element["images"]);
+            $element["videos"] = explode(',', $element["videos"]);
         }
 
         $response->json($result);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function getProduct(Request $request, Response $response)
     {
         $productId = $request->getRouteParams("productId");
 
         $productRepository = new ProductRepository();
-        $result = $productRepository->getProduct($productId);
+        $product = $productRepository->getProduct($productId);
 
-        if ($result === [])
+        if ($product === [])
         {
             $response->json((object)null);
             return;
         }
+        $product = $product[0];
 
-        $result[0]["images"] = json_decode($result[0]["images"]);
-        $result[0]["videos"] = json_decode($result[0]["videos"]);
+        $product["categories"] = json_decode($product["categories"], true);
+        
+        foreach ($product["categories"] as &$category)
+        {
+            $category = json_decode($category, true);
+        }
+            
+        $product["images"] = explode(',', $product["images"]);
+        $product["videos"] = explode(',', $product["videos"]);
 
-        $response->json($result[0]);
+        $response->json($product);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function getProducts(Request $request, Response $response)
     {
         $userId = (new PhpSession())->get('user_id');
@@ -225,15 +281,21 @@ class ProductController
         // TODO: Validar que coincida con la sesión
 
         $productRepository = new ProductRepository();
-        $result = $productRepository->getUserProducts($userId);
+        $products = $productRepository->getUserProducts($userId);
 
-        foreach ($result as &$element)
+        foreach ($products as &$element)
         {
-            $element["images"] = json_decode($element["images"]);
-            $element["videos"] = json_decode($element["videos"]);
+            $element["categories"] = json_decode($element["categories"], true);
+            foreach ($element["categories"] as &$category)
+            {
+                $category = json_decode($category, true);
+            }
+            
+            $element["images"] = explode(',', $element["images"]);
+            $element["videos"] = explode(',', $element["videos"]);
         }
 
-        $response->json($result);
+        $response->json($products);
     }
 
     public function getRecentProducts(Request $request, Response $response)

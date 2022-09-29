@@ -3,7 +3,9 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\MaxLength;
 use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 class Wishlist implements Model
 {
@@ -13,6 +15,7 @@ class Wishlist implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $wishlistId;
 
     /**
@@ -21,6 +24,7 @@ class Wishlist implements Model
      * @var string|null
      */
     #[Required]
+    #[MaxLength(50)]
     private ?string $name;
 
     /**
@@ -29,6 +33,7 @@ class Wishlist implements Model
      * @var string|null
      */
     #[Required]
+    #[MaxLength(200)]
     private ?string $description;
 
     /**
@@ -45,6 +50,7 @@ class Wishlist implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $userId;
 
     public function getWishlistId() : ?string
@@ -102,10 +108,22 @@ class Wishlist implements Model
         return $this;
     }
 
-    public function toObject() : array
+    public function toObject(array $bind = null) : array
     {
         $members = get_object_vars($this);
-        return json_decode(json_encode($members), true);
+        $members = json_decode(json_encode($members), true);
+
+        if (is_null($bind) || count($bind) === 0)
+        {
+            return $members;
+        }
+
+        $members = array_filter($members, 
+        function($key) use ($bind) { 
+            return in_array($key, $bind); 
+        }, ARRAY_FILTER_USE_KEY);
+
+        return $members;
     }
 
     public static function getProperties() : array

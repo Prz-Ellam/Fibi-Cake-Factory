@@ -1,5 +1,6 @@
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_user $$
 
 CREATE PROCEDURE sp_create_user(
     IN _user_id                 VARCHAR(36),
@@ -10,8 +11,8 @@ CREATE PROCEDURE sp_create_user(
     IN _birth_date              DATE,
     IN _password                VARCHAR(255),
     IN _gender                  INT,
-    IN _visibility              INT,
-    IN _user_role               INT,
+    IN _visible                 BOOLEAN,
+    IN _user_role               VARCHAR(36),
     IN _profile_picture         VARCHAR(36)
 )
 BEGIN
@@ -25,7 +26,7 @@ BEGIN
         birth_date, 
         password, 
         gender, 
-        visibility, 
+        visible, 
         user_role, 
         profile_picture
     )
@@ -38,13 +39,12 @@ BEGIN
         _birth_date, 
         _password, 
         _gender, 
-        _visibility, 
-        _user_role, 
+        _visible, 
+        UUID_TO_BIN(_user_role), 
         UUID_TO_BIN(_profile_picture)
     );
 
 END$$
-
 DELIMITER ;
 
 
@@ -80,6 +80,7 @@ DELIMITER ;
 CALL sp_get_users_except('', '1');
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_users_except $$
 
 CREATE PROCEDURE sp_get_users_except(
     IN _search              VARCHAR(255),
@@ -88,11 +89,16 @@ CREATE PROCEDURE sp_get_users_except(
 BEGIN
 
     SELECT
-        BIN_TO_UUID(user_id) id,
-        email,
-        username
+        BIN_TO_UUID(u.user_id) id,
+        u.email,
+        u.username,
+        ur.name userRole
     FROM
-        users
+        users AS u
+    INNER JOIN
+        user_roles AS ur
+    ON
+        BIN_TO_UUID(u.user_role_id) = BIN_TO_UUID(ur.user_role_id)
     WHERE
         username LIKE CONCAT('%', _search, '%')
         AND BIN_TO_UUID(user_id) <> _user_id;
@@ -104,6 +110,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user $$
 
 CREATE PROCEDURE sp_get_user(
     IN _user_id                 VARCHAR(36)
@@ -111,6 +118,10 @@ CREATE PROCEDURE sp_get_user(
 BEGIN
 
     SELECT
+        email,
+        username,
+        first_name,
+        last_name,
         BIN_TO_UUID(profile_picture) as 'profile_picture'
     FROM
         users
@@ -118,7 +129,6 @@ BEGIN
         BIN_TO_UUID(user_id) = _user_id;
 
 END $$
-
 DELIMITER ;
 
 

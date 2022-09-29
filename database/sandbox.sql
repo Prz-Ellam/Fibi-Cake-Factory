@@ -174,13 +174,13 @@ GROUP BY
 
 
 
-
-
+SELECT * FROM users;
+SELECT * FROM user_roles;
 
 
 SELECT * FROM orders;
 
 
 
-
+SELECT * FROM wishlists;
 

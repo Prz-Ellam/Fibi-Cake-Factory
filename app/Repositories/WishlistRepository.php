@@ -8,8 +8,8 @@ use Fibi\Helpers\Parser;
 
 class WishlistRepository
 {
-    private const CREATE = "CALL sp_create_wishlist(:wishlistId, :name, :description, :visibility, :userId)";
-    private const UPDATE = "CALL sp_update_wishlist(:wishlistId, :name, :description, :visibility)";
+    private const CREATE = "CALL sp_create_wishlist(:wishlistId, :name, :description, :visible, :userId)";
+    private const UPDATE = "CALL sp_update_wishlist(:wishlistId, :name, :description, :visible)";
     private const DELETE = "CALL sp_delete_wishlist(:wishlistId)";
     private const GET_ALL_BY_USER = "CALL sp_get_user_wishlists(:userId, :count, :offset)";
     private const GET_ALL_BY_USER_PUBLIC = "CALL get_all_by_user_public(:userId, :count, :offset)";

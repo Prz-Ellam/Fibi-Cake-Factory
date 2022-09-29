@@ -2,24 +2,27 @@
 
 namespace Fibi\Validation\Rules;
 
+use Attribute;
+
+#[Attribute]
 class MinLength implements RuleValidation
 {
     private int $minlength;
     private string $message;
 
-    public static function isVaslid(string $field, array $data) : bool
+    public function __construct(int $minlength, ?string $message = null)
     {
-        return strlen($data[$field]) < 25;
+        $this->minlength = $minlength;
     }
 
-    public function isValid(mixed $input) : bool
+    public function isValid(mixed $value) : bool
     {
-        return false;
+        return strlen($value) >= $this->minlength;
     }
 
     public function message() : string
     {
-        return "";
+        return "No";
     }
 }
 

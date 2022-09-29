@@ -16,7 +16,9 @@ class WishlistController extends Controller
 {
     /**
      * Crea una lista de deseos
-     * POST api/v1/wishlists
+     * Endpoint: POST api/v1/wishlists
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-09-28
      *
      * @param Request $request
      * @param Response $response
@@ -31,9 +33,7 @@ class WishlistController extends Controller
         $description = $request->getBody("description");
         $visibility = $request->getBody("visibility");
         $images = $request->getFileArray("images");
-        $userId = $request->getBody("user-id");
-        if (is_null($userId))
-            $userId = (new PhpSession())->get('user_id');
+        $userId = (new PhpSession())->get('user_id');
 
         // TODO: Las imagenes de listas borradas no deben poder ser accedidas
         $imagesId = [];
@@ -72,7 +72,8 @@ class WishlistController extends Controller
         }
 
         $wishlist = new Wishlist();
-        $wishlist->setWishlistId($wishlistId)
+        $wishlist
+            ->setWishlistId($wishlistId)
             ->setName($name)
             ->setDescription($description)
             ->setVisibility($visibility)
@@ -142,19 +143,10 @@ class WishlistController extends Controller
         $wishlistId = $request->getRouteParams("wishlistId");
 
         $name = $request->getBody("name");
-
-
-        var_dump($name);
-        die;
-
         $description = $request->getBody("description");
         $visibility = $request->getBody("visibility");
         $images = $request->getFileArray("images");
-        $userId = $request->getBody("user-id");
-        if (is_null($userId))
-            $userId = (new PhpSession())->get('user_id');
-
-        
+        $userId = (new PhpSession())->get('user_id');
 
         // TODO: El tema de las imagenes
         $imageRepository = new ImageRepository();

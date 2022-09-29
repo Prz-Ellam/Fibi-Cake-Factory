@@ -8,6 +8,8 @@ use CakeFactory\Repositories\AuthRepository;
 use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
+use Fibi\Core\Application;
+use Fibi\Database\DB;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Request\PhpCookie;
@@ -35,7 +37,7 @@ class UserController extends Controller
         $birthDate = $request->getBody('birthDate');
         $firstName = $request->getBody('firstName');
         $lastName = $request->getBody('lastName');
-        $visible = $request->getBody('visibility');
+        $visible = $request->getBody('visible');
         $gender = $request->getBody('gender');
         //$password = password_hash($request->getBody('password'), PASSWORD_DEFAULT);
         $password = $request->getBody('password');
@@ -66,15 +68,14 @@ class UserController extends Controller
         if ($results !== [])
         {
             // Errors
-            $response->json(["response" => "La imagen esta mal"])->setStatusCode(400);
+            $response->json(["response" => $results])->setStatusCode(400);
             return;
         }
 
+        DB::beginTransaction();
 
         $imageRepository = new ImageRepository();
         $result = $imageRepository->create($image);
-
-
 
 
         // 4 - Comprador
@@ -112,6 +113,8 @@ class UserController extends Controller
         }
 
         $shoppingCartRepository = new ShoppingCartRepository();
+
+        DB::endTransaction();
 
         $response->json(["response" => "Si"]);
     }
@@ -164,6 +167,7 @@ class UserController extends Controller
         $result = $authRepository->login($loginOrEmail);
         $passwordHashed = $result[0]["password"];
         $userId = $result[0]["user_id"];
+        $userRole = $result[0]["user_role"];
 
         $passwordCheck = password_verify($password, $passwordHashed);
 
@@ -188,6 +192,7 @@ class UserController extends Controller
         $session = new PhpSession();
         $session->set('token', $token);
         $session->set('user_id', $userId);
+        $session->set('role', $userRole);
 
         $cookies = new PhpCookie();
         $cookies->set('token', $token, time() + (60 * 60));

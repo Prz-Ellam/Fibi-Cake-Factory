@@ -24,10 +24,11 @@ CREATE TABLE IF NOT EXISTS users(
         PRIMARY KEY (user_id)
 );
 
+DROP TABLE IF EXISTS user_roles;
 -- User roles
 CREATE TABLE IF NOT EXISTS user_roles(
     user_role_id                BINARY(16) NOT NULL UNIQUE,
-    name                        VARCHAR(50) NOT NULL,
+    name                        VARCHAR(50) NOT NULL UNIQUE,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP,
     active                      BOOLEAN NOT NULL DEFAULT TRUE,

@@ -45,7 +45,7 @@
                         <label for="profile-picture" role="button" class="profile-picture-label text-white position-absolute rounded-circle"></label>
                         <img class="img img-fluid rounded-circle" id="picture-box" src="assets/img/blank-profile-picture.svg" alt="Profile picture">
                     </div>
-                    <input type="file" accept="image/*" class="form-control shadow-none rounded-1 position-absolute" name="profile-picture" id="profile-picture" >
+                    <input type="file" accept="image/*" class="form-control shadow-none rounded-1 position-absolute" name="profilePicture" id="profile-picture" >
                 </div>
                 
                 <div class="mb-4">
@@ -65,28 +65,28 @@
                 <div class="mb-4">
                     <label for="birth-date" class="form-label" role="button">Fecha de nacimiento</label>
                     <div class="input-group">
-                        <input type="date" class="form-control shadow-none rounded-1" id="birth-date" name="birth-date">
+                        <input type="date" class="form-control shadow-none rounded-1" id="birth-date" name="birthDate">
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label for="first-name" class="form-label" role="button">Nombre</label>
                     <div class="input-group">
-                        <input type="text" class="form-control shadow-none rounded-1" id="first-name" name="first-name">
+                        <input type="text" class="form-control shadow-none rounded-1" id="first-name" name="firstName">
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label for="last-name" class="form-label" role="button">Apellido(s)</label>
                     <div class="input-group">
-                        <input type="text" class="form-control shadow-none rounded-1" id="last-name" name="last-name">
+                        <input type="text" class="form-control shadow-none rounded-1" id="last-name" name="lastName">
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label for="visibility" class="form-label" role="button">Visibilidad</label>
                     <div class="input-group">
-                        <select class="form-select shadow-none rounded-1" name="visibility" id="visibility" role="button">
+                        <select class="form-select shadow-none rounded-1" name="visible" id="visibility" role="button">
                             <option value="">Seleccionar</option>
                             <option value="1">Público</option>
                             <option value="2">Privado</option>
@@ -135,7 +135,7 @@
                 <div class="mb-4">
                     <label for="confirm-password" class="form-label" role="button">Confirmar Contraseña</label>
                     <div class="input-group">
-                        <input type="password" name="confirm-password" id="confirm-password" class="form-control shadow-none">
+                        <input type="password" name="confirm-password" id="confirmPassword" class="form-control shadow-none">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-orange btn-password input-group-text shadow-none rounded-0 rounded-end shadow-none" id="btn-confirm-password"><i id="confirm-password-icon" class="fas fa-solid fa-eye"></i></button>
                         </div>

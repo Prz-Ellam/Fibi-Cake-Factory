@@ -7,26 +7,26 @@
         <li class="list-item rounded-1">
             <a href="/users" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
                 <span><i class="fas fa-user me-2"></i>Usuarios</span>
-                <span>1</span>
+                <span></span>
             </a>
         </li>
         <li class="list-item rounded-1">
             <a href="/pending-products" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
                 <span><i class="fas fa-box me-2"></i>Productos</span>
-                <span>2</span>
+                <span></span>
             </a>
         </li>
         <li class="list-item rounded-1">
             <a href="/categories" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
                 <span><i class="fas fa-border-all me-2"></i>Categorias</span>
-                <span>2</span>
+                <span></span>
             </a>
         </li>
     </ul>
-    <hr>
+    <hr class="bg-white">
     <ul class="list-unstyled">
         <li class="list-item rounded-1">
-            <a href="#" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
+            <a href="/logout" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
                 <span>
                     <i class="fas fa-door-open me-2"></i>Salir
                 </span>

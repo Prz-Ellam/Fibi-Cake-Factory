@@ -34,18 +34,18 @@
                 <!-- Media object -->
                 <section class="w-100 px-3">
                     <div class="row d-flex justify-content-center justify-content-md-start">
-                        <!-- Image -->
                         <img
-                            src="assets/img/fragile.webp"
-                            alt="John Doe"
+                            src=""
+                            alt="Profile picture"
                             class="me-3 rounded-circle p-0 col-md-6 col-sm-12"
                             style="width: 128px; height: 128px;"
+                            id="profile-picture"
                         >
                         <!-- Body -->
                         <div class="col-md-6 col-sm-12 p-0 text-center text-md-start">
-                            <h1 class="h1">Prz-Ellam</h1>
-                            <p class="h5">eliam@correo.com</p>
-                            <p class="h5">Eliam Rodríguez Pérez</p>
+                            <h1 class="h1" id="username"></h1>
+                            <p class="h5" id="email"></p>
+                            <p class="h5" id="name"></p>
                         </div>
                     </div>
                 </section>

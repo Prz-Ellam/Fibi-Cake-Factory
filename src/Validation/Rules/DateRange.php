@@ -2,6 +2,9 @@
 
 namespace Fibi\Validation\Rules;
 
+use Attribute;
+
+#[Attribute]
 class DateRange implements RuleValidation
 {
     private string $message;

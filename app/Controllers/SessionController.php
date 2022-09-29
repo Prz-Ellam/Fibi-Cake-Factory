@@ -2,17 +2,33 @@
 
 namespace CakeFactory\Controllers;
 
+use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 
-class SessionController
+class SessionController extends Controller
 {
-    public function login(Request $request, Response $response)
+    /**
+     * Inicia una sesión
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function login(Request $request, Response $response) : void
     {
-
+        $username = $request->getBody("username");
+        $password = $request->getBody("password");
     }
 
-    public function logout(Request $request, Response $response)
+    /**
+     * Elimina la sesión
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function logout(Request $request, Response $response) : void
     {
         
     }

@@ -2,6 +2,9 @@
 
 namespace Fibi\Validation\Rules;
 
+use Attribute;
+
+#[Attribute]
 class HasLower implements RuleValidation
 {
     private const REGEX = "/[a-z]/";

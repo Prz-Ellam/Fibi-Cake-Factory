@@ -2,6 +2,9 @@
 
 namespace Fibi\Validation\Rules;
 
+use Attribute;
+
+#[Attribute]
 class HasSpecialChars implements RuleValidation
 {
     private const REGEX = "/[¡”\"#$%&;\/=’?!¿:;,.\-_+*{}\[\]]/";

@@ -1,6 +1,7 @@
 USE cake_factory;
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_category $$
 
 CREATE PROCEDURE sp_create_category(
     IN _category_id             VARCHAR(36),
@@ -24,12 +25,12 @@ BEGIN
     );
 
 END$$
-
 DELIMITER ;
 
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_category $$
 
 CREATE PROCEDURE sp_update_category(
     IN _category_id             VARCHAR(36),
@@ -41,20 +42,20 @@ BEGIN
     UPDATE
         categories
     SET
-        name        = IFNULL(_name, name),
-        description = IFNULL(_description, description),
-        modified_at = NOW()
+        name            = IFNULL(_name, name),
+        description     = IFNULL(_description, description),
+        modified_at     = NOW()
     WHERE
         BIN_TO_UUID(category_id) = _category_id
         AND active = TRUE;
 
 END$$
-
 DELIMITER ;
 
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_category $$
 
 CREATE PROCEDURE sp_delete_category(
     IN _category_id             VARCHAR(36)
@@ -64,30 +65,33 @@ BEGIN
     UPDATE
         categories
     SET
-        active      = FALSE,
-        modified_at = NOW()
+        active          = FALSE,
+        modified_at     = NOW()
     WHERE
-        BIN_TO_UUID(category_id) = _category_id;
+        BIN_TO_UUID(category_id) = _category_id
+        AND active = TRUE;
 
 END $$
 DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_categories $$
 
 CREATE PROCEDURE sp_get_categories()
 BEGIN
 
     SELECT
-        BIN_TO_UUID(category_id) as 'category_id',
+        BIN_TO_UUID(category_id) AS id,
         name,
         description,
-        BIN_TO_UUID(user_id) as 'user_id'
+        BIN_TO_UUID(user_id) AS userId
     FROM
         categories
     WHERE
-        active = TRUE;
+        active = TRUE
+    ORDER BY
+        created_at ASC;
 
 END$$
-
 DELIMITER ;

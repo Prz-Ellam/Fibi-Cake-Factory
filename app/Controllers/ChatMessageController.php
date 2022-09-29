@@ -4,11 +4,12 @@ namespace CakeFactory\Controllers;
 
 use CakeFactory\Models\ChatMessage;
 use CakeFactory\Repositories\ChatMessagesRepository;
+use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
-class ChatMessageController
+class ChatMessageController extends Controller
 {
     /**
      * Undocumented function

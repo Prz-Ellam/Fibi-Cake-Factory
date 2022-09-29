@@ -2,6 +2,9 @@
 
 namespace Fibi\Validation\Rules;
 
+use Attribute;
+
+#[Attribute]
 class HasNumber implements RuleValidation
 {
     private const REGEX = "/[0-9]/";

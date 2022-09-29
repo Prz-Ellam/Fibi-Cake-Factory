@@ -2,6 +2,9 @@
 
 namespace Fibi\Validation\Rules;
 
+use Attribute;
+
+#[Attribute]
 class Phone implements RuleValidation
 {
     public function isValid(mixed $input) : bool

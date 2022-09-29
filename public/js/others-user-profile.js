@@ -25,6 +25,22 @@ const productCard = /*html*/`
 </div>
 `;
 
+$.ajax({
+    url: `/api/v1/users/${new URLSearchParams(location.search).get('id') || '0'}`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        $('#username').text(response.username);
+        $('#email').text(response.email);
+        $('#name').text(response.first_name + ' ' + response.last_name);
+        $('#profile-picture').attr('src', `api/v1/images/${response.profile_picture}`)
+
+        console.log(response);
+    }
+})
+
+
 for (let i = 0; i < 6; i++)
 {
     $('#client-wishlist-container').append(wishlistCard);

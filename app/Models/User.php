@@ -4,7 +4,14 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 use Fibi\Validation\Rules\Email;
+use Fibi\Validation\Rules\HasLower;
+use Fibi\Validation\Rules\HasNumber;
+use Fibi\Validation\Rules\HasSpecialChars;
+use Fibi\Validation\Rules\HasUpper;
+use Fibi\Validation\Rules\MaxLength;
+use Fibi\Validation\Rules\MinLength;
 use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 /**
  * Usuario de la aplicación
@@ -17,6 +24,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $userId;
 
     /**
@@ -26,6 +34,7 @@ class User implements Model
      */
     #[Required]
     #[Email]
+    #[MaxLength(255)]
     private ?string $email;
 
     /**
@@ -34,6 +43,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[MaxLength(18)]
     private ?string $username;
 
     /**
@@ -42,6 +52,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[MaxLength(50)]
     private ?string $firstName;
 
     /**
@@ -50,6 +61,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[MaxLength(50)]
     private ?string $lastName;
 
     /**
@@ -82,6 +94,12 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[MinLength(8)]
+    #[MaxLength(255)]
+    #[HasUpper]
+    #[HasLower]
+    #[HasNumber]
+    #[HasSpecialChars]
     private ?string $password;
 
     /**
@@ -90,7 +108,7 @@ class User implements Model
      * @var integer|null
      */
     #[Required]
-    private ?int $userRole;
+    private ?string $userRole;
 
     /**
      * Undocumented variable
@@ -98,6 +116,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $profilePicture;
 
     public function getUserId() : ?string
@@ -199,12 +218,12 @@ class User implements Model
         return $this;
     }
 
-    public function getUserRole() : ?int
+    public function getUserRole() : ?string
     {
         return $this->userRole;
     }
 
-    public function setUserRole(?int $userRole) : self
+    public function setUserRole(?string $userRole) : self
     {
         $this->userRole = $userRole;
         return $this;

@@ -4,6 +4,8 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
+use Fibi\Validation\Rules\MaxLength;
 
 class Category implements Model
 {
@@ -13,6 +15,7 @@ class Category implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $categoryId;
 
     /**
@@ -21,6 +24,7 @@ class Category implements Model
      * @var string|null
      */
     #[Required]
+    #[MaxLength(50)]
     private ?string $name;
 
     /**
@@ -28,6 +32,7 @@ class Category implements Model
      *
      * @var string|null
      */
+    #[MaxLength(200)]
     private ?string $description;
 
     /**
@@ -36,6 +41,7 @@ class Category implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $userId;
 
     public function getCategoryId() : ?string

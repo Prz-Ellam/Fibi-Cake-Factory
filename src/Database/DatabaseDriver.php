@@ -36,6 +36,11 @@ class DatabaseDriver extends DbConnection
         }
         catch (PDOException $ex)
         {
+            if ($this->pdo->inTransaction())
+            {
+                $this->pdo->rollback();
+            }
+
             die($ex->getMessage());
         }
     }
@@ -57,6 +62,11 @@ class DatabaseDriver extends DbConnection
         }
         catch (PDOException $ex)
         {
+            if ($this->pdo->inTransaction())
+            {
+                $this->pdo->rollback();
+            }
+            
             die($ex->getMessage());
         }
     }

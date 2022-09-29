@@ -12,7 +12,7 @@ class ProductRepository
     private const UPDATE = "CALL sp_update_product(:productId, :name, :description, :isQuotable, :price, :stock)";
     private const DELETE = "CALL sp_delete_product(:productId)";
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
-    private const GET_PRODUCT = "CALL sp_get_product(:productId)";
+    private const GET_ONE = "CALL sp_get_product(:productId)";
     private const GET_RECENT_PRODUCTS = "CALL sp_get_recent_products()";
     // GET_ALL_BY_CATEGORY
     // GET_ALL_BY_USER
@@ -67,7 +67,7 @@ class ProductRepository
 
     public function getProduct(string $productId)
     {
-        $result = DB::executeReader(self::GET_PRODUCT, [
+        $result = DB::executeReader(self::GET_ONE, [
             "productId" => $productId
         ]);
 

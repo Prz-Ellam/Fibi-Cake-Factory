@@ -4,18 +4,24 @@ namespace CakeFactory\Controllers;
 
 use CakeFactory\Models\Category;
 use CakeFactory\Repositories\CategoryRepository;
+use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid as _Uuid;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Uuid;
 
-class CategoryController
+/**
+ * Controlador de los endpoints de las categorias
+ */
+class CategoryController extends Controller
 {
     /**
-     * Crea una categoria
-     * endpoint: POST api/v1/categories
-     * Creado por: Eliam Rodriguez Perez
+     * Crea una categoría
+     * Endpoint: POST api/v1/categories
+     * Creado por: Eliam Rodríguez Pérez
      * Creado: 2022-09-26
      *
      * @param Request $request
@@ -29,10 +35,11 @@ class CategoryController
         $description = $request->getBody('description');
         $userId = (new PhpSession())->get('user_id');
 
-        if (is_null($userId))
+        if ($userId === null)
         {
             $response->setStatusCode(401)->json([
-                "status" => "Not authorized"
+                "status" => false,
+                "message" => "Not authorized"
             ]);
             return;
         }
@@ -71,7 +78,10 @@ class CategoryController
     }
 
     /**
-     * Undocumented function
+     * Actualiza una categoría
+     * Endpoint: PUT api/v1/categories/:categoryId
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-09-26
      *
      * @param Request $request
      * @param Response $response
@@ -83,18 +93,36 @@ class CategoryController
         $categoryId = $request->getRouteParams('categoryId');
         $name = $request->getBody('name');
         $description = $request->getBody('description');
-        $userId = $request->getBody("user-id");
-        if (is_null($userId))
-            $userId = (new PhpSession())->get('user_id');
+        $userId = (new PhpSession())->get('user_id');
+
+        if ($userId === null)
+        {
+            $response->setStatusCode(401)->json([
+                "status" => false,
+                "message" => "Not authorized"
+            ]);
+            return;
+        }
 
         $category = new Category();
-        $category->setCategoryId($categoryId)
+        $category
+            ->setCategoryId($categoryId)
             ->setName($name)
             ->setDescription($description)
             ->setUserId($userId);
 
         $validator = new Validator($category);
         $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if ($status === false)
+        {
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => $feedback
+            ]);
+            return;
+        }
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->update($category);
@@ -110,7 +138,10 @@ class CategoryController
     }
 
     /**
-     * Undocumented function
+     * Elimina una categoría
+     * Endpoint: DELETE api/v1/categories/:categoryId
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-09-26
      *
      * @param Request $request
      * @param Response $response
@@ -122,6 +153,17 @@ class CategoryController
         $categoryId = $request->getRouteParams("categoryId");
 
         // Validar el category Id
+        $requiredRule = new Required();
+        $uuidRule = new _Uuid();
+
+        if (!$requiredRule->isValid($categoryId) || !$uuidRule->isValid($categoryId))
+        {
+            $response->setStatusCode(400)->json([
+                "status" => false,
+                "data" => "Uuid invalido"
+            ]);
+            return;
+        }
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->delete($categoryId);
@@ -131,11 +173,21 @@ class CategoryController
         ]);
     }
 
+    /**
+     * Obtiene todas las categorías
+     * Endpoint: GET api/v1/categories
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-09-26
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function getCategories(Request $request, Response $response)
     {
         $categoryRepository = new CategoryRepository();
-        $result = $categoryRepository->getCategories();
-        $response->json($result);
+        $categories = $categoryRepository->getAll();
+        $response->json($categories);
     }
 }
 

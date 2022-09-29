@@ -20,4 +20,9 @@ class DB
     {
         return Application::app()->database->beginTransaction();
     }
+
+    public static function endTransaction()
+    {
+        return Application::app()->database->endTransaction();
+    }
 }

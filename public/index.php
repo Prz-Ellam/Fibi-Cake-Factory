@@ -1,5 +1,6 @@
 <?php
 
+use CakeFactory\Build\Startup;
 use CakeFactory\Controllers\CategoryController;
 use CakeFactory\Controllers\ChatMessageController;
 use CakeFactory\Controllers\ImageController;
@@ -12,6 +13,7 @@ use CakeFactory\Controllers\VideoController;
 use CakeFactory\Controllers\WishlistController;
 use CakeFactory\Controllers\WishlistObjectController;
 use CakeFactory\Models\Category;
+use CakeFactory\Repositories\UserRepository;
 use Dotenv\Dotenv;
 use Fibi\Core\Application;
 use Fibi\Http\Request;
@@ -24,6 +26,18 @@ require_once("../vendor/autoload.php");
 
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
+
+
+
+//$startup = new Startup();
+//$startup->load();
+//die;
+
+
+
+
+
+
 
 $app = Application::app();
 
@@ -100,8 +114,9 @@ $app->get('/home', function(Request $request, Response $response) {
         $response->redirect('/');
         return;
     }
+    
 
-    if (false)
+    if ($session->get('role') === 'Administrador' || $session->get('role') === 'Super Administrador')
     {
         $response->view('admin-dashboard', 'auth-layout');
         return;
@@ -296,7 +311,30 @@ $app->get('/profile', function(Request $request, Response $response) {
         return;
     }
 
-    $response->view('profile', 'auth-layout');
+    $id = $request->getQuery('id');
+    if ($id === null)
+    {
+        $response->redirect('/profile?id=' . $session->get('user_id'));
+        return;
+    }
+
+    if ($id === $session->get('user_id'))
+        $response->view('profile', 'auth-layout');
+    else
+    {
+        $userId = $request->getQuery('id');
+
+        $userRepository = new UserRepository();
+        $user = $userRepository->getUser($userId);
+
+        if ($user === [])
+        {
+            $response->text("404 Not found")->setStatusCode(404);
+            return;
+        }
+
+        $response->view('user-profile-2', 'auth-layout');
+    }
 });
 
 $app->get('/search', function(Request $request, Response $response) {
@@ -513,6 +551,12 @@ $app->get('/prueba', function(Request $request, Response $response) {
     //var_dump($validator->validate());
 
     die;
+
+});
+
+$app->get('/run', function(Request $req, Response $res) {
+
+    
 
 });
 

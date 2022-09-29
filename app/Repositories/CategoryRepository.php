@@ -37,7 +37,7 @@ class CategoryRepository
         return $result > 0;
     }
 
-    public function getCategories()
+    public function getAll()
     {
         $result = DB::executeReader(self::GET_ALL);
         return $result;
