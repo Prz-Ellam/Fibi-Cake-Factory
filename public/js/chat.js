@@ -14,9 +14,29 @@ for (let i = 0; i < 8; i++)
     $('#chats-container').append(chatComponent);
 }
 
+var id;
+$.ajax({
+    url: 'api/v1/session',
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        id = response.id;
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response.profilePicture}`;
+                $('.nav-link img').attr('src', url);
+            }
+        });
+    }
+});
 
 $.ajax({
-    url: '/api/v1/users?exclude=516a3887-06b1-4203-ad59-07dc13d1e0fe',
+    url: `/api/v1/users?exclude=${id}`,
     method: 'GET',
     timeout: 0,
     success: function(response) {
@@ -94,6 +114,77 @@ $(document).ready(function() {
         $('#chat-messages').prop('checked', true);
         $('#chats-container').addClass('d-md-block d-none');
         $('#messages-container').removeClass('d-md-block d-none');
-    })
+    });
+
+    var data = ["Boston Celtics", "Chicago Bulls", "Miami Heat", "Orlando Magic", "Atlanta Hawks", "Philadelphia Sixers", "New York Knicks", "Indiana Pacers", "Charlotte Bobcats", "Milwaukee Bucks", "Detroit Pistons", "New Jersey Nets", "Toronto Raptors", "Washington Wizards", "Cleveland Cavaliers"];
+
+    //$("#search").autocomplete({source:data});
+    $("#search").autocomplete({
+        delay: 0,
+        source: data,
+        minLength: 1,
+        open: function(){
+            setTimeout(function () {
+                $('.ui-autocomplete').css('z-index', 99999999999999);
+            }, 0);
+        },
+        select: function(event, ui) {
+            alert("Selecciono: " + ui.item.label);
+        }
+    });
+    
+    $("#search-users").autocomplete({
+        delay: 0,
+        source: function(request, response) {
+            $.ajax({
+                data: {term : request.term},
+                method: 'GET',
+                url: `/api/v1/users?exclude=${id}`,
+                success: function(data) {
+                    // TODO: ?
+                    const list = [];
+                    data.forEach((element) => {
+                        list.push(element.username);
+                    });
+
+                    response($.map(data, function(objet){
+                        return {
+                            label: objet.username,
+                            value: objet.id
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 1,
+        open: function(){
+            setTimeout(function () {
+                $('.ui-autocomplete').css('z-index', 99999999999999);
+            }, 0);
+        },
+        focus: function(event, ui)
+        {
+            // prevent autocomplete from updating the textbox
+			event.preventDefault();
+			// manually update the textbox
+			$(this).val(ui.item.label);
+        },
+        select: function(event, ui) {
+
+
+            // prevent autocomplete from updating the textbox
+			event.preventDefault();
+		    // manually update the textbox and hidden field
+			// $(this).attr('user-id', ui.item.value);
+			$("#search-users").val(ui.item.label);
+
+
+            
+
+
+            
+        }
+    });
+    
 
 });

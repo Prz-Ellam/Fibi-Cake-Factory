@@ -19,3 +19,31 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_role_by_name $$
+
+CREATE PROCEDURE sp_get_user_role_by_name(
+    IN _name                        VARCHAR(50)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(user_role_id) userRoleId,
+        name
+    FROM
+        user_roles
+    WHERE
+        name = _name
+    LIMIT
+        1;
+
+END $$
+DELIMITER ;
+
+
+
+
+SELECT * FROM users;

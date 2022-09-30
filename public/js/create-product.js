@@ -10,9 +10,8 @@ $.ajax({
             async: false,
             timeout: 0,
             success: function(response) {
-                const url = `api/v1/images/${response['profile_picture']}`;
+                const url = `api/v1/images/${response.profilePicture}`;
                 $('.nav-link img').attr('src', url);
-                console.log(response['profile_picture']);
             }
         });
     }

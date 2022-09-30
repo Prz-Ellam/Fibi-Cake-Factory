@@ -12,6 +12,9 @@
     <!-- Bootstrap 5.0.0 -->
     <link rel="stylesheet" href="vendor/node_modules/bootstrap/dist/css/bootstrap.min.css">
     
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- CSS -->
     <link rel="stylesheet" href="./styles/navbar.css">
     <link rel="stylesheet" href="./styles/colors.css">
@@ -101,7 +104,7 @@
             <div class="row h-100 overflow-auto">   
       
                 <div class="d-md-block d-none col-12 col-md-3 card rounded-0 bg-white overflow-auto h-100 py-3" id="chats-container">
-                    <input type="search" name="" class="form-control rounded-1 shadow-none mb-3" id="" placeholder="Buscar personas">
+                    <input type="search" name="" class="form-control rounded-1 shadow-none mb-3" id="search-users" placeholder="Buscar personas">
                 </div>
 
                 <div class="bg-white card col-12 col-md-9 rounded-0 overflow-auto h-100" id="messages-container">
@@ -148,6 +151,9 @@
     <!-- Bootstrap 5.0.0 -->
     <script src="vendor/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     
+    <!-- jQuery UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
  

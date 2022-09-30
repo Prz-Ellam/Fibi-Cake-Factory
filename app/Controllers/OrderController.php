@@ -13,14 +13,17 @@ use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class OrderController extends Controller
 {
     public function checkout(Request $request, Response $response)
     {
+        $session = new PhpSession();
+
         $orderId = Uuid::uuid4()->toString();
-        $userId = (new PhpSession())->get('user_id');
+        $userId = $session->get('user_id');
 
         $names = $request->getBody("names");
         $lastName = $request->getBody("last-name");
@@ -45,10 +48,23 @@ class OrderController extends Controller
             ->setState($state)
             ->setPostalCode($postalCode);
 
+        $validator = new Validator($order);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if (!$status)
+        {
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => $feedback
+            ]);
+            return;
+        }
+
         $orderRepository = new OrderRepository();
         $result = $orderRepository->create($order);
 
-        if ($result === false)
+        if (!$result)
         {
             $response->text("Error en crear orden");
             return;
@@ -76,7 +92,7 @@ class OrderController extends Controller
                 ->setAmount($amount);
 
             $result = $shoppingRepository->create($shopping);
-            if ($result === false)
+            if (!$result)
             {
                 $response->text("Error en crear una compra");
                 return;

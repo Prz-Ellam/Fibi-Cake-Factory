@@ -58,6 +58,13 @@ class Application
      */
     private static self $instance; 
 
+    /**
+     * Variables de la aplicacion
+     *
+     * @var array
+     */
+    private array $storage;
+
     private function __construct()
     {
         $this->router = new Router();
@@ -155,6 +162,16 @@ class Application
     public function addMiddleware(Closure|array $action)
     {
         $this->middlewares[] = $action;
+    }
+
+    public function setItem(string $name, mixed $value)
+    {
+        $this->storage[$name] = $value;
+    }
+
+    public function getItem(string $name)
+    {
+        return $this->storage[$name] ?? null;
     }
 }
 

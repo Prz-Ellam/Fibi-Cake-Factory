@@ -4,6 +4,7 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 use Fibi\Validation\Rules\Email;
+use Fibi\Validation\Rules\EqualTo;
 use Fibi\Validation\Rules\HasLower;
 use Fibi\Validation\Rules\HasNumber;
 use Fibi\Validation\Rules\HasSpecialChars;
@@ -43,6 +44,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
+    #[MinLength(3)]
     #[MaxLength(18)]
     private ?string $username;
 
@@ -75,18 +77,18 @@ class User implements Model
     /**
      * Undocumented variable
      *
-     * @var integer|null
+     * @var bool|null
      */
     #[Required]
-    private ?int $visibility;
+    private ?bool $visible;
 
     /**
      * Undocumented variable
      *
-     * @var string|null
+     * @var integer|null
      */
     #[Required]
-    private ?string $gender;
+    private ?int $gender;
 
     /**
      * Undocumented variable
@@ -100,6 +102,7 @@ class User implements Model
     #[HasLower]
     #[HasNumber]
     #[HasSpecialChars]
+    //#[EqualTo('confirmPassword')]
     private ?string $password;
 
     /**
@@ -185,23 +188,23 @@ class User implements Model
         return $this;
     }
 
-    public function getVisibility() : ?int
+    public function getVisibility() : ?bool
     {
-        return $this->visibility;
+        return $this->visible;
     }
 
-    public function setVisibility(?int $visibility) : self
+    public function setVisibility(?bool $visible) : self
     {
-        $this->visibility = $visibility;
+        $this->visible = $visible;
         return $this;
     }
 
-    public function getGender() : ?string
+    public function getGender() : ?int
     {
         return $this->gender;
     }
 
-    public function setGender(?string $gender) : self
+    public function setGender(?int $gender) : self
     {
         $this->gender = $gender;
         return $this;

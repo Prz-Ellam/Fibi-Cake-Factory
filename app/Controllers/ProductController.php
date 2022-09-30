@@ -341,6 +341,32 @@ class ProductController extends Controller
     {
         
     }
+
+    public function approve(Request $request, Response $response)
+    {
+        $productId = $request->getBody("productId");
+
+        // Validar sesión
+        $session = new PhpSession();
+        $role = $session->get('role');
+
+        if ($role !== "Super Administrador" && $role !== "Administrador")
+        {
+            $response->json([
+                "status" => "Unauthorized"
+            ])->setStatusCode(401);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        //$productRepository->approve($productId);
+
+    }
+
+    public function denied(Request $request, Response $response)
+    {
+        $productId = $request->getBody("productId");
+    }
 }
 
 ?>

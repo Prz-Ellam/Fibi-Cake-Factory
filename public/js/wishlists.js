@@ -150,11 +150,24 @@ const wishlistCard = /*html*/`
 </div>
 `;
 
+
 $.ajax({
     url: "api/v1/session",
     method: "GET",
     timeout: 0,
     success: function(response) {
+
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response.profilePicture}`;
+                $('.nav-link img').attr('src', url);
+            }
+        });
+        
         console.log(response.id);
 
         $.ajax({
@@ -576,7 +589,6 @@ $(document).ready(function() {
             method: 'POST',
             url: `/api/v1/wishlists`,
             data: requestBody,
-            //dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,
@@ -638,7 +650,6 @@ $(document).ready(function() {
             method: 'POST',
             url: `/api/v1/wishlists/${wishlistId}`,
             data: requestBody,
-            //dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,

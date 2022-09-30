@@ -2,7 +2,9 @@
 
 namespace Fibi\Http;
 
+use Fibi\Helpers\UploadedFile;
 use Fibi\Routing\Route;
+use Fibi\Session\Session;
 
 class Request
 {
@@ -156,14 +158,24 @@ class Request
         return $this;
     }
 
-    public function getFile(?string $key = null) : mixed
+    public function getFile(?string $key = null) : UploadedFile
     {
         if (is_null($key))
         {
             return $this->files;
         }
 
-        return $this->files[$key] ?? null;
+        $fileUploaded = new UploadedFile(
+            $this->files[$key]["name"] ?? null,
+            $this->files[$key]["path"] ?? null,
+            $this->files[$key]["tmp_name"] ?? null,
+            $this->files[$key]["size"] ?? null,
+            $this->files[$key]["type"] ?? null
+        );
+
+        return $fileUploaded;
+
+        //return $this->files[$key] ?? null;
     }
 
     public function getFileArray(string $key)

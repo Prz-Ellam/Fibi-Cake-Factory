@@ -7,6 +7,7 @@ use CakeFactory\Repositories\ChatMessagesRepository;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class ChatMessageController extends Controller
@@ -32,10 +33,23 @@ class ChatMessageController extends Controller
             ->setChatParticipantId($chatParticipantId)
             ->setMessageContent($messageContent);
 
+        $validator = new Validator($chatMessage);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if (!$status)
+        {
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => $feedback
+            ]);
+            return;
+        }
+
         $chatMessagesRepository = new ChatMessagesRepository();
         $result = $chatMessagesRepository->create($chatMessage);
 
-        if ($result === false)
+        if (!$result)
         {
             $response->setStatusCode(400)->json([
                 "status" => $result

@@ -1,3 +1,21 @@
+$.ajax({
+    url: 'api/v1/session',
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response.profilePicture}`;
+                $('.nav-link img').attr('src', url);
+            }
+        });
+    }
+});
 
 $.ajax({
     url: `api/v1/shopping-cart`,

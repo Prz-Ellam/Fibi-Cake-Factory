@@ -3,11 +3,27 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 class ShoppingCart implements Model
 {
+    /**
+     * Identificador único del carrito de compras
+     *
+     * @var string|null
+     */
+    #[Required]
+    #[Uuid]
     private ?string $shoppingCartId;
     
+    /**
+     * Identificador del usuario al que le pertenece el carrito
+     *
+     * @var string|null
+     */
+    #[Required]
+    #[Uuid]
     private ?string $userId;
 
     public function getShoppingCartId() : ?string

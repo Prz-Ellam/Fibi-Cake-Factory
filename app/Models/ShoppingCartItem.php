@@ -3,15 +3,24 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 class ShoppingCartItem implements Model
 {
+    #[Required]
+    #[Uuid]
     private ?string $shoppingCartItemId;
 
+    #[Required]
+    #[Uuid]
     private ?string $shoppingCartId;
 
+    #[Required]
+    #[Uuid]
     private ?string $productId;
     
+    #[Required]
     private ?int $quantity;
 
     public function getShoppingCartItemId() : ?string

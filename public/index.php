@@ -2,6 +2,7 @@
 
 use CakeFactory\Build\Startup;
 use CakeFactory\Controllers\CategoryController;
+use CakeFactory\Controllers\ChatController;
 use CakeFactory\Controllers\ChatMessageController;
 use CakeFactory\Controllers\ImageController;
 use CakeFactory\Controllers\OrderController;
@@ -40,6 +41,7 @@ $dotenv->load();
 
 
 $app = Application::app();
+
 
 $uri = $_SERVER["REQUEST_URI"];
 if ($uri[strlen($uri) - 1] === "/")
@@ -115,7 +117,6 @@ $app->get('/home', function(Request $request, Response $response) {
         return;
     }
     
-
     if ($session->get('role') === 'Administrador' || $session->get('role') === 'Super Administrador')
     {
         $response->view('admin-dashboard', 'auth-layout');
@@ -359,6 +360,8 @@ $app->put('/api/v1/users', function() {});
 $app->get('/api/v1/users/{userId}', [ new UserController(), 'getUser' ]);
 $app->delete('/api/v1/users/{userId}', function() {});
 
+$app->post('/api/v1/login', [ new UserController(), 'login' ]);
+
 // Wishlists
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
 $app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
@@ -406,6 +409,10 @@ $app->get('/api/v1/wishlist-objects/{wishlistId}', [ new WishlistObjectControlle
 $app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObjectController(), 'deleteObject' ]);
 
 $app->post('/api/v1/checkout', [ new OrderController(), 'checkout' ]);
+
+
+$app->post('/api/v1/chats/check', [ new ChatController(), 'checkIfExists' ]);
+$app->post('/api/v1/chats/findOrCreate', [ new ChatController(), 'findOrCreateChat' ]);
 
 
 $app->post('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'create' ]);

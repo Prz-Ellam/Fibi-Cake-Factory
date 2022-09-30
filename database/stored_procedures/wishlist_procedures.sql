@@ -5,7 +5,7 @@ CREATE PROCEDURE sp_create_wishlist(
     IN _wishlist_id             VARCHAR(36),
     IN _name                    VARCHAR(50),
     IN _description             VARCHAR(200),
-    IN _visibility              INT,
+    IN _visible              INT,
     IN _user_id                 VARCHAR(36)
 )
 BEGIN
@@ -14,14 +14,14 @@ BEGIN
         wishlist_id,
         name,
         description,
-        visibility,
+        visible,
         user_id
     )
     VALUES(
         UUID_TO_BIN(_wishlist_id),
         _name,
         _description,
-        _visibility,
+        _visible,
         UUID_TO_BIN(_user_id)
     );
 
@@ -36,7 +36,7 @@ CREATE PROCEDURE sp_update_wishlist(
     IN _wishlist_id             VARCHAR(36),
     IN _name                    VARCHAR(50),
     IN _description             VARCHAR(200),
-    IN _visibility              INT
+    IN _visible              INT
 )
 BEGIN
 
@@ -45,7 +45,7 @@ BEGIN
     SET
         name            = IFNULL(_name, name),
         description     = IFNULL(_description, description),
-        visibility      = IFNULL(_visibility, visibility)
+        visible      = IFNULL(_visible, visible)
     WHERE
         BIN_TO_UUID(wishlist_id) = _wishlist_id
         --AND BIN_TO_UUID(user_id) = _user_id
@@ -88,7 +88,7 @@ BEGIN
         BIN_TO_UUID(w.wishlist_id) id,
         w.name,
         w.description,
-        w.visibility,
+        w.visible,
         IF(BIN_TO_UUID(i.image_id) IS NOT NULL, 
         JSON_ARRAYAGG(BIN_TO_UUID(i.image_id)),
         JSON_ARRAY()) images
@@ -106,7 +106,7 @@ BEGIN
         w.wishlist_id,
         w.name, 
         w.description, 
-        w.visibility;
+        w.visible;
 
 END $$
 DELIMITER ;
@@ -126,7 +126,7 @@ BEGIN
         BIN_TO_UUID(w.wishlist_id) id,
         w.name,
         w.description,
-        w.visibility,
+        w.visible,
         IF(BIN_TO_UUID(i.image_id) IS NOT NULL, 
         JSON_ARRAYAGG(BIN_TO_UUID(i.image_id)),
         JSON_ARRAY()) images
@@ -144,7 +144,7 @@ BEGIN
         w.wishlist_id,
         w.name, 
         w.description, 
-        w.visibility
+        w.visible
     ORDER BY
         w.created_at ASC
     LIMIT

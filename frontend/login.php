@@ -31,7 +31,7 @@
 
     <section class="container my-4" id="main-container">
         <div class="row d-flex justify-content-center">
-            <form class="bg-white rounded-1 shadow-sm p-5 col-lg-5 col-md-7" id="login-form" novalidate>
+            <form class="bg-white rounded-1 shadow-sm p-5 col-lg-5 col-md-7" id="login-form" novalidate method="POST" action="/api/v1/login">
 
                 <h1 class="h2 text-center mb-4">Iniciar sesión</h1>
                 <hr class="mb-4">
@@ -39,7 +39,7 @@
                 <div class="mb-4">
                     <label class="form-label" for="login-or-email" role="button">Correo electrónico o nombre de usuario</label>
                     <div class="input-group">
-                        <input type="email" class="form-control shadow-none rounded-1" name="login-or-email" id="login-or-email" placeholder="">
+                        <input type="email" class="form-control shadow-none rounded-1" name="loginOrEmail" id="login-or-email" placeholder="">
                     </div>
                 </div>
 

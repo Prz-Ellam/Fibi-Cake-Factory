@@ -70,6 +70,8 @@ CALL sp_get_user_wishlists('4b8c6a1b-ab63-461e-9576-029d0d7f256c');
 
 SELECT *, BIN_TO_UUID(user_id) as 'user_id' FROM users;
 
+DELETE FROM users WHERE BIN_TO_UUID(user_id) = '66d64531-7a6f-4ec2-a12b-0acd9d4670de';
+
 SELECT *, BIN_TO_UUID(wishlist_id) as 'wishlist_id' FROM wishlists;
 
 SELECT * FROM images;
@@ -120,8 +122,8 @@ FROM chat_messages;
 
 CALL sp_create_chat(UUID());
 
-CALL sp_create_chat_participant(UUID(), 'c332f2ed-3edf-11ed-8be6-6018950ce9af', '516a3887-06b1-4203-ad59-07dc13d1e0fe');
-CALL sp_create_chat_participant(UUID(), 'c332f2ed-3edf-11ed-8be6-6018950ce9af', 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb');
+CALL sp_create_chat_participant(UUID(), '5b65138e-4082-11ed-972c-6018950ce9af', '95ee300d-6466-4f43-86fd-35c2737da7f8');
+CALL sp_create_chat_participant(UUID(), '5b65138e-4082-11ed-972c-6018950ce9af', '76dd9897-f26a-44d5-852c-9f7c0f3f0c90');
 
 
 CALL sp_create_chat_message(UUID(), '6f8a6e76-3ee0-11ed-8be6-6018950ce9af', 'Hola como estas');
@@ -154,8 +156,8 @@ WHERE
 
 -- Checa si dos usuarios ya tienen un chat
 SELECT
-    BIN_TO_UUID(c.chat_id) id,
-    COUNT(BIN_TO_UUID(cp.chat_participant_id)) >= 2
+    --BIN_TO_UUID(c.chat_id) id,
+    COUNT(BIN_TO_UUID(cp.chat_participant_id)) = 2 AS `exists`
 FROM
     chats AS c
 INNER JOIN
@@ -163,14 +165,17 @@ INNER JOIN
 ON
     c.chat_id = cp.chat_id
 WHERE
-    BIN_TO_UUID(c.chat_id) = 'c332f2ed-3edf-11ed-8be6-6018950ce9af'
-    AND (BIN_TO_UUID(cp.user_id) = '516a3887-06b1-4203-ad59-07dc13d1e0fe'
-    OR BIN_TO_UUID(cp.user_id) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb')
+    --BIN_TO_UUID(c.chat_id) = 'c332f2ed-3edf-11ed-8be6-6018950ce9af'
+    BIN_TO_UUID(cp.user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8'
+    OR BIN_TO_UUID(cp.user_id) = '76dd9897-f26a-44d5-852c-9f7c0f3f0c90'
 GROUP BY
-    c.chat_id;
+    c.chat_id
+HAVING
+    COUNT(BIN_TO_UUID(cp.chat_participant_id)) = 2;
 
 
-
+'95ee300d-6466-4f43-86fd-35c2737da7f8'
+'76dd9897-f26a-44d5-852c-9f7c0f3f0c90'
 
 
 

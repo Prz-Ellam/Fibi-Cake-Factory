@@ -1,3 +1,22 @@
+$.ajax({
+    url: 'api/v1/session',
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response.profilePicture}`;
+                $('.nav-link img').attr('src', url);
+            }
+        });
+    }
+});
+
 const productSearchCard = /*html*/`
 <div class="bg-white col-lg-4 col-md-6 col-sm-12  text-center p-5">
     <a href="/product"><img src="assets/img/E001S011649.jpg" class="img-fluid p-3"></a>

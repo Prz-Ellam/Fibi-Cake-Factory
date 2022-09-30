@@ -12,8 +12,6 @@ const userRow = /*html*/`
     </tr>
     `;
 
-    for (let i = 0; i < 8; i++) $('#table-users tbody').append(userRow);
-
 $(document).ready(function() {
 
     var table = $('#table-users').DataTable({

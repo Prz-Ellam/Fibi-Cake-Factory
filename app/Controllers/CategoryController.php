@@ -30,12 +30,14 @@ class CategoryController extends Controller
      */
     public function create(Request $request, Response $response)
     {
-        $categoryId = Uuid::uuid4()->toString();
-        $name = $request->getBody('name');
-        $description = $request->getBody('description');
-        $userId = (new PhpSession())->get('user_id');
+        $session = new PhpSession();
 
-        if ($userId === null)
+        $categoryId = Uuid::uuid4()->toString();
+        $name = $request->getBody("name");
+        $description = $request->getBody("description");
+        $userId = $session->get("user_id");
+
+        if (!$userId)
         {
             $response->setStatusCode(401)->json([
                 "status" => false,
@@ -55,7 +57,7 @@ class CategoryController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if ($status === false)
+        if (!$status)
         {
             $response->setStatusCode(400)->json([
                 "status" => $status,
@@ -66,6 +68,15 @@ class CategoryController extends Controller
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->create($category);
+
+        if (!$result)
+        {
+            $response->setStatusCode(400)->json([
+                "status" => $result,
+                "data" => "No se pudo crear el objeto en la base de datos"
+            ]);
+            return;
+        }
 
         $response->json([
             "status" => $result,
@@ -89,13 +100,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Response $response)
     {
+        $session = new PhpSession();
+
         // TODO: Solo un usuario administrador puede actualizar
         $categoryId = $request->getRouteParams('categoryId');
         $name = $request->getBody('name');
         $description = $request->getBody('description');
-        $userId = (new PhpSession())->get('user_id');
+        $userId = $session->get('user_id');
 
-        if ($userId === null)
+        if (!$userId)
         {
             $response->setStatusCode(401)->json([
                 "status" => false,
@@ -115,7 +128,7 @@ class CategoryController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if ($status === false)
+        if (!$status)
         {
             $response->setStatusCode(400)->json([
                 "status" => $status,

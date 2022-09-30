@@ -98,7 +98,7 @@ BEGIN
     INNER JOIN
         user_roles AS ur
     ON
-        BIN_TO_UUID(u.user_role_id) = BIN_TO_UUID(ur.user_role_id)
+        BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
     WHERE
         username LIKE CONCAT('%', _search, '%')
         AND BIN_TO_UUID(user_id) <> _user_id;
@@ -120,9 +120,11 @@ BEGIN
     SELECT
         email,
         username,
-        first_name,
-        last_name,
-        BIN_TO_UUID(profile_picture) as 'profile_picture'
+        first_name AS firstName,
+        last_name AS lastName,
+        birth_date AS birthDate,
+        gender AS gender,
+        BIN_TO_UUID(profile_picture) AS profilePicture
     FROM
         users
     WHERE
@@ -159,6 +161,32 @@ BEGIN
 
     SELECT
         IF(COUNT(username) > 0, TRUE, FALSE)
+    FROM
+        users
+    WHERE
+        username = _username;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_by_username $$
+
+CREATE PROCEDURE sp_get_user_by_username(
+    IN _username                 VARCHAR(18)
+)
+BEGIN
+
+    SELECT
+        email,
+        username,
+        first_name AS firstName,
+        last_name AS lastName,
+        birth_date AS birthDate,
+        gender AS gender,
+        BIN_TO_UUID(profile_picture) AS profilePicture
     FROM
         users
     WHERE

@@ -1,3 +1,78 @@
+const id = new URLSearchParams(window.location.search).get('id') || '0';
+
+$.ajax({
+    url: 'api/v1/session',
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response.profilePicture}`;
+                $('.nav-link img').attr('src', url);
+            }
+        });
+    }
+});
+
+$.ajax({
+    url: `/api/v1/users/${id}`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        $('#picture-box').attr('src', `/api/v1/images/${response.profilePicture}`);
+        $('#email').val(response.email);
+        $('#username').val(response.username);
+        $('#birth-date').val(response.birthDate);
+        $('#first-name').val(response.firstName);
+        $('#last-name').val(response.lastName);
+
+        switch (response.gender)
+        {
+            case 1:
+                $('#male').attr('checked', '');
+                break;
+            case 2:
+                $('#female').attr('checked', '');
+                break;
+            default:
+                break;
+        }
+
+        $.ajax({
+            url: `/api/v1/images/${response.profilePicture}`,
+            method: 'GET',
+            timeout: 0,
+            xhrFields: {
+                responseType: 'blob' 
+            },
+            success: (response, status, headers) => {
+                const contentDisposition = headers.getResponseHeader('content-disposition');
+        
+                const filenameRegex = new RegExp(/\"(.+)\"/);
+                const filename = filenameRegex.exec(contentDisposition)[1];
+                const mime = headers.getResponseHeader('content-type');
+                const lastModified = headers.getResponseHeader('last-modified');
+
+                const file = new File([response], filename, {
+                    type: mime,
+                    lastModified: new Date(lastModified)
+                });
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                const fileInput = document.getElementById('profile-picture');
+                fileInput.files = dataTransfer.files;
+            }
+        });
+    }
+});
+
 $(document).ready(function() {
 
     var date = new Date();
@@ -315,6 +390,16 @@ $(document).ready(function() {
             return;
         }
 
+        $.ajax({
+            url: `/api/v1/users/${id}`,
+            method: 'PUT',
+            data: $(this).serialize(),
+            success: function(response)
+            {
+
+            }
+        });
+        
     });
 
 

@@ -120,9 +120,8 @@ $.ajax({
             async: false,
             timeout: 0,
             success: function(response) {
-                const url = `api/v1/images/${response['profile_picture']}`;
+                const url = `api/v1/images/${response.profilePicture}`;
                 $('.nav-link img').attr('src', url);
-                console.log(response['profile_picture']);
             }
         });
     }
@@ -287,6 +286,30 @@ $(document).ready(function()
             4000: {
                 items: 8
             }
+        }
+    });
+
+    $("#search").autocomplete({
+        delay: 0,
+        source: function(request, response) {
+            $.ajax({
+                data: {term : request.term},
+                method: "GET",
+                dataType: "json",
+                url: '../Controllers/SearchBox.php',
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        minLength: 1,
+        open: function(){
+            setTimeout(function () {
+                $('.ui-autocomplete').css('z-index', 99999999999999);
+            }, 0);
+        },
+        select: function(event, ui) {
+            alert("Selecciono: " + ui.item.label);
         }
     });
 
