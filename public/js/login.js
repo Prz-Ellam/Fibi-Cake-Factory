@@ -59,33 +59,20 @@ $(document).ready(function() {
 
         if (mode === 'password') {
             $('#password').attr('type', 'text');
-            $(`.fas`).removeClass('fa-eye').addClass('fa-eye-slash');
+            $('.fas').removeClass('fa-eye').addClass('fa-eye-slash');
         }
         else {
             $('#password').attr('type', 'password');
-            $(`.fas`).removeClass('fa-eye-slash').addClass('fa-eye');
+            $('.fas').removeClass('fa-eye-slash').addClass('fa-eye');
         }
     });
-
-    function jsonEncode(formData, multiFields = null) {
-        let object = Object.fromEntries(formData.entries());
-
-        // If the data has multi-select values
-        if (multiFields && Array.isArray(multiFields)) {
-            multiFields.forEach((field) => {
-                object[field] = formData.getAll(field);
-            });
-        }
-
-        return object;
-    }
 
     $('#login-form').submit(function(event) {
 
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 
@@ -116,7 +103,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 

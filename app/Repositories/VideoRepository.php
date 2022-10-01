@@ -12,7 +12,7 @@ class VideoRepository
 
     public function create(Video $video) : bool
     {
-        $result = DB::executeNonQuery(self::CREATE_VIDEO, [
+        return DB::executeNonQuery(self::CREATE_VIDEO, [
             "videoId"               => $video->getVideoId(),
             "name"                  => $video->getName(),
             "size"                  => $video->getSize(),
@@ -20,9 +20,7 @@ class VideoRepository
             "type"                  => $video->getType(),
             "multimediaEntityId"    => $video->getMultimediaEntityId(),
             "multimediaEntityType"  => $video->getMultimediaEntityType()
-        ]);
-
-        return $result > 0;
+        ]) > 0;
     }
 
     public function delete(string $videoId) : bool

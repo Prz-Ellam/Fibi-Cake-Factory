@@ -31,6 +31,11 @@ class Required implements RuleValidation
      */
     public function isValid(mixed $value) : bool
     {
+        if (is_numeric($value))
+        {
+            return isset($value);
+        }
+
         return isset($value) && !empty(trim($value));
     }
 

@@ -11,7 +11,7 @@
             </a>
         </li>
         <li class="list-item rounded-1">
-            <a href="/pending-products" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
+            <a href="/products" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
                 <span><i class="fas fa-box me-2"></i>Productos</span>
                 <span></span>
             </a>

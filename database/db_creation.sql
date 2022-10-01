@@ -82,32 +82,47 @@ CREATE TABLE IF NOT EXISTS products_categories(
 );
 
 -- Comments
-DROP TABLE IF EXISTS comments;
-CREATE TABLE IF NOT EXISTS comments(
-    comment_id                  BINARY(16) NOT NULL UNIQUE,
+DROP TABLE IF EXISTS reviews;
+CREATE TABLE IF NOT EXISTS reviews(
+    review_id                   BINARY(16) NOT NULL UNIQUE,
     message                     VARCHAR(255) NOT NULL,
+    rate                        SMALLINT,
     product_id                  BINARY(16) NOT NULL,
     user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT comments_pk
-        PRIMARY KEY (comment_id)
+    CONSTRAINT reviews_pk
+        PRIMARY KEY (review_id)
 );
 
+
+-- DROP TABLE IF EXISTS comments;
+-- CREATE TABLE IF NOT EXISTS comments(
+--    comment_id                  BINARY(16) NOT NULL UNIQUE,
+--    message                     VARCHAR(255) NOT NULL,
+--    product_id                  BINARY(16) NOT NULL,
+--    user_id                     BINARY(16) NOT NULL,
+--    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
+--    modified_at                 TIMESTAMP DEFAULT NOW(),
+--    active                      BOOLEAN NOT NULL DEFAULT TRUE,
+--    CONSTRAINT comments_pk
+--        PRIMARY KEY (comment_id)
+-- );
+
 -- Rates
-DROP TABLE IF EXISTS rates;
-CREATE TABLE IF NOT EXISTS rates(
-    rate_id                     BINARY(16) NOT NULL UNIQUE,
-    rate                        SMALLINT NOT NULL,
-    product_id                  BINARY(16) NOT NULL,
-    user_id                     BINARY(16) NOT NULL,
-    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
-    active                      BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT rates_pk
-        PRIMARY KEY (rate_id)
-);
+-- DROP TABLE IF EXISTS rates;
+-- CREATE TABLE IF NOT EXISTS rates(
+--    rate_id                     BINARY(16) NOT NULL UNIQUE,
+--    rate                        SMALLINT NOT NULL,
+--    product_id                  BINARY(16) NOT NULL,
+--    user_id                     BINARY(16) NOT NULL,
+--    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
+--    modified_at                 TIMESTAMP,
+--    active                      BOOLEAN NOT NULL DEFAULT TRUE,
+--    CONSTRAINT rates_pk
+--        PRIMARY KEY (rate_id)
+-- );
 
 -- Wishlists
 DROP TABLE IF EXISTS wishlists;

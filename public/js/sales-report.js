@@ -1,3 +1,46 @@
+$.ajax({
+    url: '/api/v1/reports/sales-report',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response)
+    {
+        response.forEach((element) => 
+        {
+            $('#table-body').append(/*html*/`
+                <tr>
+                    <td>${element.date}</td>
+                    <td>${element.categories}</td>
+                    <td>${element.productName}</td>
+                    <td>${element.rate}</td>
+                    <td>${element.price}</td>
+                    <td>${element.stock}</td>
+                </tr>
+            `);
+        });
+    }
+});
+
+$.ajax({
+    url: '/api/v1/reports/sales-report2',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response)
+    {
+        response.forEach((element) => 
+        {
+            $('#table-body-2').append(/*html*/`
+                <tr>
+                    <td>${element.date}</td>
+                    <td>${element.category}</td>
+                    <td>${element.quantity}</td>
+                </tr>
+            `);
+        });
+    }
+});
+
 $(document).ready(function() {
 
     var detailedSalesReport = $('#detailed-sales-report').DataTable({

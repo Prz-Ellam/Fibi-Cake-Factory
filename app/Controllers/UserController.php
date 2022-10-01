@@ -48,7 +48,7 @@ class UserController extends Controller
         $password = $request->getBody('password');
         $confirmPassword = $request->getBody('confirmPassword');
         $profilePicture = $request->getFile('profilePicture');
-        Storage::set('confirmPassword', $confirmPassword);
+        //Storage::set('confirmPassword', $confirmPassword);
         
         $session = new PhpSession();
         // Solo un super administrado logueado puede dar de alta otro tipo de usuarios
@@ -146,7 +146,7 @@ class UserController extends Controller
         $userRepository = new UserRepository();
         $result = $userRepository->create($user);
 
-        if ($result === false)
+        if (!$result)
         {
             $response->json(["response" => "No"])->setStatusCode(400);
             return;
@@ -216,7 +216,20 @@ class UserController extends Controller
      */
     public function update(Request $request, Response $response) : void
     {
+        //$userId = Uuid::uuid4()->toString();
+        $email = $request->getBody('email');
+        $username = $request->getBody('username');
+        $birthDate = $request->getBody('birthDate');
+        $firstName = $request->getBody('firstName');
+        $lastName = $request->getBody('lastName');
+        //$visible = $request->getBody('visible');
+        $gender = $request->getBody('gender');
+        //$password = $request->getBody('password');
+        //$confirmPassword = $request->getBody('confirmPassword');
+        $profilePicture = $request->getFile('profilePicture');
 
+        
+        
     }
 
     public function updatePassword(Request $request, Response $response) : void
@@ -364,5 +377,3 @@ class UserController extends Controller
     }
     
 }
-
-?>

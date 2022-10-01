@@ -64,9 +64,13 @@ class WishlistRepository
         return $result;
     }
 
-    public function getUserWishlistsPubli(string $userId, int $count, int $offset) : array
+    public function getAllByUserPublic(string $userId, int $count, int $offset) : array
     {
-        return [];
+        return DB::executeReader(self::GET_ALL_BY_USER_PUBLIC, [
+            "userId"    => $userId,
+            "count"     => $count,
+            "offset"    => $offset
+        ]);
     }
 }
 

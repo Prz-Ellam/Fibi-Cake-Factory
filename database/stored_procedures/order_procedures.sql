@@ -34,47 +34,102 @@ END $$
 DELIMITER ;
 
 
+
+
+
+
 -- TODO: Bajar la cantidad de productos en la BD
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_orders_report $$
+
+CREATE PROCEDURE sp_get_orders_report(
+    IN _user_id             VARCHAR(36),
+    IN _category_id         VARCHAR(36),
+    IN _from                DATE,
+    IN _to                  DATE
+)
+BEGIN
+
+    SELECT
+        date,
+        GROUP_CONCAT(categories) categories,
+        productName,
+        rate,
+        price
+    FROM
+        vw_orders_report
+    WHERE
+        user = _user_id
+        AND (categories_id = _category_id OR _category_id IS NULL)
+        AND (date BETWEEN IFNULL(_from, '1000-01-01') AND IFNULL(_to, '9999-12-31'))
+    GROUP BY
+        date,
+        productName,
+        rate,
+        price;
+
+END $$
+DELIMITER ;
 
 
 
-SELECT 
-    s.created_at,
-    pc.category_id
-    p.name,
-    p.price,
-    p.stock
-FROM
-    shoppings AS s
-INNER JOIN
-    products AS p
-ON
-    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)
-LEFT JOIN
-    products_categories AS pc
-ON
-    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id);
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_sales_report $$
 
+CREATE PROCEDURE sp_get_sales_report(
+    IN _user_id             VARCHAR(36),
+    IN _category_id         VARCHAR(36),
+    IN _from                DATE,
+    IN _to                  DATE
+)
+BEGIN
 
-SELECT
-    s.created_at,
-    p.name AS product_name,
-    p.price,
-    c.name
-FROM
-    shoppings AS s
-INNER JOIN
-    products AS p
-ON
-    s.product_id = p.product_id
-INNER JOIN
-    products_categories AS pc
-ON
-    p.product_id = pc.product_id
-INNER JOIN
-    categories AS c
-ON
-    pc.category_id = c.category_id;
+    SELECT
+        date,
+        GROUP_CONCAT(categories) categories,
+        productName,
+        rate,
+        price,
+        stock
+    FROM
+        vw_sales_report
+    WHERE
+        user = _user_id
+        AND (categories_id = _category_id OR _category_id IS NULL)
+        AND (date BETWEEN IFNULL(_from, '1000-01-01') AND IFNULL(_to, '9999-12-31'))
+    GROUP BY
+        date,
+        productName,
+        rate,
+        price;
+
+END $$
+DELIMITER ;
 
 
 
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_sales_report_2 $$
+
+CREATE PROCEDURE sp_get_sales_report_2(
+    IN _user_id             VARCHAR(36),
+    IN _category_id         VARCHAR(36),
+    IN _from                DATE,
+    IN _to                  DATE
+)
+BEGIN
+
+    SELECT
+        date,
+        category,
+        quantity
+    FROM
+        vw_sales_report_2
+    WHERE
+        user_id = _user_id
+        AND (category_id = _category_id OR _category_id IS NULL)
+        AND (date BETWEEN IFNULL(_from, '1000-01-01') AND IFNULL(_to, '9999-12-31'));
+
+END $$
+DELIMITER ;

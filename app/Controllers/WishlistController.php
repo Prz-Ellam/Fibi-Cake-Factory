@@ -92,6 +92,7 @@ class WishlistController extends Controller
             ->setVisible($visible)
             ->setUserId($userId);
 
+
         $validator = new Validator($wishlist);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
@@ -208,6 +209,7 @@ class WishlistController extends Controller
      */
     public function delete(Request $request, Response $response)
     {
+        // TODO: Que no se pueda borrar los que no te pertenecen
         $wishlistId = $request->getRouteParams("wishlistId");
 
         $wishlistRepository = new WishlistRepository();
@@ -236,7 +238,7 @@ class WishlistController extends Controller
      * @param Response $response
      * @return void
      */
-    public function getUserWishlists(Request $request, Response $response)
+    public function getUserWishlists(Request $request, Response $response) : void
     {
         $count = $request->getQuery("count") ?? 12;
         $page = $request->getQuery("page") ?? 1;
@@ -249,6 +251,34 @@ class WishlistController extends Controller
 
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->getUserWishlists($userId, $count, $offset);
+
+        if (is_null($result))
+        {
+            $response->setStatusCode(404)->json(["status" => "Not found"]);
+            return;
+        }
+
+        foreach ($result as &$element)
+        {
+            $element["images"] = json_decode($element["images"]);
+        }
+
+        $response->json($result);
+    }
+
+    public function getUserPublicWishlists(Request $request, Response $response) : void
+    {
+        $count = $request->getQuery("count") ?? 12;
+        $page = $request->getQuery("page") ?? 1;
+
+        $offset = floor($count * ($page - 1));
+
+        $userId = $request->getRouteParams("userId");
+
+        // TODO: Validar que coincida con la sesión
+
+        $wishlistRepository = new WishlistRepository();
+        $result = $wishlistRepository->getAllByUserPublic($userId, $count, $offset);
 
         if (is_null($result))
         {

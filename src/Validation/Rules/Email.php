@@ -16,7 +16,7 @@ class Email implements RuleValidation
 
     public function message() : string
     {
-        return "Por favor ingrese un email válido";
+        return "El formato de correo electrónico no es válido";
     }
 }
 

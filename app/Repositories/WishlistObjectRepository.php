@@ -15,22 +15,18 @@ class WishlistObjectRepository
     public function create(WishlistObject $wishlistObject)
     {
         $parameters = Parser::SP(self::CREATE);
-        $result = DB::executeNonQuery(self::CREATE, [
+        return DB::executeNonQuery(self::CREATE, [
             "wishlistObjectId"      => $wishlistObject->getWishlistObjectId(),
             "wishlistId"            => $wishlistObject->getWishlistId(),
             "productId"             => $wishlistObject->getProductId()
-        ]);
-
-        return $result > 0;
+        ]) > 0;
     }
 
     public function delete(string $wishlistObjectId)
     {
-        $result = DB::executeNonQuery(self::DELETE, [
+        return DB::executeNonQuery(self::DELETE, [
             "wishlistObjectId"      => $wishlistObjectId
-        ]);
-
-        return $result > 0;
+        ]) > 0;
     }
 
     public function getWishlistObjects(string $wishlistId)

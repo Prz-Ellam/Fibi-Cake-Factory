@@ -25,6 +25,8 @@ const productCard = /*html*/`
 </div>
 `;
 
+const id = new URLSearchParams(location.search).get('id') || '0';
+
 $.ajax({
     url: `/api/v1/users/${new URLSearchParams(location.search).get('id') || '0'}`,
     method: 'GET',
@@ -38,20 +40,35 @@ $.ajax({
 
         console.log(response);
     }
-})
+});
+
+$.ajax({
+    url: `/api/v1/users/${id}/products/approved`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        response.forEach(function(product) {
+            $('#seller-product-container').append(productCard);
+        });
+    }
+});
+
+$.ajax({
+    url: `api/v1/users/${id}/wishlists/public`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response) {
+        response.forEach(function(element) {
+            $('#seller-wishlist-container').append(wishlistCard);
+            //var carouselDOM = $(wishlist).find('.card .carousel')[0];
+            //var carousel = new bootstrap.Carousel(carouselDOM);
+            //carousel.cycle();
+        });
+     }
+});
 
 
-for (let i = 0; i < 6; i++)
-{
-    $('#client-wishlist-container').append(wishlistCard);
-    $('#seller-wishlist-container').append(wishlistCard);
-}
-
-for (let i = 0; i < 12; i++)
-{
-    $('#seller-product-container').append(productCard);
-    $('#admin-product-container').append(productCard);
-}
 
 $(document).ready(function() {
 

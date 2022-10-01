@@ -7,11 +7,11 @@ function CommentComponent(comment)
             <div class="col-12">
                 <a href="/profile?id=${comment.userId}" class="mt-0 me-1">${comment.username}</a>
                 <span class="rating">
-                    <i class="rating-star far fa-star" value="1"></i>
-                    <i class="rating-star far fa-star" value="2"></i>
-                    <i class="rating-star far fa-star" value="3"></i>
-                    <i class="rating-star far fa-star" value="4"></i>
-                    <i class="rating-star far fa-star" value="5"></i>
+                    <i class="rating-star ${ (comment.rate >= 1) ? 'fas' : 'far'} fa-star" value="1"></i>
+                    <i class="rating-star ${ (comment.rate >= 2) ? 'fas' : 'far'} fa-star" value="2"></i>
+                    <i class="rating-star ${ (comment.rate >= 3) ? 'fas' : 'far'} fa-star" value="3"></i>
+                    <i class="rating-star ${ (comment.rate >= 4) ? 'fas' : 'far'} fa-star" value="4"></i>
+                    <i class="rating-star ${ (comment.rate >= 5) ? 'fas' : 'far'} fa-star" value="5"></i>
                 </span>
                 <p class="mb-0">${comment.message}</p>
                 <small>${comment.createdAt}</small><br>
@@ -41,14 +41,8 @@ getSession = () => {
 const productId = new URLSearchParams(window.location.search).get("search");
 const id = getSession();
 
-$.ajax({
-    url: "api/v1/session",
-    method: "GET",
-    async: false,
-    timeout: 0,
-    success: function(response) {
         $.ajax({
-            url: `api/v1/users/${response.id}`,
+            url: `api/v1/users/${id}`,
             method: "GET",
             async: false,
             timeout: 0,
@@ -57,8 +51,7 @@ $.ajax({
                 $('.nav-link img').attr('src', url);
             }
         });
-    }
-});
+
 
 
 $.ajax({
@@ -82,6 +75,8 @@ $.ajax({
         $('#zoom').attr('src', 'api/v1/images/' + product.images[0]);
         $('.mini-zoom').attr('src', 'api/v1/images/' + product.images[0]);
 
+        $('#rate-number').text('4.6');
+
     }
 });
 
@@ -94,7 +89,6 @@ $.ajax({
         response.forEach((comment) => {
             $('#comment-section').append(CommentComponent(comment));
         })
-        console.log(response);
     }
 });
 

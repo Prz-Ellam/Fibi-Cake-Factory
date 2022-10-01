@@ -191,16 +191,46 @@ SELECT * FROM wishlists;
 
 
 
-
-SELECT * FROM products;
-
+SELECT * FROM vw_orders_report;
 
 
-SELECT s.created_at, s.amount, p.name, c.name FROM shoppings AS s
-INNER JOIN products AS p ON s.product_id = p.product_id
-INNER JOIN products_categories AS pc ON s.product_id = pc.product_id
-INNER JOIN categories AS c ON pc.category_id = c.category_id;
+-- TODO: Tal vez el categorias deberia tener un unique en nombre?
+
+SELECT 
+    s.created_at `date`,
+    GROUP_CONCAT(DISTINCT c.name) `categories`,
+    p.name `productName`,
+    IFNULL(ROUND(AVG(r.rate), 2), 'No reviews') `rate`,
+    s.amount / s.quantity `price`,
+    BIN_TO_UUID(o.user_id) `user`
+FROM
+    shoppings AS s
+INNER JOIN
+    orders AS o
+ON
+    BIN_TO_UUID(s.order_id) = BIN_TO_UUID(o.order_id)
+INNER JOIN 
+    products AS p 
+ON 
+    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)
+INNER JOIN 
+    products_categories AS pc
+ON 
+    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(pc.product_id)
+INNER JOIN 
+    categories AS c
+ON 
+    BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(c.category_id)
+LEFT JOIN
+    reviews AS r
+ON
+    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(r.product_id)
+GROUP BY
+    s.created_at,
+    s.amount,
+    s.quantity,
+    p.name;
 
 
 
-SELECT * FROM users;
+SELECT * FROM wishlists;

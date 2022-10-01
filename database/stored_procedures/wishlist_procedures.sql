@@ -158,6 +158,54 @@ DELIMITER ;
 
 
 
+DELIMITER $$
+DROP PROCEDURE IF EXISTS get_all_by_user_public $$
+
+CREATE PROCEDURE get_all_by_user_public(
+    IN _user_id                 VARCHAR(36),
+    IN _limit                   INT,
+    IN _offset                  INT
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(w.wishlist_id) id,
+        w.name,
+        w.description,
+        w.visible,
+        IF(BIN_TO_UUID(i.image_id) IS NOT NULL, 
+        JSON_ARRAYAGG(BIN_TO_UUID(i.image_id)),
+        JSON_ARRAY()) images
+    FROM
+        wishlists AS w
+    LEFT JOIN
+        images AS i
+    ON
+        BIN_TO_UUID(i.multimedia_entity_id) = BIN_TO_UUID(w.wishlist_id) 
+        AND i.multimedia_entity_type = 'wishlists'
+    WHERE
+        BIN_TO_UUID(w.user_id) = _user_id
+        AND w.visible = TRUE
+        AND w.active = TRUE
+    GROUP BY
+        w.wishlist_id,
+        w.name, 
+        w.description, 
+        w.visible
+    ORDER BY
+        w.created_at ASC
+    LIMIT
+        _limit
+    OFFSET
+        _offset;
+
+END$$
+DELIMITER ;
+
+
+
+
+
 --SELECT value FROM JSON_TABLE(
 --    '[  "774f4c15-05fc-48b9-827f-1d5f2e267341", 
 --        "7d409c8b-a6f5-41a3-a6e8-e4d4e1d70479" 

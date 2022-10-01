@@ -3,26 +3,28 @@
 namespace CakeFactory\Repositories;
 
 use CakeFactory\Models\Comment;
+use CakeFactory\Models\Review;
 use Fibi\Database\DB;
 
-class CommentRepository
+class ReviewRepository
 {
-    private const CREATE = "CALL sp_create_comment(:commentId, :message, :productId, :userId)";
+    private const CREATE = "CALL sp_create_review(:reviewId, :message, :rate, :productId, :userId)";
     private const UPDATE = "";
     private const DELETE = "";
-    private const GET_ALL_BY_PRODUCT = "CALL sp_comments_get_all_by_product(:productId)";
+    private const GET_ALL_BY_PRODUCT = "CALL sp_reviews_get_all_by_product(:productId)";
 
-    public function create(Comment $comment) : bool
+    public function create(Review $comment) : bool
     {
         return DB::executeNonQuery(self::CREATE, [
-            "commentId" => $comment->getCommentId(),
+            "reviewId" => $comment->getReviewId(),
             "message" => $comment->getMessage(),
+            "rate" => $comment->getRate(),
             "productId" => $comment->getProductId(),
             "userId" => $comment->getUserId()
         ]) > 0;
     }
 
-    public function update(Comment $comment) : bool
+    public function update(Review $comment) : bool
     {
         return false;
     }

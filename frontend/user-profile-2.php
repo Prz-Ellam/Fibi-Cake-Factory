@@ -73,7 +73,7 @@ use CakeFactory\Repositories\UserRepository;
                 <div id="test-1" class="">
                     <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
 
-                    <div class="row" id="client-wishlist-container">
+                    <div class="row" class="wishlist-container" id="client-wishlist-container">
                     </div>
                     
                     <nav aria-label="Page navigation example">
@@ -92,7 +92,7 @@ use CakeFactory\Repositories\UserRepository;
                         case "Administrador":
                 ?>
 
-                <div id="test-2" class="">
+                <div id="test-2" class="wishlist-container">
                     <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
                     <h4 class="text-brown text-center"><i class="fas fa-lock"></i> Esta cuenta es privada</h4>
                 </div>
@@ -102,7 +102,7 @@ use CakeFactory\Repositories\UserRepository;
                         case "Vendedor":
                 ?>
 
-                <div id="test-3" class="">
+                <div id="test-3" class="wishlist-container">
                     
                     <ul class="nav nav-tabs mb-4" id="main-tab">
                         <li class="nav-item">
@@ -116,7 +116,7 @@ use CakeFactory\Repositories\UserRepository;
                     <div class="row" id="seller-product-container">
                         <h1 class="text-brown text-center mb-4">Productos</h1>
                     </div>
-                    <div class="row d-none" id="seller-wishlist-container">
+                    <div class="row d-none" class="product-container" id="seller-wishlist-container">
                         <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
                     </div>
                     
@@ -137,10 +137,10 @@ use CakeFactory\Repositories\UserRepository;
                         case "Comprador":
                 ?>
             
-                <div id="test-4" class="">
+                <div id="test-4" class="wishlist-container">
                     <h1 class="text-brown text-center mb-4">Productos aprobados</h1>
                     
-                    <div class="row" id="admin-product-container">
+                    <div class="row" class="product-container" id="admin-product-container">
                     </div>
                     <nav aria-label="Page navigation example">
                         <ul class="mt-4 pagination justify-content-center">

@@ -45,5 +45,3 @@ class ImageRepository
         return $result > 0;
     }
 }
-
-?>

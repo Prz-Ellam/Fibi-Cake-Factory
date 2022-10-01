@@ -64,6 +64,8 @@
                             <i class="rating-star far fa-star" value="5"></i>
                         </div>
 
+                        <p id="rate-number"></p>
+
                         <hr>
 
                         <p class="fw-bold text-brown">Descripción:</p>

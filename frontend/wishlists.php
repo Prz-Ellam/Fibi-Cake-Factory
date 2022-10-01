@@ -98,7 +98,7 @@
                                 <select class="form-select shadow-none rounded-1" name="visible" id="add-wishlist-visibility">
                                     <option value="">Seleccionar</option>
                                     <option value="1">Pública</option>
-                                    <option value="2">Privada</option>
+                                    <option value="0">Privada</option>
                                 </select>
                             </div>
                         </div>

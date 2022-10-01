@@ -7,7 +7,7 @@ use Fibi\Validation\Rules\MaxLength;
 use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Rules\Uuid;
 
-class Comment implements Model
+class Review implements Model
 {
     /**
      * Undocumented variable
@@ -16,7 +16,7 @@ class Comment implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $commentId;
+    private ?string $reviewId;
 
     /**
      * Undocumented variable
@@ -26,6 +26,15 @@ class Comment implements Model
     #[Required]
     #[MaxLength(255)]
     private ?string $message;
+
+    /**
+     * Undocumented variable
+     *
+     * @var integer|null
+     */
+    #[Required]
+    #[MaxLength(5)]
+    private ?int $rate;
 
     /**
      * Undocumented variable
@@ -45,14 +54,14 @@ class Comment implements Model
     #[Uuid]
     private ?string $userId;
 
-    public function getCommentId() : ?string
+    public function getReviewId() : ?string
     {
-        return $this->commentId;
+        return $this->reviewId;
     }
 
-    public function setCommentId(?string $commentId) : self
+    public function setReviewId(?string $reviewId) : self
     {
-        $this->commentId = $commentId;
+        $this->reviewId = $reviewId;
         return $this;
     }
 
@@ -64,6 +73,17 @@ class Comment implements Model
     public function setMessage(?string $message) : self
     {
         $this->message = $message;
+        return $this;
+    }
+
+    public function getRate() : ?int
+    {
+        return $this->rate;
+    }
+
+    public function setRate(?int $rate) : self
+    {
+        $this->rate = $rate;
         return $this;
     }
 

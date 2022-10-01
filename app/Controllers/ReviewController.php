@@ -2,8 +2,8 @@
 
 namespace CakeFactory\Controllers;
 
-use CakeFactory\Models\Comment;
-use CakeFactory\Repositories\CommentRepository;
+use CakeFactory\Models\Review;
+use CakeFactory\Repositories\ReviewRepository;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
@@ -12,7 +12,7 @@ use Fibi\Validation\Rules;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
-class CommentController
+class ReviewController
 {
     /**
      * Crea un comentario
@@ -25,19 +25,20 @@ class CommentController
     {
         $session = new PhpSession();
 
-        $commentId = Uuid::uuid4()->toString();
+        $reviewId = Uuid::uuid4()->toString();
         $message = $request->getBody("message");
         $productId = $request->getRouteParams("productId");
         $userId = $session->get("user_id");
 
-        $comment = new Comment();
-        $comment
-            ->setCommentId($commentId)
+        $review = new Review();
+        $review
+            ->setReviewId($reviewId)
             ->setMessage($message)
+            ->setRate(10)
             ->setProductId($productId)
             ->setUserId($userId);
 
-        $validator = new Validator($comment);
+        $validator = new Validator($review);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
@@ -50,8 +51,8 @@ class CommentController
             return;
         }
 
-        $commentRepository = new CommentRepository();
-        $status = $commentRepository->create($comment);
+        $commentRepository = new ReviewRepository();
+        $status = $commentRepository->create($review);
         if (!$status)
         {
             $response->json([
@@ -81,7 +82,7 @@ class CommentController
             return;
         }
 
-        $commentRepository = new CommentRepository();
+        $commentRepository = new ReviewRepository();
         $comments = $commentRepository->getAllByProduct($productId);
 
         $response->json($comments);

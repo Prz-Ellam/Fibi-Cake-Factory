@@ -63,15 +63,7 @@
                         <th>Existencia actual</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>25/06/2022 13:59</td>
-                        <td>Tres leches</td>
-                        <td>Supremo de tres leches</td>
-                        <td>5 estrellas</td>
-                        <td>$321.00 M.N</td>
-                        <td>26</td>
-                    </tr>
+                <tbody id="table-body">
                 </tbody>
             </table>
         </div>
@@ -88,12 +80,7 @@
                         <th>Ventas</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Febrero de 2022</td>
-                        <td>Frutas</td>
-                        <td>36</td>
-                    </tr>
+                <tbody id="table-body-2">
                 </tbody>
             </table>
         </div>

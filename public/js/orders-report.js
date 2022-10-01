@@ -1,3 +1,26 @@
+$.ajax({
+    url: '/api/v1/reports/order-report',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response)
+    {
+        response.forEach((element) => 
+        {
+            $('#table-body').append(/*html*/`
+                <tr role="button">
+                    <td>${element.date}</td>
+                    <td>${element.categories}</td>
+                    <td>${element.productName}</td>
+                    <td>${element.rate}</td>
+                    <td>${element.price}</td>
+                </tr>
+            `);
+        });
+
+    }
+});
+
 $(document).ready(function() {
 
     var table = $('#orders-report').DataTable({

@@ -62,14 +62,8 @@
                         <th>Precio</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr role="button">
-                        <td>14/03/2022 17:49</td>
-                        <td>Frutas</td>
-                        <td>Tentación de frutas</td>
-                        <td>4 estrellas</td>
-                        <td>$267.00 M.N</td>
-                    </tr>
+                <tbody id="table-body">
+                    
                 </tbody>
             </table>
         </div>
