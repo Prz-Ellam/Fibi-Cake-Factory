@@ -77,7 +77,6 @@ END $$
 DELIMITER ;
 
 
-CALL sp_get_users_except('', '1');
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_users_except $$
@@ -118,15 +117,20 @@ CREATE PROCEDURE sp_get_user(
 BEGIN
 
     SELECT
-        email,
-        username,
-        first_name AS firstName,
-        last_name AS lastName,
-        birth_date AS birthDate,
-        gender AS gender,
-        BIN_TO_UUID(profile_picture) AS profilePicture
+        u.email,
+        u.username,
+        u.first_name AS firstName,
+        u.last_name AS lastName,
+        u.birth_date AS birthDate,
+        u.gender AS gender,
+        ur.name AS userRole,
+        BIN_TO_UUID(u.profile_picture) AS profilePicture
     FROM
-        users
+        users AS u
+    INNER JOIN
+        user_roles AS ur
+    ON
+        BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
     WHERE
         BIN_TO_UUID(user_id) = _user_id;
 
@@ -194,3 +198,11 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+
+SELECT *, BIN_TO_UUID(user_role) FROM users;
+
+UPDATE users SET user_role = UUID_TO_BIN('62be423f-10fd-4cae-b066-b853cc30fe43') WHERE username = 'Grace';
+
+SELECT *, BIN_TO_UUID(user_role_id) FROM user_roles;

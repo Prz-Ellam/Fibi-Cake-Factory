@@ -1,70 +1,17 @@
 
 
+import { getSession } from './utils/session.js';
+
+const id = getSession();
 class Wishlist
 {
-    constructor(name, description, visibility, images)
+    constructor(name, description, visible, images)
     {
         this.name = name;
         this.description = description;
-        this.visibility = visibility;
+        this.visible = visibility;
         this.images = images;
     }
-}
-
-function getImages() {
-
-    let imagesHTML;
-    $('#add-image-list').children('span').each(function(i, element) {
-
-        const dataURL = $(element).find('.product-mul').attr('src');
-        imagesHTML += /*html*/`
-        <div class="carousel-item${(i == 0 ? " active" : "")}" data-bs-interval="10000">
-            <div class="ratio ratio-4x3">
-                <img src="${dataURL}" class="card-img-top w-100 h-100">
-            </div>
-        </div>
-        `;
-    });
-
-    return imagesHTML;
-
-}
-
-function WishlistCard(wishlist) {
-
-    const visibility = (Number(wishlist.visibility) === 1) ? 
-    `<p class="text-brown wishlist-visibility" value="1"><i class="fas fa-users" aria-hidden="true"></i> Pública</p>`
-    :
-    `<p class="text-brown wishlist-visibility" value="2"><i class="fas fa-lock"></i> Privada</p>`;
-
-    const card = $($.parseHTML(/*html*/`
-    <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
-        <div class="card mx-auto" style="width: 18rem;">
-            <div class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    ${getImages()}
-                </div>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-brown wishlist-name">${wishlist.name}</h5>
-                <p class="card-text text-brown mb-2 wishlist-description">${wishlist.description}</p>
-                ${visibility}
-                <div class="d-flex justify-content-start">
-                    <a href="#" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
-                    <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-wishlist">Eliminar</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    `));
-
-    $('#wishlist-container').append(card);
-    //console.log(jqCard)
-    var carouselDOM = $(card).find('.card .carousel')[0];
-    console.log(carouselDOM);
-    var carousel = new bootstrap.Carousel(carouselDOM);
-    carousel.cycle();
-
 }
 
 function getImageHTML(images)
@@ -108,7 +55,7 @@ function createWishlistCard(wishlist)
             <div class="card-body">
                 <h5 class="card-title text-brown wishlist-name">${wishlist.name}</h5>
                 <p class="card-text text-brown wishlist-description mb-2">${wishlist.description}</p>
-                ${ (wishlist.visibility === 1) ? 
+                ${ (wishlist.visible === 1) ? 
                     /*html*/`<p class="text-brown wishlist-visibility" value="1"><i class="fas fa-users" aria-hidden="true"></i> Pública</p>` : 
                     /*html*/`<p class="text-brown wishlist-visibility" value="2"><i class="fas fa-lock"></i> Privada</p>`
                 }
@@ -122,70 +69,32 @@ function createWishlistCard(wishlist)
     `));
 }
 
-
-const wishlistCard = /*html*/`
-<div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
-    <div class="card mx-auto" style="width: 18rem;">
-        <div class="carousel slide" data-bs-ride="carousel" role="button">
-            <div class="carousel-inner">
-                <div class="carousel-item active" data-bs-interval="10000">
-                    <div class="ratio ratio-4x3">
-                        <img src="assets/img/wishlist.png" class="card-img-top w-100 h-100">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title text-brown wishlist-name">Nombre de la lista</h5>
-            <p class="card-text text-brown wishlist-description mb-2">Descripción de la lista</p>
-            <p class="text-brown wishlist-visibility" value="1">
-                <i class="fas fa-users" aria-hidden="true"></i> Pública
-            </p>
-            <div class="d-flex justify-content-start">
-                <a href="/edit-product" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
-                <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-wishlist">Eliminar</a>
-            </div>
-        </div>
-    </div>
-</div>
-`;
-
-
 $.ajax({
-    url: "api/v1/session",
+    url: `api/v1/users/${id}`,
     method: "GET",
+    async: false,
     timeout: 0,
     success: function(response) {
-
-        $.ajax({
-            url: `api/v1/users/${response.id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
-        });
-        
-        console.log(response.id);
-
-        $.ajax({
-            url: `api/v1/users/${response.id}/wishlists`,
-            method: 'GET',
-            timeout: 0,
-            success: function(response) {
-                response.forEach(function(element) {
-                    const wishlist = createWishlistCard(element);
-                    $('#wishlist-container').append(wishlist);
-                    var carouselDOM = $(wishlist).find('.card .carousel')[0];
-                    var carousel = new bootstrap.Carousel(carouselDOM);
-                    carousel.cycle();
-                });
-            }
-        });
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
     }
 });
+        
+$.ajax({
+    url: `api/v1/users/${id}/wishlists`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response) {
+        response.forEach(function(element) {
+            const wishlist = createWishlistCard(element);
+            $('#wishlist-container').append(wishlist);
+            var carouselDOM = $(wishlist).find('.card .carousel')[0];
+            var carousel = new bootstrap.Carousel(carouselDOM);
+            carousel.cycle();
+        });
+     }
+});
+
 
 $(document).ready(function() {
 
@@ -581,8 +490,8 @@ $(document).ready(function() {
 
         const requestBody = new FormData(this);
 
-        modal = document.getElementById('create-wishlist');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('create-wishlist');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
         
         $.ajax({

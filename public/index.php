@@ -165,6 +165,13 @@ $app->get('/products', function(Request $request, Response $response) {
         return;
     }
 
+    $role = $session->get("role");
+    if ($role === "Super Administrador" || $role === "Administrador") 
+    {
+        $response->view('approve-products', 'auth-layout');
+        return;
+    }
+
     $response->view('products', 'auth-layout');
 });
 
@@ -426,6 +433,14 @@ $app->get('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'get
 
 $app->post('/api/v1/{productId}/comments', [ new CommentController(), 'create' ]);
 $app->get('/api/v1/products/{productId}/comments', [ new CommentController(), 'getProductComments' ]);
+
+$app->get('/api/v1/products/find/pending', [ new ProductController(), 'getPendingProducts' ]);
+$app->post('/api/v1/products/{productId}/approve', [ new ProductController(), 'approve'  ]);
+$app->post('/api/v1/products/{productId}/denied', [ new ProductController(), 'denied'  ]);
+
+$app->get('/api/v1/users/{userId}/products/approved', [ new ProductController(), 'getUserApproveProducts' ]);
+$app->get('/api/v1/users/{userId}/products/denied', [ new ProductController(), 'getUserDeniedProducts' ]);
+$app->get('/api/v1/users/{userId}/products/pending', [ new ProductController(), 'getUserPendingProducts' ]);
 
 $app->put('/prueba', function (Request $request, Response $response) {
 

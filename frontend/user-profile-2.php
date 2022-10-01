@@ -1,3 +1,14 @@
+<?php
+
+use CakeFactory\Repositories\UserRepository;
+
+    $var = $_GET["id"];
+
+    $userRepository = new UserRepository();
+    $user = $userRepository->getUser($var);
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,7 +65,12 @@
                     
                 <hr class="mb-5">
 
-                <div id="test-1" class="d-none">
+                <?php
+                    switch($user[0]["userRole"]) { 
+                        case "Super Administrador":
+                ?>
+
+                <div id="test-1" class="">
                     <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
 
                     <div class="row" id="client-wishlist-container">
@@ -71,12 +87,22 @@
                     </nav>
                 </div>
 
-                <div id="test-2" class="d-none">
+                <?php
+                            break;
+                        case "Administrador":
+                ?>
+
+                <div id="test-2" class="">
                     <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
                     <h4 class="text-brown text-center"><i class="fas fa-lock"></i> Esta cuenta es privada</h4>
                 </div>
 
-                <div id="test-3" class="d-none">
+                <?php
+                            break;
+                        case "Vendedor":
+                ?>
+
+                <div id="test-3" class="">
                     
                     <ul class="nav nav-tabs mb-4" id="main-tab">
                         <li class="nav-item">
@@ -105,8 +131,13 @@
                     </nav>
                     
                 </div>
+
+                <?php
+                            break;
+                        case "Comprador":
+                ?>
             
-                <div id="test-4" class="d-none">
+                <div id="test-4" class="">
                     <h1 class="text-brown text-center mb-4">Productos aprobados</h1>
                     
                     <div class="row" id="admin-product-container">
@@ -121,6 +152,11 @@
                         </ul>
                     </nav>
                 </div>
+
+                <?php
+                            break;
+                    };
+                ?>
             </div>
         </div>
     </section>

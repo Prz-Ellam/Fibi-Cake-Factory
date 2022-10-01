@@ -52,20 +52,7 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Frutas</td>
-                                        <td>Son de frutas</td>
-                                        <td>
-                                            <button class="btn btn-primary shadow-none rounded-1 btn-edit" data-bs-toggle="modal" data-bs-target="#edit-category">
-                                                <i class="fa fa-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-danger shadow-none rounded-1 btn-delete" data-bs-toggle="modal" data-bs-target="#delete-category">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody id="table-body">
                                 </tbody>
                             </table>
                         </div>

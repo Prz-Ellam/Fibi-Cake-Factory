@@ -205,6 +205,6 @@
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
 
     <!-- Script -->
-    <script type="text/javascript" src="./js/wishlists.js"></script>
+    <script type="module" src="./js/wishlists.js"></script>
 </body>
 </html>

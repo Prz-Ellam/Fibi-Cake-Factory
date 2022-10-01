@@ -6,6 +6,33 @@ class Category {
     }
 }
 
+$.ajax({
+    url: '/api/v1/categories',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response)
+    {
+        response.forEach((category) => {
+            $('#table-body').append(/*html*/`
+            <tr>
+                <td></td>
+                <td>${category.name}</td>
+                <td>${category.description}</td>
+                <td>
+                    <button class="btn btn-primary shadow-none rounded-1 btn-edit" data-bs-toggle="modal" data-bs-target="#edit-category">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger shadow-none rounded-1 btn-delete" data-bs-toggle="modal" data-bs-target="#delete-category">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            `);
+        });
+    }
+})
+
 $(document).ready(function() {
 
     var table = $('#categories').DataTable({

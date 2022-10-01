@@ -55,7 +55,7 @@ for (let i = 0; i < 12; i++)
 
 $(document).ready(function() {
 
-    const id = new URLSearchParams(window.location.search).get("id");
+    const id = new URLSearchParams(window.location.search).get("a");
     $(`#test-${id}`).removeClass('d-none');
 
     $("#main-tab li a").click(function(e) {

@@ -1,3 +1,31 @@
+$.ajax({
+    url: '/api/v1/products/find/pending',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response)
+    {
+        response.forEach((product) =>
+        {
+            $('#table-body').append(/*html*/`
+                <tr role="button">
+                    <td scope="row">1</td>
+                    <td>${product.name}</td>
+                    <td>
+                        <img class="img-fluid rounded-circle" width="40" height="40" src="/api/v1/images/${product.profilePicture}">
+                        <span>${product.username}</span>
+                    </td>
+                    <td>${product.createdAt}</td>
+                    <td>
+                        <button class="btn btn-success shadow-none rounded-1 btn-approve" value="${product.id}"><i class="fa fa-check"></i></button>
+                        <button class="btn btn-danger shadow-none rounded-1 btn-denied" value="${product.id}"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `);
+        })
+    }
+})
+
 $(document).ready(function() {
 
     $('#table-products').DataTable({
@@ -41,18 +69,45 @@ $(document).ready(function() {
 
     $(document).on('click', '.btn-approve', function() {
         $(this).closest('tr').remove();
-        Toast.fire({
-            icon: 'success',
-            title: 'El producto ha sido aprobado'
+
+        const id = $(this).val();
+
+        $.ajax({
+            url: `/api/v1/products/${id}/approve`,
+            method: 'POST',
+            timeout: 0,
+            success: function(response)
+            {
+                console.log(response);
+                Toast.fire({
+                    icon: 'success',
+                    title: 'El producto ha sido aprobado'
+                });
+            } 
         });
+
+        
     });
 
     $(document).on('click', '.btn-denied', function() {
         $(this).closest('tr').remove();
-        Toast.fire({
-            icon: 'error',
-            title: 'El producto ha sido rechazado'
+
+        const id = $(this).val();
+
+        $.ajax({
+            url: `/api/v1/products/${id}/denied`,
+            method: 'POST',
+            timeout: 0,
+            success: function(response)
+            {
+                console.log(response);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'El producto ha sido rechazado'
+                });
+            } 
         });
+        
     });
 
 });

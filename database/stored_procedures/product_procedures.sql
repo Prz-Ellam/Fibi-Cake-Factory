@@ -175,7 +175,6 @@ BEGIN
         p.approved;
 
 END $$
-
 DELIMITER ;
 
 
@@ -265,6 +264,7 @@ BEGIN
         BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
     WHERE
         p.active = TRUE
+        AND p.approved = TRUE
     GROUP BY
         p.product_id, 
         p.name, 
@@ -332,3 +332,283 @@ SELECT
         p.price, 
         p.stock, 
         p.approved;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_pending_products $$
+
+CREATE PROCEDURE sp_get_pending_products()
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        p.name,
+        p.description,
+        p.is_quotable,
+        p.price,
+        p.stock,
+        p.approved,
+        u.username,
+        p.created_at createdAt,
+        BIN_TO_UUID(u.profile_picture) profilePicture,
+        JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
+    FROM
+        products AS p
+    INNER JOIN
+        users AS u
+    ON
+        BIN_TO_UUID(p.user_id) = BIN_TO_UUID(u.user_id)
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    INNER JOIN
+        categories AS c
+    ON
+        BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(c.category_id)
+    INNER JOIN
+        images AS i
+    ON
+        p.product_id = i.multimedia_entity_id
+    INNER JOIN
+        videos AS v
+    ON
+        p.product_id = v.multimedia_entity_id
+    WHERE
+        p.approved = FALSE
+        AND p.approved_by IS NULL
+    GROUP BY
+        p.product_id, 
+        p.name, 
+        p.description, 
+        p.is_quotable, 
+        p.price, 
+        p.stock, 
+        p.approved,
+        u.username,
+        u.profile_picture,
+        p.created_at;
+
+END $$
+DELIMITER ;
+
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_product_approve $$
+
+CREATE PROCEDURE sp_product_approve(
+    IN _product_id              VARCHAR(36),
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    UPDATE
+        products
+    SET
+        approved = TRUE,
+        approved_by = UUID_TO_BIN(_user_id)
+    WHERE
+        BIN_TO_UUID(product_id) = _product_id;
+
+END $$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_product_denied $$
+
+CREATE PROCEDURE sp_product_denied(
+    IN _product_id              VARCHAR(36),
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    UPDATE
+        products
+    SET
+        approved = FALSE,
+        approved_by = UUID_TO_BIN(_user_id)
+    WHERE
+        BIN_TO_UUID(product_id) = _product_id;
+
+END $$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_products_approved $$
+
+CREATE PROCEDURE sp_get_user_products_approved(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        p.name,
+        p.description,
+        p.is_quotable,
+        p.price,
+        p.stock,
+        p.approved,
+        JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
+    FROM
+        products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    INNER JOIN
+        categories AS c
+    ON
+        BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(c.category_id)
+    INNER JOIN
+        images AS i
+    ON
+        p.product_id = i.multimedia_entity_id
+    INNER JOIN
+        videos AS v
+    ON
+        p.product_id = v.multimedia_entity_id
+    WHERE
+        BIN_TO_UUID(p.user_id) = _user_id
+        AND p.approved = TRUE
+        AND p.approved_by IS NOT NULL
+        AND p.active = TRUE
+    GROUP BY
+        p.product_id, 
+        p.name, 
+        p.description, 
+        p.is_quotable, 
+        p.price, 
+        p.stock, 
+        p.approved;
+
+END $$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_products_denied $$
+
+CREATE PROCEDURE sp_get_user_products_denied(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        p.name,
+        p.description,
+        p.is_quotable,
+        p.price,
+        p.stock,
+        p.approved,
+        JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
+    FROM
+        products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    INNER JOIN
+        categories AS c
+    ON
+        BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(c.category_id)
+    INNER JOIN
+        images AS i
+    ON
+        p.product_id = i.multimedia_entity_id
+    INNER JOIN
+        videos AS v
+    ON
+        p.product_id = v.multimedia_entity_id
+    WHERE
+        BIN_TO_UUID(p.user_id) = _user_id
+        AND p.approved = FALSE
+        AND p.approved_by IS NOT NULL
+        AND p.active = TRUE
+    GROUP BY
+        p.product_id, 
+        p.name, 
+        p.description, 
+        p.is_quotable, 
+        p.price, 
+        p.stock, 
+        p.approved;
+
+END $$
+DELIMITER ;
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_products_pending $$
+
+CREATE PROCEDURE sp_get_user_products_pending(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        p.name,
+        p.description,
+        p.is_quotable,
+        p.price,
+        p.stock,
+        p.approved,
+        JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
+    FROM
+        products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    INNER JOIN
+        categories AS c
+    ON
+        BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(c.category_id)
+    INNER JOIN
+        images AS i
+    ON
+        p.product_id = i.multimedia_entity_id
+    INNER JOIN
+        videos AS v
+    ON
+        p.product_id = v.multimedia_entity_id
+    WHERE
+        BIN_TO_UUID(p.user_id) = _user_id
+        AND p.approved = FALSE
+        AND p.approved_by IS NULL
+        AND p.active = TRUE
+    GROUP BY
+        p.product_id, 
+        p.name, 
+        p.description, 
+        p.is_quotable, 
+        p.price, 
+        p.stock, 
+        p.approved;
+
+END $$
+DELIMITER ;

@@ -27,7 +27,7 @@
 </head>
 <body>
     <div class="main-container d-flex">
-        @side-bar
+        @sidebar
         <div class="content">
             <div class="container m-0 card">
                 <div class="row d-flex justify-content-center">
@@ -47,17 +47,7 @@
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr role="button">
-                                        <td scope="row">1</td>
-                                        <td>Fresas con crema</td>
-                                        <td><img class="img-fluid rounded-circle" width="40" height="40" src="https://cdn.pixabay.com/user/2014/05/07/00-10-34-2_250x250.jpg"> Eliam</td>
-                                        <td>12 de marzo de 2022</td>
-                                        <td>
-                                            <button class="btn btn-success shadow-none rounded-1 btn-approve"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-danger shadow-none rounded-1 btn-denied"><i class="fa fa-trash"></i></button>
-                                        </td>
-                                    </tr>
+                                <tbody id="table-body">
                                 </tbody>
                             </table>
                         </div>            

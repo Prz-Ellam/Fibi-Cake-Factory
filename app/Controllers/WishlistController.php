@@ -10,8 +10,12 @@ use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
+/**
+ * Controlador de las listas de deseos
+ */
 class WishlistController extends Controller
 {
     /**
@@ -27,30 +31,24 @@ class WishlistController extends Controller
     public function create(Request $request, Response $response)
     {
         // TODO: Validar que exista una sección activa
+        $session = new PhpSession();
 
         $wishlistId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
-        $visibility = $request->getBody("visible");
+        $visible = $request->getBody("visible");
         $images = $request->getFileArray("images");
-        $userId = (new PhpSession())->get('user_id');
+        $userId = $session->get('user_id');
 
         // TODO: Las imagenes de listas borradas no deben poder ser accedidas
         $imagesId = [];
         foreach ($images as $image)
         {
             $imageId = Uuid::uuid4()->toString();
-
-            $ext = explode('.', $image["name"])[1];
-
-            //$JWT_SECRET = "3bb515fea33c5a653a5bbdcd20d958c8b7e49a91db0c74e91a04a0faab4f5c3a";
-            //$jwt = JWT::encode([$imageId], $JWT_SECRET, "HS256");
-            
-            $imageName = "$imageId.$ext";
-            //$imageName = $image["name"];
-            $imageType = $image["type"];
-            $imageSize = $image["size"];
-            $imageContent = file_get_contents($image["tmp_name"]);
+            $imageName = $image->getName();
+            $imageType = $image->getType();
+            $imageSize = $image->getSize();
+            $imageContent = $image->getContent();
 
             $image = new Image();
             $image->setImageId($imageId)
@@ -61,12 +59,27 @@ class WishlistController extends Controller
                 ->setMultimediaEntityId($wishlistId)
                 ->setMultimediaEntityType('wishlists');
 
+            $validator = new Validator($image);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+
+            if (!$status)
+            {
+                // Errors
+                $response->json([
+                    "response" => $status,
+                    "data" => $feedback
+                ])->setStatusCode(400);
+                return;
+            }
+
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
 
-            if ($result === false)
+            if (!$result)
             {
-                $response->json(["response" => "No"]);
+                $response->json(["response" => "No"])->setStatusCode(400);
+                return;
             }
             $imagesId[] = $imageId;
         }
@@ -76,15 +89,30 @@ class WishlistController extends Controller
             ->setWishlistId($wishlistId)
             ->setName($name)
             ->setDescription($description)
-            ->setVisibility($visibility)
+            ->setVisible($visible)
             ->setUserId($userId);
+
+        $validator = new Validator($wishlist);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if (!$status)
+        {
+            // Errors
+            $response->json([
+                "response" => $status,
+                "data" => $feedback
+            ])->setStatusCode(400);
+            return;
+        }
 
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->create($wishlist);
 
-        if ($result === false)
+        if (!$result)
         {
-            $response->json(["status" => $result]);
+            $response->json(["status" => $result])->setStatusCode(400);
+            return;
         }
 
         $response->json([
@@ -93,42 +121,10 @@ class WishlistController extends Controller
                 "id" => $wishlistId,
                 "name" => $name,
                 "images" => $imagesId,
-                "visibility" => $visibility,
+                "visibility" => $visible,
                 "description" => $description
             ]
         ]);
-
-        /*
-        $clientToken = $request->getHeaders('Authorization');
-
-        try {
-        $result = JWT::decode(
-            $clientToken, 
-            new Key("3bb515fea33c5a653a5bbdcd20d958c8b7e49a91db0c74e91a04a0faab4f5c3a", "HS256"));
-
-            $session = new PhpSession();
-            $sessionToken = $session->get('token');
-
-            if ($sessionToken != $clientToken)
-            {
-                $response->text("No valid");
-                return;
-            }
-        }
-        catch (Exception $ex)
-        {
-            $response->text("No valid");
-            return;
-        }
-
-        if (is_null($clientToken))
-        {
-            $response->text("null");
-            return;
-        }
-
-        $response->text($clientToken);
-        */
     }
 
     /**
@@ -185,7 +181,7 @@ class WishlistController extends Controller
         $wishlist->setWishlistId($wishlistId)
             ->setName($name)
             ->setDescription($description)
-            ->setVisibility($visibility)
+            ->setVisible($visibility)
             ->setUserId($userId);
 
         $wishlistRepository = new WishlistRepository();
@@ -268,5 +264,3 @@ class WishlistController extends Controller
         $response->json($result);
     }
 }
-
-?>

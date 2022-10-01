@@ -1,21 +1,19 @@
+
+import { getSession } from './utils/session.js';
+
+const id = getSession();
+
 $.ajax({
-    url: 'api/v1/session',
-    method: 'GET',
+    url: `api/v1/users/${id}`,
+    method: "GET",
     async: false,
     timeout: 0,
     success: function(response) {
-        $.ajax({
-            url: `api/v1/users/${response.id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
-        });
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
     }
 });
+
 
 const productCard = /*html*/`
     <div class="col-lg-4 col-md-6 col-sm-12 text-center p-5">
@@ -49,27 +47,19 @@ function ProductCard(product)
     `;
 }
 
+
 $.ajax({
-    url: "api/v1/session",
-    method: "GET",
+    url: `/api/v1/users/${id}/products/approved`,
+    method: 'GET',
     timeout: 0,
-    success: function(response) {
-        console.log(response.id);
-
-        $.ajax({
-            url: `/api/v1/users/${response.id}/products`,
-            method: 'GET',
-            timeout: 0,
-            success: function(response)
-            {
-                response.forEach(function(product) {
-                    $('#products-container').append(ProductCard(product));
-                });
-            }
+    success: function(response)
+    {
+        response.forEach(function(product) {
+            $('#products-container').append(ProductCard(product));
         });
-
     }
 });
+
 
 
 $(document).ready(function() {
@@ -77,6 +67,35 @@ $(document).ready(function() {
     $("#main-tab li a").click(function(e) {
         e.preventDefault();
         $(this).tab("show");
+        const type = $(this).attr('value');
+
+        var url;
+        switch(type)
+        {
+            case 'approved':
+                url = `/api/v1/users/${id}/products/approved`
+                break;
+            case 'pending':
+                url = `/api/v1/users/${id}/products/pending`
+                break;
+            case 'denied':
+                url = `/api/v1/users/${id}/products/denied`
+                break;
+        }
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            timeout: 0,
+            success: function(response)
+            {
+                $('#products-container').empty();
+                response.forEach(function(product) {
+                    $('#products-container').append(ProductCard(product));
+                });
+            }
+        });
+
     });
 
     var element;

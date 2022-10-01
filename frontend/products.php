@@ -32,13 +32,13 @@
                 
                 <ul class="nav nav-tabs mb-4" id="main-tab">
                     <li class="nav-item">
-                        <a class="nav-link text-brown active" aria-current="page" href="#">Publicados</a>
+                        <a class="nav-link text-brown active" value="approved" aria-current="page" href="#">Publicados</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-brown" href="#">Pendientes</a>
+                        <a class="nav-link text-brown" value="pending" href="#">Pendientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-brown" href="#">Rechazados</a>
+                        <a class="nav-link text-brown" value="denied" href="#">Rechazados</a>
                     </li>
                 </ul>
                 

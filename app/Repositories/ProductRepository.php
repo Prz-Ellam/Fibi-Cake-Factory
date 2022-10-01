@@ -14,9 +14,17 @@ class ProductRepository
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
     private const GET_ONE = "CALL sp_get_product(:productId)";
     private const GET_RECENT_PRODUCTS = "CALL sp_get_recent_products()";
+    private const FIND_ALL_BY_PENDING = "CALL sp_get_pending_products()";
+
+    private const APPROVE = "CALL sp_product_approve(:productId, :userId)";
+    private const DENIED = "CALL sp_product_denied(:productId, :userId)";
+    //private const PENDING = "CALL sp_product_pending(:productId, :userId)";
+
     // GET_ALL_BY_CATEGORY
     // GET_ALL_BY_USER
-    // GET_ALL_BY_USER_APPROVE
+    private const GET_ALL_BY_USER_APPROVE = "CALL sp_get_user_products_approved(:userId)";
+    private const GET_ALL_BY_USER_DENIED = "CALL sp_get_user_products_denied(:userId)";
+    private const GET_ALL_BY_USER_PENDING = "CALL sp_get_user_products_pending(:userId)";
     // GET_ALL_BY_ADMIN_APPROVE
     // GET_ALL_BY_RATE
     // GET_ALL_BY_PRICE
@@ -83,10 +91,52 @@ class ProductRepository
         return $result;
     }
 
+    public function getAllByUserApprove(string $userId)
+    {
+        return DB::executeReader(self::GET_ALL_BY_USER_APPROVE, [
+            "userId" => $userId
+        ]);
+    }
+
+    public function getAllByUserDenied(string $userId)
+    {
+        return DB::executeReader(self::GET_ALL_BY_USER_DENIED, [
+            "userId" => $userId
+        ]);
+    }
+
+    public function getAllByUserPending(string $userId)
+    {
+        return DB::executeReader(self::GET_ALL_BY_USER_PENDING, [
+            "userId" => $userId
+        ]);
+    }
+
     public function getRecentProducts()
     {
         $result = DB::executeReader(self::GET_RECENT_PRODUCTS, []);
         return $result;
+    }
+
+    public function findAllByPending() : array
+    {
+        return DB::executeReader(self::FIND_ALL_BY_PENDING);
+    }
+
+    public function approve(string $productId, string $userId) : bool
+    {
+        return DB::executeNonQuery(self::APPROVE, [
+            "productId" => $productId,
+            "userId" => $userId
+        ]) > 0;
+    }
+
+    public function denied(string $productId, string $userId) : bool
+    {
+        return DB::executeNonQuery(self::DENIED, [
+            "productId" => $productId,
+            "userId" => $userId
+        ]) > 0;
     }
 }
 

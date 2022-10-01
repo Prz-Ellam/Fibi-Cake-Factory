@@ -28,7 +28,7 @@ class WishlistRepository
             "wishlistId"        => $wishlist->getWishlistId(),
             "name"              => $wishlist->getName(),
             "description"       => $wishlist->getDescription(),
-            "visibility"        => $wishlist->getVisibility()
+            "visible"           => $wishlist->isVisible()
             //"userId"            => $wishlist->getUserId()
         ]);
 

@@ -42,7 +42,7 @@ class Wishlist implements Model
      * @var integer|null
      */
     #[Required]
-    private ?int $visible;
+    private ?bool $visible;
 
     /**
      * Undocumented variable
@@ -86,12 +86,12 @@ class Wishlist implements Model
         return $this;
     }
 
-    public function getVisibility() : ?int
+    public function isVisible() : ?bool
     {
         return $this->visible;
     }
 
-    public function setVisibility(?int $visible) : self
+    public function setVisible(?bool $visible) : self
     {
         $this->visible = $visible;
         return $this;
@@ -131,5 +131,3 @@ class Wishlist implements Model
         return array_keys(get_class_vars(self::class));
     }
 }
-
-?>

@@ -15,6 +15,8 @@ use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid as RulesUuid;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
@@ -419,12 +421,41 @@ class ProductController extends Controller
 
     public function getPendingProducts(Request $request, Response $response)
     {
+        $productRepository = new ProductRepository();
+        $result = $productRepository->findAllByPending();
 
+        foreach ($result as &$element)
+        {
+            $element["images"] = explode(",", $element["images"]);
+            $element["videos"] = explode(",", $element["videos"]);
+        }
+
+        $response->json($result);
     }
 
     public function getUserPendingProducts(Request $request, Response $response)
     {
+        $userId = $request->getRouteParams("userId");
 
+        $required = new Required();
+        $uuid = new RulesUuid();
+
+        if (!$required->isValid($userId) || !$uuid->isValid($userId))
+        {
+            $response->json(["Esta mal"])->setStatusCode(400);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        $result = $productRepository->getAllByUserPending($userId);
+
+        foreach ($result as &$element)
+        {
+            $element["images"] = explode(",", $element["images"]);
+            $element["videos"] = explode(",", $element["videos"]);
+        }
+
+        $response->json($result);
     }
 
     public function getDeniedProducts(Request $request, Response $response)
@@ -434,7 +465,27 @@ class ProductController extends Controller
 
     public function getUserDeniedProducts(Request $request, Response $response)
     {
+        $userId = $request->getRouteParams("userId");
 
+        $required = new Required();
+        $uuid = new RulesUuid();
+
+        if (!$required->isValid($userId) || !$uuid->isValid($userId))
+        {
+            $response->json(["Esta mal"])->setStatusCode(400);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        $result = $productRepository->getAllByUserDenied($userId);
+
+        foreach ($result as &$element)
+        {
+            $element["images"] = explode(",", $element["images"]);
+            $element["videos"] = explode(",", $element["videos"]);
+        }
+
+        $response->json($result);
     }
 
     public function getApproveProducts(Request $request, Response $response)
@@ -444,15 +495,47 @@ class ProductController extends Controller
 
     public function getUserApproveProducts(Request $request, Response $response)
     {
-        
+        //$session = new PhpSession();
+        //$userId = $session->get("user_id");
+        $userId = $request->getRouteParams("userId");
+
+        $required = new Required();
+        $uuid = new RulesUuid();
+
+        if (!$required->isValid($userId) || !$uuid->isValid($userId))
+        {
+            $response->json(["Esta mal"])->setStatusCode(400);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        $result = $productRepository->getAllByUserApprove($userId);
+
+        foreach ($result as &$element)
+        {
+            $element["images"] = explode(",", $element["images"]);
+            $element["videos"] = explode(",", $element["videos"]);
+        }
+
+        $response->json($result);
     }
 
     public function approve(Request $request, Response $response)
     {
-        $productId = $request->getBody("productId");
+        $productId = $request->getRouteParams("productId");
+
+        $required = new Required();
+        $uuid = new RulesUuid();
+
+        if (!$required->isValid($productId) || !$required->isValid($productId))
+        {
+            $response->json(["Esta mal"])->setStatusCode(400);
+            return;
+        }
 
         // Validar sesión
         $session = new PhpSession();
+        $userId = $session->get("user_id");
         $role = $session->get('role');
 
         if ($role !== "Super Administrador" && $role !== "Administrador")
@@ -464,13 +547,57 @@ class ProductController extends Controller
         }
 
         $productRepository = new ProductRepository();
-        //$productRepository->approve($productId);
+        $result = $productRepository->approve($productId, $userId);
 
+        if (!$result)
+        {
+            $response->json(["response" => "No"])->setStatusCode(400);
+            return;
+        }
+
+        $response->json([
+            "status" => true
+        ]);
     }
 
     public function denied(Request $request, Response $response)
     {
-        $productId = $request->getBody("productId");
+        $productId = $request->getRouteParams("productId");
+
+        $required = new Required();
+        $uuid = new RulesUuid();
+
+        if (!$required->isValid($productId) || !$required->isValid($productId))
+        {
+            $response->json(["Esta mal"])->setStatusCode(400);
+            return;
+        }
+
+        // Validar sesión
+        $session = new PhpSession();
+        $role = $session->get('role');
+        $userId = $session->get("user_id");
+
+        if ($role !== "Super Administrador" && $role !== "Administrador")
+        {
+            $response->json([
+                "status" => "Unauthorized"
+            ])->setStatusCode(401);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        $result = $productRepository->denied($productId, $userId);
+
+        if (!$result)
+        {
+            $response->json(["response" => "No"])->setStatusCode(400);
+            return;
+        }
+
+        $response->json([
+            "status" => true
+        ]);
     }
 }
 
