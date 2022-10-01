@@ -12,22 +12,22 @@ CREATE PROCEDURE sp_create_image(
 BEGIN
 
     INSERT INTO images(
-            image_id,
-            name,
-            size,
-            content,
-            type,
-            multimedia_entity_id,
-            multimedia_entity_type
+        image_id,
+        name,
+        size,
+        content,
+        type,
+        multimedia_entity_id,
+        multimedia_entity_type
     )
     VALUES(
-            UUID_TO_BIN(_image_id),
-            _name,
-            _size,
-            _content,
-            _type,
-            UUID_TO_BIN(_multimedia_entity_id),
-            _multimedia_entity_type
+        UUID_TO_BIN(_image_id),
+        _name,
+        _size,
+        _content,
+        _type,
+        UUID_TO_BIN(_multimedia_entity_id),
+        _multimedia_entity_type
     );
 
 END $$

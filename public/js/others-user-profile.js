@@ -33,8 +33,8 @@ $.ajax({
     {
         $('#username').text(response.username);
         $('#email').text(response.email);
-        $('#name').text(response.first_name + ' ' + response.last_name);
-        $('#profile-picture').attr('src', `api/v1/images/${response.profile_picture}`)
+        $('#name').text(response.firstName + ' ' + response.lastName);
+        $('#profile-picture').attr('src', `api/v1/images/${response.profilePicture}`)
 
         console.log(response);
     }

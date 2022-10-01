@@ -11,7 +11,7 @@ const chatComponent = /*html*/`
 
 for (let i = 0; i < 8; i++)
 {
-    $('#chats-container').append(chatComponent);
+    //$('#chats-container').append(chatComponent);
 }
 
 var id;
@@ -43,6 +43,9 @@ $.ajax({
         console.log(response);
     }
 });
+
+var chatParticipantId = null;
+var chatId = null;
 
 $(document).ready(function() {
 
@@ -85,11 +88,25 @@ $(document).ready(function() {
 
     function postMessage(message)
     {
-        $('#comment-box').append(`
-            <div class="d-flex justify-content-end my-3">
-                <small class="bg-orange text-light p-2 rounded-2 overflow-auto">${message}</small>
-            </div>
-        `);
+        if (chatParticipantId !== null && chatId !== null)
+        {
+            $.ajax({
+                url: `/api/v1/chats/${chatId}/messages`,
+                method: 'POST',
+                data: `chatParticipantId=${chatParticipantId}&messageContent=${message}`,
+                timeout: 0,
+                success: function(response)
+                {
+                    console.log(response);
+                    $('#comment-box').append(`
+                        <div class="d-flex justify-content-end my-3">
+                            <small class="bg-orange text-light p-2 rounded-2 overflow-auto">${message}</small>
+                        </div>
+                    `);
+                }
+            })
+        }
+        
         $('#message').val('');
         $('#comment-box').stop().animate({
             scrollTop: $('#comment-box')[0].scrollHeight
@@ -179,7 +196,59 @@ $(document).ready(function() {
 			$("#search-users").val(ui.item.label);
 
 
-            
+            console.log(ui.item.value);
+
+            $.ajax({
+                url: '/api/v1/chats/findOrCreate',
+                method: 'POST',
+                data: `userId1=${id}&userId2=${ui.item.value}`,
+                async: false,
+                timeout: 0,
+                success: function(response)
+                {
+                    console.log(response);
+                    chatId = response.id;
+                }
+            });
+
+            $.ajax({
+                url: '/api/v1/chatParticipants/userId',
+                method: 'POST',
+                data: `userId=${id}&chatId=${chatId}`,
+                timeout: 0,
+                success: function(response)
+                {
+                    console.log(response);
+                    chatParticipantId = response.id;
+                }
+            });
+
+            $.ajax({
+                url: `/api/v1/chats/${chatId}/messages`,
+                method: 'GET',
+                timeout: 0,
+                success: function(response)
+                {
+                    $('#comment-box').empty();
+
+                    response.forEach(function(message)
+                    {
+                        $('#comment-box').append((message.user === chatParticipantId) ?
+                        `
+                            <div class="d-flex justify-content-end my-3">
+                                <small class="bg-orange text-light p-2 rounded-2 overflow-auto">${message.content}</small>
+                            </div>
+                        `
+                        :
+                        `
+                            <div class="d-flex justify-content-start my-3">
+                                <small class="bg-secondary text-light p-2 rounded-2 overflow-auto">${message.content}</small>
+                            </div>
+                        `
+                        );
+                    });
+                }
+            });
 
 
             

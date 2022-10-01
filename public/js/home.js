@@ -82,38 +82,35 @@ function CarouselCard(product)
             <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
             <h5 class="fw-bold price mb-0">${fmt.format(product.price)}</h5>
             <p>${product.name}</p>
-            <div class="d-flex justify-content-center">
+            ${ (product.userId === id) ?
+            `<div class="d-flex justify-content-center">
+                <a href="/update-product" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
+                <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
+            </div>`
+            :
+            `<div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
                 <button type="button" class="btn btn-danger shadow-none rounded-1 add-wishlist" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
-            </div>
+            </div>`
+            }
         </form>
     </div>
     `;
 }
 
 
-$('#recomendations').append(carouselCard);
-$('#sellers').append(carouselCard);
+//$('#recomendations').append(carouselCard);
+//$('#sellers').append(carouselCard);
 //$('#stars').append(carouselCard);
 
-$('#recomendations').append(carouselCard2);
-$('#sellers').append(carouselCard2);
-//$('#stars').append(carouselCard2);
-
-$('#recomendations').append(carouselCard3);
-$('#sellers').append(carouselCard3);
-//$('#stars').append(carouselCard3);
-
-$('#categories-carousel').append(carouselCategoryCard);
-$('#categories-carousel').append(carouselCategoryCard2);
-$('#categories-carousel').append(carouselCategoryCard3);
-
+var id;
 $.ajax({
     url: 'api/v1/session',
     method: 'GET',
     async: false,
     timeout: 0,
     success: function(response) {
+        id = response.id;
         $.ajax({
             url: `api/v1/users/${response.id}`,
             method: "GET",

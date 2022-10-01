@@ -3,15 +3,46 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\MaxLength;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 class Comment implements Model
 {
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
+    #[Uuid]
     private ?string $commentId;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
+    #[MaxLength(255)]
     private ?string $message;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
+    #[Uuid]
     private ?string $productId;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    #[Required]
+    #[Uuid]
     private ?string $userId;
 
     public function getCommentId() : ?string

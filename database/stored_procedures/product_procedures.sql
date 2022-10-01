@@ -233,7 +233,11 @@ END $$
 DELIMITER ;
 
 
+
+
+
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_recent_products $$
 
 CREATE PROCEDURE sp_get_recent_products()
 BEGIN
@@ -246,8 +250,9 @@ BEGIN
         p.price,
         p.stock,
         p.approved,
-        JSON_ARRAY(GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id))) images,
-        JSON_ARRAY(GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id))) videos
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos,
+        BIN_TO_UUID(p.user_id) userId
     FROM
         products AS p
     LEFT JOIN
@@ -267,12 +272,12 @@ BEGIN
         p.is_quotable, 
         p.price, 
         p.stock, 
-        p.approved
+        p.approved,
+        p.user_id
     ORDER BY
         p.created_at ASC;
 
 END $$
-
 DELIMITER ;
 
 

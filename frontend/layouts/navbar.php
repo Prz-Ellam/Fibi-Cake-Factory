@@ -41,7 +41,7 @@
                         <div class="dropdown-divider"></div>
                         <a href="/products" class="dropdown-item">Mis productos</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item" id="close-session">Cerrar sesión</a>
+                        <a href="/logout" class="dropdown-item" id="close-session">Cerrar sesión</a>
                     </div>
                 </li>
             </ul>

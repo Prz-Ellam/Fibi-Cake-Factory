@@ -12,6 +12,7 @@ class ResponseEmitter
             header("$key: $value");
         }
         header("Content-Length: " . strlen($response->getBody()));
+        header("Cache-Control: no-cache");
 
         print($response->getBody());
     }

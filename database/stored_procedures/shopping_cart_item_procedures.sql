@@ -1,5 +1,6 @@
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_add_shopping_cart_item $$
 
 CREATE PROCEDURE sp_add_shopping_cart_item(
     IN _shopping_cart_item_id           VARCHAR(36),

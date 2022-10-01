@@ -68,7 +68,7 @@
                                     <div class="dropdown-divider"></div>
                                     <a href="/products" class="dropdown-item">Mis productos</a>
                                     <div class="dropdown-divider"></div>
-                                    <a href="#" class="dropdown-item" id="close-session">Cerrar sesión</a>
+                                    <a href="/logout" class="dropdown-item" id="close-session">Cerrar sesión</a>
                                 </div>
                             </li>
                         </ul>
@@ -118,14 +118,7 @@
     
                     <hr>
     
-                    <div class="overflow-auto p-2 h-100" id="comment-box">
-                        <div class="d-flex justify-content-start my-3">
-                            <small class="bg-secondary text-light p-2 rounded-2 overflow-auto">Hola</small>
-                        </div>
-                        <div class="d-flex justify-content-start my-3">
-                            <small class="bg-secondary text-light p-2 rounded-2 overflow-auto">¿Cómo estas?</small>
-                        </div>
-                    </div>
+                    <div class="overflow-auto p-2 h-100" id="comment-box"></div>
                             
                     <hr class="text-light">
 

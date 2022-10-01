@@ -37,10 +37,9 @@ class CategoryRepository
         return $result > 0;
     }
 
-    public function getAll()
+    public function getAll() : array
     {
-        $result = DB::executeReader(self::GET_ALL);
-        return $result;
+        return DB::executeReader(self::GET_ALL);
     }
 
     public function getAllByProduct(string $productId) : array

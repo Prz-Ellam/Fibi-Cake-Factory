@@ -24,7 +24,7 @@ $.ajax({
     async: false,
     success: function(response) {
         response.forEach(function(element) {
-            $('#categories').append(`<option value="${element.category_id}">${element.name}</option>`);
+            $('#categories').append(`<option value="${element.id}">${element.name}</option>`);
         });
     }
 });
@@ -288,9 +288,6 @@ $(document).ready(function() {
 
         const requestBody = new FormData(this);
 
-        $('#categories').append(`<option value="${optionsCount}">${requestBody.get('name')}</option>`);
-        $('#categories').multipleSelect('refresh');
-
         $.ajax({
             method: 'POST',
             url: 'api/v1/categories',
@@ -298,8 +295,8 @@ $(document).ready(function() {
             data: $(this).serialize(),
             //dataType: 'json',
             success: function(response) {
-                
-
+                $('#categories').append(`<option value="${response.id}">${response.name}</option>`);
+                $('#categories').multipleSelect('refresh');
             },
             error: function(response, status, error) {
                 console.log(status);
@@ -348,7 +345,7 @@ $(document).ready(function() {
                     icon: 'success',
                     title: 'Tu producto ha sido añadido al carrito'
                 }).then((result) => {
-                    window.location.href = '/home';
+                    //window.location.href = '/home';
                 });
             },
             error: function(response, status, error) {

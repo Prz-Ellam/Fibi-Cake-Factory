@@ -2,6 +2,7 @@
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_chat_message $$
 
 CREATE PROCEDURE sp_create_chat_message(
     IN _chat_message_id             VARCHAR(36),
@@ -22,7 +23,6 @@ BEGIN
     );
 
 END $$
-
 DELIMITER ;
 
 
@@ -46,7 +46,8 @@ BEGIN
 END $$
 
 
-
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_messages_from_chat $$
 
 CREATE PROCEDURE sp_get_messages_from_chat(
     IN _chat_id             VARCHAR(36)
@@ -54,10 +55,10 @@ CREATE PROCEDURE sp_get_messages_from_chat(
 BEGIN
 
     SELECT
-        BIN_TO_UUID(cm.chat_message_id) id,
-        BIN_TO_UUID(cm.chat_participant_id) user,
-        cm.message_content content,
-        cm.created_at
+        BIN_TO_UUID(cm.chat_message_id) AS id,
+        BIN_TO_UUID(cm.chat_participant_id) AS user,
+        cm.message_content AS content,
+        cm.created_at AS createdAt
     FROM
         chat_messages AS cm
     INNER JOIN
@@ -71,3 +72,4 @@ BEGIN
         cm.created_at ASC;
 
 END $$
+DELIMITER ;

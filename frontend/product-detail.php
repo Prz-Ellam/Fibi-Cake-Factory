@@ -98,115 +98,7 @@
             <textarea class="form-control rounded-1 shadow-none mb-3" id="message-box" placeholder="Escribe un comentario"></textarea>
             <button class="btn btn-orange rounded-1 shadow-none mb-4" id="send-message">Enviar</button>
 
-            <div id="comment-section">
-                <div class="d-flex">
-                    <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
-                    <div class="row">
-                        <div class="col-9">
-                            <a href="/sandbox" class="mt-0 me-1">Eliam Rodríguez Pérez</a>
-                            <span class="rating">
-                                <i class="rating-star far fa-star" value="1"></i>
-                                <i class="rating-star far fa-star" value="2"></i>
-                                <i class="rating-star far fa-star" value="3"></i>
-                                <i class="rating-star far fa-star" value="4"></i>
-                                <i class="rating-star far fa-star" value="5"></i>
-                            </span>
-                            <p class="mb-0">Hola me gusta mucho este producto creo que es muy bueno</p>
-                            <small>15 de enero de 2022 a las 03:46</small><br>
-                            <span class="badge bg-primary" role="button">Editar</span>
-                            <span class="badge bg-danger" role="button">Eliminar</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <div class="d-flex">
-                    <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
-                    <div class="row">
-                        <div class="col-9">
-                            <a href="/sandbox" class="mt-0 me-1">Eliam Rodríguez Pérez</a>
-                            <span class="rating">
-                                <i class="rating-star far fa-star" value="1"></i>
-                                <i class="rating-star far fa-star" value="2"></i>
-                                <i class="rating-star far fa-star" value="3"></i>
-                                <i class="rating-star far fa-star" value="4"></i>
-                                <i class="rating-star far fa-star" value="5"></i>
-                            </span>
-                            <p class="mb-0">Hola me gusta mucho este producto creo que es muy bueno</p>
-                            <small>15 de enero de 2022 a las 03:46</small><br>
-                            <span class="badge bg-primary" role="button">Editar</span>
-                            <span class="badge bg-danger" role="button">Eliminar</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <div class="d-flex">
-                    <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
-                    <div class="row">
-                        <div class="col-9">
-                            <a href="/sandbox" class="mt-0 me-1">Eliam Rodríguez Pérez</a>
-                            <span class="rating">
-                                <i class="rating-star far fa-star" value="1"></i>
-                                <i class="rating-star far fa-star" value="2"></i>
-                                <i class="rating-star far fa-star" value="3"></i>
-                                <i class="rating-star far fa-star" value="4"></i>
-                                <i class="rating-star far fa-star" value="5"></i>
-                            </span>
-                            <p class="mb-0">Hola me gusta mucho este producto creo que es muy bueno</p>
-                            <small>15 de enero de 2022 a las 03:46</small><br>
-                            <span class="badge bg-primary" role="button">Editar</span>
-                            <span class="badge bg-danger" role="button">Eliminar</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <div class="d-flex">
-                    <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
-                    <div class="row">
-                        <div class="col-9">
-                            <a href="/sandbox" class="mt-0 me-1">Eliam Rodríguez Pérez</a>
-                            <span class="rating">
-                                <i class="rating-star far fa-star" value="1"></i>
-                                <i class="rating-star far fa-star" value="2"></i>
-                                <i class="rating-star far fa-star" value="3"></i>
-                                <i class="rating-star far fa-star" value="4"></i>
-                                <i class="rating-star far fa-star" value="5"></i>
-                            </span>
-                            <p class="mb-0">Hola me gusta mucho este producto creo que es muy bueno</p>
-                            <small>15 de enero de 2022 a las 03:46</small><br>
-                            <span class="badge bg-primary" role="button">Editar</span>
-                            <span class="badge bg-danger" role="button">Eliminar</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <div class="d-flex">
-                    <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
-                    <div class="row">
-                        <div class="col-9">
-                            <a href="/sandbox" class="mt-0 me-1">Eliam Rodríguez Pérez</a>
-                            <span class="rating">
-                                <i class="rating-star far fa-star" value="1"></i>
-                                <i class="rating-star far fa-star" value="2"></i>
-                                <i class="rating-star far fa-star" value="3"></i>
-                                <i class="rating-star far fa-star" value="4"></i>
-                                <i class="rating-star far fa-star" value="5"></i>
-                            </span>
-                            <p class="mb-0">Hola me gusta mucho este producto creo que es muy bueno</p>
-                            <small>15 de enero de 2022 a las 03:46</small><br>
-                            <span class="badge bg-primary" role="button">Editar</span>
-                            <span class="badge bg-danger" role="button">Eliminar</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="comment-section"></div>
         </div>
     </section>
 
@@ -330,8 +222,8 @@
     <!-- jQuery Validation 1.19.5 -->
     <script src="vendor/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
     
-    <!-- Elevate Zoom -->
-    <script type="text/javascript" src="https://cdn.rawgit.com/igorlino/elevatezoom-plus/1.1.6/src/jquery.ez-plus.js"></script>
+    <!-- Elevate Zoom
+    <script type="text/javascript" src="https://cdn.rawgit.com/igorlino/elevatezoom-plus/1.1.6/src/jquery.ez-plus.js"></script> -->
 
     <!-- Popper JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>

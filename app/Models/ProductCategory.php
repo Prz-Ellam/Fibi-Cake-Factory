@@ -3,13 +3,21 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 class ProductCategory implements Model
 {
+    #[Required]
+    #[Uuid]
     private ?string $productCategoryId;
 
+    #[Required]
+    #[Uuid]
     private ?string $productId;
     
+    #[Required]
+    #[Uuid]
     private ?string $categoryId;
 
     public function getProductCategoryId()

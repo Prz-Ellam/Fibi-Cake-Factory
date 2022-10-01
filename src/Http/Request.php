@@ -180,7 +180,12 @@ class Request
 
     public function getFileArray(string $key)
     {
-        $rawImages = $this->getFile($key);
+        $rawImages = $this->files[$key] ?? null;
+        if (!$rawImages)
+        {
+            return [];
+        }
+        //$rawImages = $this->getFile($key);
 
         if (is_string($rawImages["name"]))
         {
@@ -208,7 +213,19 @@ class Request
             $images[$i]["size"] = $rawImages["size"][$i];
         }
 
-        return $images;
+        $finalImages = [];
+        foreach ($images as $imageCurrent)
+        {
+            $finalImages[] = new UploadedFile(
+                $imageCurrent["name"] ?? null,
+                $imageCurrent["path"] ?? null,
+                $imageCurrent["tmp_name"] ?? null,
+                $imageCurrent["size"] ?? null,
+                $imageCurrent["type"] ?? null
+            );
+        }
+
+        return $finalImages;
     }
 
     public function hasFile(string $key) : bool

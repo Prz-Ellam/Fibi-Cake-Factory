@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS comments(
     product_id                  BINARY(16) NOT NULL,
     user_id                     BINARY(16) NOT NULL,
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
+    modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT comments_pk
         PRIMARY KEY (comment_id)

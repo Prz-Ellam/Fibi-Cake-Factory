@@ -108,7 +108,7 @@ class Video implements Model
     public function toObject() : array
     {
         $members = get_object_vars($this);
-        return json_decode(json_encode($members), true);
+        return $members;
     }
 
     public static function getProperties() : array

@@ -1,7 +1,68 @@
-console.log(new URLSearchParams(window.location.search).get("search"));
+function CommentComponent(comment)
+{
+    return /*html*/`
+    <div class="d-flex">
+        <img src="api/v1/images/${comment.profilePicture}" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
+        <div class="row">
+            <div class="col-12">
+                <a href="/profile?id=${comment.userId}" class="mt-0 me-1">${comment.username}</a>
+                <span class="rating">
+                    <i class="rating-star far fa-star" value="1"></i>
+                    <i class="rating-star far fa-star" value="2"></i>
+                    <i class="rating-star far fa-star" value="3"></i>
+                    <i class="rating-star far fa-star" value="4"></i>
+                    <i class="rating-star far fa-star" value="5"></i>
+                </span>
+                <p class="mb-0">${comment.message}</p>
+                <small>${comment.createdAt}</small><br>
+                <span class="badge bg-primary" role="button">Editar</span>
+                <span class="badge bg-danger" role="button">Eliminar</span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    `;
+}
+
+getSession = () => {
+    var value = null;
+    $.ajax({
+        url: 'api/v1/session',
+        method: 'GET',
+        async: false,
+        timeout: 0,
+        success: function(response) {
+            value = response.id;
+        }
+    });
+    return value;
+};
+
+const productId = new URLSearchParams(window.location.search).get("search");
+const id = getSession();
 
 $.ajax({
-    url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
+    url: "api/v1/session",
+    method: "GET",
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        $.ajax({
+            url: `api/v1/users/${response.id}`,
+            method: "GET",
+            async: false,
+            timeout: 0,
+            success: function(response) {
+                const url = `api/v1/images/${response.profilePicture}`;
+                $('.nav-link img').attr('src', url);
+            }
+        });
+    }
+});
+
+
+$.ajax({
+    url: `/api/v1/products/${productId || '0'}`,
     method: 'GET',
     timeout: 0,
     success: function(response)
@@ -21,6 +82,19 @@ $.ajax({
         $('#zoom').attr('src', 'api/v1/images/' + product.images[0]);
         $('.mini-zoom').attr('src', 'api/v1/images/' + product.images[0]);
 
+    }
+});
+
+$.ajax({
+    url: `/api/v1/products/${productId}/comments`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response)
+    {
+        response.forEach((comment) => {
+            $('#comment-section').append(CommentComponent(comment));
+        })
+        console.log(response);
     }
 });
 
@@ -81,7 +155,7 @@ $(document).ready(function() {
         
     });
     
-    
+    /*
     $(".zoom").ezPlus({
         zoomType: 'inner',
         cursor: 'crosshair',
@@ -89,7 +163,7 @@ $(document).ready(function() {
         zoomWindowFadeOut: 500,
         lensFadeIn: 500,
         lensFadeOut: 500
-    }/*{
+    }{
         zoomType: "inner",
         zoomLevel: 2,
         cursor: "crosshair",
@@ -97,7 +171,7 @@ $(document).ready(function() {
         zoomWindowFadeOut: 500,
         lensFadeIn: 500,
             lensFadeOut: 500
-    }*/);
+    });*/
 
     const Toast = Swal.mixin({
         toast: true,
@@ -138,9 +212,22 @@ $(document).ready(function() {
         })
     });
 
-    $('#send-message').click(function() {
-
+    $('#send-message').click(function()
+    {
         const text = $('#message-box').val();
+
+        $.ajax({
+            url: `/api/v1/${productId}/comments`,
+            method: 'POST',
+            data: `message=${text}`,
+            timeout: 0,
+            success: function(response)
+            {
+                console.log(response);
+            }
+        });
+
+        
         $('#message-box').val('');
 
         if (text === '')

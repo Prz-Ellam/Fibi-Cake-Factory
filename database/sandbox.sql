@@ -189,3 +189,14 @@ SELECT * FROM orders;
 
 SELECT * FROM wishlists;
 
+
+
+
+SELECT * FROM products;
+
+
+
+SELECT s.created_at, s.amount, p.name, c.name FROM shoppings AS s
+INNER JOIN products AS p ON s.product_id = p.product_id
+INNER JOIN products_categories AS pc ON s.product_id = pc.product_id
+INNER JOIN categories AS c ON pc.category_id = c.category_id;

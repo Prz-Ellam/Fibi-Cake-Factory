@@ -4,6 +4,7 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid;
 
 class Chat implements Model
 {
@@ -13,6 +14,7 @@ class Chat implements Model
      * @var string|null
      */
     #[Required]
+    #[Uuid]
     private ?string $chatId;
 
     public function getChatId() : ?string

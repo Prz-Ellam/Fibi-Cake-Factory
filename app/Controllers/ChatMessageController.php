@@ -7,6 +7,8 @@ use CakeFactory\Repositories\ChatMessagesRepository;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
+use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Uuid as RulesUuid;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
@@ -60,7 +62,7 @@ class ChatMessageController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Obtener todos los mensajes de un chat
      *
      * @param Request $request
      * @param Response $response
@@ -70,6 +72,16 @@ class ChatMessageController extends Controller
     {
         // "c332f2ed-3edf-11ed-8be6-6018950ce9af"
         $chatId = $request->getRouteParams("chatId");
+
+        $required = new Required();
+        $uuid = new RulesUuid();
+        if (!$required->isValid($chatId) || !$uuid->isValid($chatId))
+        {
+            $response->setStatusCode(400)->json([
+                "status" => false
+            ]);
+            return;
+        }
 
         $chatMessagesRepository = new ChatMessagesRepository();
         $chatMessages = $chatMessagesRepository->getAllByChat($chatId);

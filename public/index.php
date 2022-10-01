@@ -4,6 +4,8 @@ use CakeFactory\Build\Startup;
 use CakeFactory\Controllers\CategoryController;
 use CakeFactory\Controllers\ChatController;
 use CakeFactory\Controllers\ChatMessageController;
+use CakeFactory\Controllers\ChatParticipantController;
+use CakeFactory\Controllers\CommentController;
 use CakeFactory\Controllers\ImageController;
 use CakeFactory\Controllers\OrderController;
 use CakeFactory\Controllers\ProductController;
@@ -14,6 +16,7 @@ use CakeFactory\Controllers\VideoController;
 use CakeFactory\Controllers\WishlistController;
 use CakeFactory\Controllers\WishlistObjectController;
 use CakeFactory\Models\Category;
+use CakeFactory\Models\ChatParticipant;
 use CakeFactory\Repositories\UserRepository;
 use Dotenv\Dotenv;
 use Fibi\Core\Application;
@@ -415,10 +418,14 @@ $app->post('/api/v1/chats/check', [ new ChatController(), 'checkIfExists' ]);
 $app->post('/api/v1/chats/findOrCreate', [ new ChatController(), 'findOrCreateChat' ]);
 
 
+$app->post('/api/v1/chatParticipants/userId', [ new ChatParticipantController(), 'getOneByUserId' ]);
+
 $app->post('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'create' ]);
 $app->get('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'getAllByChat' ]);
 
 
+$app->post('/api/v1/{productId}/comments', [ new CommentController(), 'create' ]);
+$app->get('/api/v1/products/{productId}/comments', [ new CommentController(), 'getProductComments' ]);
 
 $app->put('/prueba', function (Request $request, Response $response) {
 

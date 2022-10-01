@@ -95,7 +95,7 @@
                         <div class="mb-3">
                             <label class="form-label" for="wishlist-visibility" role="button">Visibilidad</label>
                             <div class="input-group">
-                                <select class="form-select shadow-none rounded-1" name="visibility" id="add-wishlist-visibility">
+                                <select class="form-select shadow-none rounded-1" name="visible" id="add-wishlist-visibility">
                                     <option value="">Seleccionar</option>
                                     <option value="1">Pública</option>
                                     <option value="2">Privada</option>
@@ -151,7 +151,7 @@
                         <div class="mb-3">
                             <label class="form-label" for="wishlist-visibility" role="button">Visibilidad</label>
                             <div class="input-group">
-                                <select class="form-select shadow-none rounded-1" name="visibility" id="edit-wishlist-visibility">
+                                <select class="form-select shadow-none rounded-1" name="visible" id="edit-wishlist-visibility">
                                     <option value="">Seleccionar</option>
                                     <option value="1">Pública</option>
                                     <option value="2">Privada</option>

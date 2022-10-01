@@ -10,10 +10,12 @@ use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ProductCategoryRepository;
 use CakeFactory\Repositories\ProductRepository;
 use CakeFactory\Repositories\VideoRepository;
+use Fibi\Database\DB;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class ProductController extends Controller
@@ -38,23 +40,64 @@ class ProductController extends Controller
         $videos = $request->getFileArray("videos");
 
         // TODO: Validar que esto existe realmente en la BD
-        $categories = $request->getBody("categories");
+        $categories = $request->getBody("categories") ?? [];
 
         $userId = $request->getBody("user-id");
         if (is_null($userId))
             $userId = (new PhpSession())->get('user_id');
 
+        DB::beginTransaction();
+
+        $product = new Product();
+        $product->setProductId($productId)
+            ->setName($name)
+            ->setDescription($description)
+            ->setTypeOfSell($typeOfSell)
+            ->setPrice($price)
+            ->setStock($stock)
+            ->setUserId($userId);
+
+        $validator = new Validator($product);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if (!$status)
+        {
+            // Errors
+            $response->json([
+                "response" => $status,
+                "data" => $feedback
+            ])->setStatusCode(400);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        $result = $productRepository->create($product);
+
+        if (!$result)
+        {
+            $response->json(["response" => "No"])->setStatusCode(400);
+            return;
+        }
+
         $imagesId = [];
+
+        if (count($images) < 1)
+        {
+            $response->json([
+                "status" => false,
+                "message" => "No hay imagenes"
+            ]);
+            return;
+        }
+
         foreach ($images as $image)
         {
             $imageId = Uuid::uuid4()->toString();
-            $ext = explode('.', $image["name"])[1];
-
-            $imageName = "$imageId.$ext";
-            //$imageName = $image["name"];
-            $imageType = $image["type"];
-            $imageSize = $image["size"];
-            $imageContent = file_get_contents($image["tmp_name"]);
+            $imageName = $image->getName();
+            $imageType = $image->getType();
+            $imageSize = $image->getSize();
+            $imageContent = $image->getContent();
 
             // 3 - Multimedia type de listas de deseos
             $image = new Image();
@@ -65,28 +108,51 @@ class ProductController extends Controller
                 ->setContent($imageContent)
                 ->setMultimediaEntityId($productId)
                 ->setMultimediaEntityType('products');
+            
+            $validator = new Validator($image);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+
+            if (!$status)
+            {
+                // Errors
+                $response->json([
+                    "response" => $status,
+                    "data" => $feedback
+                ])->setStatusCode(400);
+                return;
+            }
 
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
 
-            if ($result === false)
+            if (!$result)
             {
-                $response->json(["response" => "No"]);
+                $response->json(["response" => "No"])->setStatusCode(400);
+                return;
             }
 
             $imagesId[] = $imageId;
+        }
+
+
+        if (count($videos) < 1)
+        {
+            $response->json([
+                "status" => false,
+                "message" => "No hay videos"
+            ]);
+            return;
         }
 
         $videosId = [];
         foreach ($videos as $video)
         {
             $videoId = Uuid::uuid4()->toString();
-
-            $ext = explode('.', $video["name"])[1];
-            $videoName = "$videoId.$ext";
-            $videoType = $video["type"];
-            $videoSize = $video["size"];
-            $videoContent = file_get_contents($video["tmp_name"]);
+            $videoName = $video->getName();
+            $videoType = $video->getType();
+            $videoSize = $video->getSize();
+            $videoContent = $video->getContent();
 
             $video = new Video();
             $video->setVideoId($videoId)
@@ -97,10 +163,39 @@ class ProductController extends Controller
                 ->setMultimediaEntityId($productId)
                 ->setMultimediaEntityType('products');
 
+            $validator = new Validator($video);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+
+            if (!$status)
+            {
+                // Errors
+                $response->json([
+                    "response" => $status,
+                    "data" => $feedback
+                ])->setStatusCode(400);
+                return;
+            }
+
             $videoRepository = new VideoRepository();
             $result = $videoRepository->create($video);
 
+            if (!$result)
+            {
+                $response->json(["response" => "No"])->setStatusCode(400);
+                return;
+            }
+
             $videosId[] = $videoId;
+        }
+
+        if (count($categories) < 1)
+        {
+            $response->json([
+                "status" => false,
+                "message" => "No hay categorias"
+            ]);
+            return;
         }
 
         foreach ($categories as $categoryId)
@@ -116,21 +211,31 @@ class ProductController extends Controller
                 ->setProductId($productId)
                 ->setCategoryId($categoryId);
 
+            $validator = new Validator($productCategory);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+
+            if (!$status)
+            {
+                // Errors
+                $response->json([
+                    "response" => $status,
+                    "data" => $feedback
+                ])->setStatusCode(400);
+                return;
+            }
+
             $productCategoryRepository = new ProductCategoryRepository();
-            $result = $productCategoryRepository->create($productCategory); 
+            $result = $productCategoryRepository->create($productCategory);
+
+            if (!$result)
+            {
+                $response->json(["response" => "No"])->setStatusCode(400);
+                return;
+            }
         }
 
-        $product = new Product();
-        $product->setProductId($productId)
-            ->setName($name)
-            ->setDescription($description)
-            ->setTypeOfSell($typeOfSell)
-            ->setPrice($price)
-            ->setStock($stock)
-            ->setUserId($userId);
-
-        $productRepository = new ProductRepository();
-        $result = $productRepository->create($product);
+        DB::endTransaction();
 
         $response->json([$result]);
     }
@@ -305,8 +410,8 @@ class ProductController extends Controller
 
         foreach ($result as &$element)
         {
-            $element["images"] = json_decode($element["images"]);
-            $element["videos"] = json_decode($element["videos"]);
+            $element["images"] = explode(",", $element["images"]);
+            $element["videos"] = explode(",", $element["videos"]);
         }
 
         $response->json($result);

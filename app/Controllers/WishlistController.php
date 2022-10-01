@@ -31,7 +31,7 @@ class WishlistController extends Controller
         $wishlistId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
-        $visibility = $request->getBody("visibility");
+        $visibility = $request->getBody("visible");
         $images = $request->getFileArray("images");
         $userId = (new PhpSession())->get('user_id');
 
@@ -144,7 +144,7 @@ class WishlistController extends Controller
 
         $name = $request->getBody("name");
         $description = $request->getBody("description");
-        $visibility = $request->getBody("visibility");
+        $visibility = $request->getBody("visible");
         $images = $request->getFileArray("images");
         $userId = (new PhpSession())->get('user_id');
 
