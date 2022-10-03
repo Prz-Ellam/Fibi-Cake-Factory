@@ -34,7 +34,7 @@ $.ajax({
             $('#table-body').append(/*html*/`
             <tr class="mainRow" role="button" id="${shoppingCartItem.id}">
                 <td></td>
-                <td><img src="assets/img/IMG001.jpg" class="me-3" height="100"></td>
+                <td><img src="api/v1/images/${shoppingCartItem.image}" class="me-3" height="100"></td>
                 <td scope="row">${shoppingCartItem.name}</td>
                 <td scope="row"><span>${fmt.format(shoppingCartItem.price)} M.N</span></td>
                 <td scope="row"><input type="number" value="${shoppingCartItem.quantity}" min="1" max="100" class="form-control shadow-none w-50 quantity rounded-1"></td>

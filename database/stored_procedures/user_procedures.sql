@@ -139,6 +139,40 @@ DELIMITER ;
 
 
 
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_by_filter $$
+
+CREATE PROCEDURE sp_get_user_by_filter(
+    IN _filter                 VARCHAR(255)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(u.user_id) id,
+        u.email,
+        u.username,
+        u.first_name AS firstName,
+        u.last_name AS lastName,
+        u.birth_date AS birthDate,
+        u.gender AS gender,
+        ur.name AS userRole,
+        BIN_TO_UUID(u.profile_picture) AS profilePicture
+    FROM
+        users AS u
+    INNER JOIN
+        user_roles AS ur
+    ON
+        BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
+    WHERE
+        u.username LIKE CONCAT('%', _filter, '%')
+        OR u.email LIKE CONCAT('%', _filter, '%');
+
+END $$
+DELIMITER ;
+
+
+
 DELIMITER $$
 CREATE PROCEDURE sp_email_exists(
     IN _email           VARCHAR(255)

@@ -203,7 +203,7 @@ use CakeFactory\Repositories\UserRepository;
     <!-- Sweet Alert -->
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
-    <script type="text/javascript" src="js/others-user-profile.js"></script>
+    <script type="module" src="js/others-user-profile.js"></script>
 </body>
 </html>
 <!-- 600! -->

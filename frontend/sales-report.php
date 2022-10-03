@@ -119,6 +119,6 @@
     <script src="vendor/node_modules/chart.js/dist/chart.min.js"></script>
 
     <!-- JavaScript -->
-    <script src="./js/sales-report.js"></script>
+    <script type="module" src="./js/sales-report.js"></script>
 </body>
 </html>

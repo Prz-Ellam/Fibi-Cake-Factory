@@ -86,7 +86,9 @@ DELIMITER ;
 
 
 
+
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_shopping_cart_items $$
 
 CREATE PROCEDURE sp_get_shopping_cart_items(
     IN _shopping_cart_id                 VARCHAR(36)
@@ -98,16 +100,28 @@ BEGIN
         BIN_TO_UUID(p.product_id) product_id,
         p.name,
         sci.quantity,
-        p.price
+        p.price,
+        BIN_TO_UUID(i.image_id) image
     FROM
         shopping_cart_items AS sci
     INNER JOIN
         products AS p
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(sci.product_id)
+    INNER JOIN
+        images AS i
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(i.multimedia_entity_id)
+        AND i.multimedia_entity_type = 'products'
     WHERE
-        BIN_TO_UUID(shopping_cart_id) = _shopping_cart_id
-        AND sci.active = TRUE;
+        BIN_TO_UUID(sci.shopping_cart_id) = _shopping_cart_id
+        AND sci.active = TRUE
+    GROUP BY
+        sci.shopping_cart_item_id,
+        p.product_id,
+        p.name,
+        sci.quantity,
+        p.price;
 
 END $$
 DELIMITER ;

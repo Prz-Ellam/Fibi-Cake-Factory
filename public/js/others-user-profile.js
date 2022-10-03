@@ -1,3 +1,19 @@
+import { getSession } from './utils/session.js';
+
+const id = getSession();
+
+$.ajax({
+    url: `api/v1/users/${id}`,
+    method: "GET",
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
+    }
+});
+
+
 const wishlistCard = /*html*/`
 <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
     <div class="card mx-auto" style="width: 18rem;">
@@ -25,7 +41,8 @@ const productCard = /*html*/`
 </div>
 `;
 
-const id = new URLSearchParams(location.search).get('id') || '0';
+const userId = new URLSearchParams(location.search).get('id') || '0';
+
 
 $.ajax({
     url: `/api/v1/users/${new URLSearchParams(location.search).get('id') || '0'}`,
@@ -72,8 +89,7 @@ $.ajax({
 
 $(document).ready(function() {
 
-    const id = new URLSearchParams(window.location.search).get("a");
-    $(`#test-${id}`).removeClass('d-none');
+    $(`#test-${userId}`).removeClass('d-none');
 
     $("#main-tab li a").click(function(e) {
         e.preventDefault();

@@ -375,5 +375,15 @@ class UserController extends Controller
 
         $response->json($users);
     }
+
+    public function getAllByFilter(Request $request, Response $response) : void
+    {
+        $search = $request->getQuery('search');
+
+        $userRepository = new UserRepository();
+        $users = $userRepository->getAllByFilter($search);
+
+        $response->json($users);
+    }
     
 }

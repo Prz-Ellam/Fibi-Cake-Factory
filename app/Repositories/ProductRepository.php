@@ -18,20 +18,17 @@ class ProductRepository
 
     private const APPROVE = "CALL sp_product_approve(:productId, :userId)";
     private const DENIED = "CALL sp_product_denied(:productId, :userId)";
-    //private const PENDING = "CALL sp_product_pending(:productId, :userId)";
 
-    // GET_ALL_BY_CATEGORY
-    // GET_ALL_BY_USER
     private const GET_ALL_BY_USER_APPROVE = "CALL sp_get_user_products_approved(:userId)";
     private const GET_ALL_BY_USER_DENIED = "CALL sp_get_user_products_denied(:userId)";
     private const GET_ALL_BY_USER_PENDING = "CALL sp_get_user_products_pending(:userId)";
     // GET_ALL_BY_ADMIN_APPROVE
-    // GET_ALL_BY_RATE
-    // GET_ALL_BY_PRICE
-    // GET_ALL_BY_USER_FAVORITES
-    // GET_ALL_BY_USER_RECOMENDATIONS
-    // APPROVE_PRODUCT (:userId)
-    // DENIED_PRODUCT (:userId)
+    private const GET_ALL_BY_ALPHA_ORDER = "CALL sp_products_get_all_by_alpha_order";
+    private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate";
+    private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price";
+    private const GET_ALL_BY_SHIPS = "CALL sp_products_get_all_by_ships";
+    private const GET_ALL_BY_CATEGORY = "CALL sp_products_get_all_by_category";
+    private const GET_ALL_BY_USER_RECOMENDATIONS = "CALL sp_products_get_all_by_user_recomendations";
 
     public function create(Product $product) : bool
     {

@@ -1,11 +1,34 @@
+import { getSession } from './utils/session.js';
+
+const id = getSession();
+
+const search = new URLSearchParams(window.location.search).get("search");
+$('#search').val(search);
+
 $.ajax({
-    url: 'api/v1/session',
+    url: `/api/v1/users/filter/search?search=${search}`,
     method: 'GET',
-    async: false,
     timeout: 0,
-    success: function(response) {
+    success: function(response)
+    {
+        response.forEach((user) =>
+        {
+            $('#users-section').append(/*html*/`
+                <a href="/profile?id=${user.id}" class="col-lg-4 col-md-6 col-sm-12  text-decoration-none text-brown">
+                    <div class="bg-white text-center p-5">
+                        <img src="api/v1/images/${user.profilePicture}" class="img-fluid p-3 rounded-circle" alt="A">
+                        <h5 class="fw-bold mb-0">${user.username}</h5>
+                        <p>${user.firstName + ' ' + user.lastName}</p>
+                    </div>
+                </a>
+            `)
+        })
+    }
+});
+
+
         $.ajax({
-            url: `api/v1/users/${response.id}`,
+            url: `api/v1/users/${id}`,
             method: "GET",
             async: false,
             timeout: 0,
@@ -14,8 +37,7 @@ $.ajax({
                 $('.nav-link img').attr('src', url);
             }
         });
-    }
-});
+
 
 const productSearchCard = /*html*/`
 <div class="bg-white col-lg-4 col-md-6 col-sm-12  text-center p-5">

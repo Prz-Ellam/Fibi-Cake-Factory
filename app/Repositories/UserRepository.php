@@ -14,6 +14,7 @@ class UserRepository
     private const LOGIN = "CALL login(:loginOrEmail, :password)";
     private const GET_USER = "CALL sp_get_user(:userId)";
     private const GET_ALL_EXCEPT = "CALL sp_get_users_except(:search, :userId)";
+    private const GET_ALL_BY_FILTER = "CALL sp_get_user_by_filter(:filter)";
     // GET_ALL
     // SEARCH
 
@@ -64,6 +65,13 @@ class UserRepository
             "search" => $search
         ]);
         return $result;
+    }
+
+    public function getAllByFilter(string $filter)
+    {
+        return DB::executeReader(self::GET_ALL_BY_FILTER, [
+            "filter" => $filter
+        ]);
     }
 
     public function login(string $loginOrEmail, string $password)

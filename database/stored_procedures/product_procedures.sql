@@ -31,7 +31,6 @@ BEGIN
     );
 
 END $$
-
 DELIMITER ;
 
 
@@ -612,3 +611,124 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_sells $$
+
+CREATE PROCEDURE sp_products_get_all_by_sells(
+    IN _order                       VARCHAR(4),
+    IN _filter                      VARCHAR(255),
+    IN _limit                       INT,
+    IN _offset                      INT
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id),
+        name,
+        IFNULL(SUM(s.quantity), 0)
+    FROM
+        products AS p
+    LEFT JOIN
+        shoppings AS s
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
+    WHERE
+        p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+        AND p.active = TRUE
+    GROUP BY
+        p.product_id,
+        name
+    ORDER BY
+        CASE _order WHEN 'asc'  THEN COUNT(s.quantity) END ASC,
+        CASE _order WHEN 'desc' THEN COUNT(s.quantity) END DESC;
+
+END $$
+DELIMITER ;
+
+
+
+
+
+
+-- El precio
+SELECT
+    BIN_TO_UUID(p.product_id),
+    name,
+    price
+FROM
+    products AS p
+WHERE
+    active = TRUE
+    AND approved = TRUE
+ORDER BY
+    price DESC;
+
+
+-- Alfabetico
+SELECT
+    BIN_TO_UUID(p.product_id),
+    name,
+    price
+FROM
+    products AS p
+WHERE
+    active = TRUE
+    AND approved = TRUE
+ORDER BY
+    name ASC;
+
+
+-- Mejor calificados
+SELECT
+    BIN_TO_UUID(p.product_id),
+    p.name,
+    IFNULL(AVG(r.rate), 'No reviews')
+FROM
+    products AS p
+LEFT JOIN
+    reviews AS r
+ON
+    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(r.product_id)
+WHERE
+    p.active = TRUE
+    AND p.approved = TRUE
+GROUP BY
+    BIN_TO_UUID(p.product_id),
+    p.name
+ORDER BY
+    AVG(r.rate) DESC;
+
+
+
+
+-- Filtrar por categoria
+SELECT BIN_TO_UUID(category_id), name FROM categories;
+
+-- 06c69dc0-af3a-4663-b504-01b5a449c5f2 (Frutas)
+-- 3d7ad7f2-674d-47c2-a1ca-6c8e0170941d (A)
+
+SELECT
+    BIN_TO_UUID(p.product_id),
+    p.name
+FROM
+    products AS p
+INNER JOIN
+    products_categories AS pc
+ON
+    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+WHERE
+    p.active = TRUE
+    AND p.approved = TRUE
+    AND BIN_TO_UUID(pc.category_id) = '3d7ad7f2-674d-47c2-a1ca-6c8e0170941d'
+
+
+
+
+-- Categorias favoritas del usuario
+
+
+
+-- Productos recomendados para el usuario

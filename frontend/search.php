@@ -78,20 +78,6 @@
                 </div>
 
                 <div class="row d-none" id="users-section">
-                    <a href="/sandbox" class="col-lg-4 col-md-6 col-sm-12  text-decoration-none text-brown">
-                        <div class="bg-white text-center p-5">
-                            <img src="assets/img/fragile.webp" class="img-fluid p-3 rounded-circle" alt="A">
-                            <h5 class="fw-bold mb-0">Prz-Ellam</h5>
-                            <p>Eliam Rodríguez Pérez</p>
-                        </div>
-                    </a>
-                    <a href="/sandbox" class="col-lg-4 col-md-6 col-sm-12 text-decoration-none text-brown">
-                        <div class="bg-white text-center p-5">
-                            <img src="assets/img/fragile.webp" class="img-fluid p-3 rounded-circle" alt="A">
-                            <h5 class="fw-bold mb-0">Prz-Ellam</h5>
-                            <p>Eliam Rodríguez Pérez</p>
-                        </div>
-                    </a>
                 </div>
 
                 <nav aria-label="Page navigation example">
@@ -155,6 +141,6 @@
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     
     <!-- JavaScript -->
-    <script type="text/javascript" src="./js/search.js"></script>
+    <script type="module" src="./js/search.js"></script>
 </body>
 </html>

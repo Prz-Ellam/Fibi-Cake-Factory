@@ -96,6 +96,6 @@
     <!-- Chart.js -->
     <script src="vendor/node_modules/chart.js/dist/chart.min.js"></script>
 
-    <script type="text/javascript" src="./js/orders-report.js"></script>
+    <script type="module" src="./js/orders-report.js"></script>
 </body>
 </html>

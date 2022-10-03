@@ -42,6 +42,8 @@ DELIMITER ;
 
 
 
+
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_user_shopping_cart(

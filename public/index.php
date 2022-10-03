@@ -451,6 +451,7 @@ $app->get('/api/v1/reports/order-report', [ new ReportController(), 'getOrderRep
 $app->get('/api/v1/reports/sales-report2', [ new ReportController(), 'getSalesReport2' ]);
 $app->get('/api/v1/reports/sales-report', [ new ReportController(), 'getSalesReport' ]);
 
+$app->get('/api/v1/users/filter/search', [ new UserController(), 'getAllByFilter' ]);
 
 $app->get('/testing', function (Request $request, Response $response) {
 
