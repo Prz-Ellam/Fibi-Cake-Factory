@@ -20,8 +20,25 @@
     <link rel="stylesheet" href="./styles/navbar.css">
     <link rel="stylesheet" href="./styles/layout.css">
     <link rel="stylesheet" href="./styles/footer.css">
+
+    <!-- jQuery 3.6.0 -->
+    <script defer src="vendor/node_modules/jquery/dist/jquery.min.js"></script>
+    
+    <!-- jQuery Validation 1.19.5 -->
+    <script defer src="vendor/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    
+    <!-- Bootstrap 5.0.0 -->
+    <script defer src="vendor/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Sweet Alert -->
+    <script defer src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <script defer src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
+
+    <script defer type="module" src="./js/products.js"></script>
 </head>
-<body>
+<body class="d-none">
     @navbar
 
     <div class="container my-4">
@@ -78,21 +95,5 @@
 
     @footer
 
-    <!-- jQuery 3.6.0 -->
-    <script src="vendor/node_modules/jquery/dist/jquery.min.js"></script>
-    
-    <!-- jQuery Validation 1.19.5 -->
-    <script src="vendor/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-    
-    <!-- Bootstrap 5.0.0 -->
-    <script src="vendor/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <!-- Sweet Alert -->
-    <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
-    
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
-
-    <script type="module" src="./js/products.js"></script>
 </body>
 </html>

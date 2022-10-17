@@ -5,13 +5,13 @@ $.ajax({
     method: 'GET',
     async: false,
     timeout: 0,
-    success: function(response) {
+    success: function (response) {
         $.ajax({
             url: `api/v1/users/${response.id}`,
             method: "GET",
             async: false,
             timeout: 0,
-            success: function(response) {
+            success: function (response) {
                 const url = `api/v1/images/${response.profilePicture}`;
                 $('.nav-link img').attr('src', url);
             }
@@ -23,8 +23,7 @@ $.ajax({
     url: `/api/v1/users/${id}`,
     method: 'GET',
     timeout: 0,
-    success: function(response)
-    {
+    success: function (response) {
         $('#picture-box').attr('src', `/api/v1/images/${response.profilePicture}`);
         $('#email').val(response.email);
         $('#username').val(response.username);
@@ -32,8 +31,10 @@ $.ajax({
         $('#first-name').val(response.firstName);
         $('#last-name').val(response.lastName);
 
-        switch (response.gender)
-        {
+        switch (response.gender) {
+            case 0:
+                $('#other').attr('checked', '');
+                break;
             case 1:
                 $('#male').attr('checked', '');
                 break;
@@ -49,11 +50,11 @@ $.ajax({
             method: 'GET',
             timeout: 0,
             xhrFields: {
-                responseType: 'blob' 
+                responseType: 'blob'
             },
             success: (response, status, headers) => {
                 const contentDisposition = headers.getResponseHeader('content-disposition');
-        
+
                 const filenameRegex = new RegExp(/\"(.+)\"/);
                 const filename = filenameRegex.exec(contentDisposition)[1];
                 const mime = headers.getResponseHeader('content-type');
@@ -73,33 +74,33 @@ $.ajax({
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     var date = new Date();
     var dateFormat = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0')
     $('#birth-date').val(dateFormat);
 
     // RFC
-    $.validator.addMethod('email5322', function(value, element) {
+    $.validator.addMethod('email5322', function (value, element) {
         return this.optional(element) || /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(value);
     }, 'Please enter a valid email');
 
     // Date Range
-    $.validator.addMethod("dateRange", function(value, element, parameter) {
+    $.validator.addMethod("dateRange", function (value, element, parameter) {
         return this.optional(element) ||
-        !(Date.parse(value) > Date.parse(parameter[1]) || Date.parse(value) < Date.parse(parameter[0]));
+            !(Date.parse(value) > Date.parse(parameter[1]) || Date.parse(value) < Date.parse(parameter[0]));
     }, 'Please enter a valid date');
 
-    $.validator.addMethod("username", function(value, element) {
+    $.validator.addMethod("username", function (value, element) {
         return this.optional(element) || /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){2,18}$/.test(value);
     }, 'Please enter a valid username');
 
     // Data size (no puede pesar mas de 8MB)
-    $.validator.addMethod('filesize', function(value, element, parameter) {
+    $.validator.addMethod('filesize', function (value, element, parameter) {
 
         let result;
         if (element.files[0] === undefined) {
-            return this.optional(element) || result; 
+            return this.optional(element) || result;
         }
 
         const size = (element.files[0].size / 1024 / 1024).toFixed(2);
@@ -109,29 +110,29 @@ $(document).ready(function() {
     }, 'Please enter a valid file');
 
     // Regex
-    $.validator.addMethod('lower', function(value, element) {
-          var regexp = new RegExp(/[a-z]/g);
-          return this.optional(element) || regexp.test(value);
+    $.validator.addMethod('lower', function (value, element) {
+        var regexp = new RegExp(/[a-z]/g);
+        return this.optional(element) || regexp.test(value);
     }, 'Please enter a valid input');
 
-    $.validator.addMethod('upper', function(value, element) {
+    $.validator.addMethod('upper', function (value, element) {
         var regexp = new RegExp(/[A-Z]/g);
         return this.optional(element) || regexp.test(value);
     }, 'Please enter a valid input');
 
-    $.validator.addMethod('numbers', function(value, element) {
+    $.validator.addMethod('numbers', function (value, element) {
         var regexp = new RegExp(/[0-9]/g);
         return this.optional(element) || regexp.test(value);
     }, 'Please enter a valid input');
 
-    $.validator.addMethod('regex', function(value, element, parameter) {
+    $.validator.addMethod('regex', function (value, element, parameter) {
         var regexp = new RegExp(parameter);
         return this.optional(element) || regexp.test(value);
     }, 'Please enter a valid input');
 
     $('#profile-form').validate({
         rules: {
-            'profile-picture': {
+            'profilePicture': {
                 required: true,
                 filesize: 8
             },
@@ -141,9 +142,9 @@ $(document).ready(function() {
                 email5322: true,
                 remote: {
                     type: 'POST',
-                    url: '/isEmailAvailable',
+                    url: 'api/v1/users/email/available',
                     data: {
-                        'email': function() { return $('#email').val() }
+                        'email': function () { return $('#email').val() }
                     },
                     dataType: 'json'
                 }
@@ -154,30 +155,30 @@ $(document).ready(function() {
                 minlength: 3,
                 remote: {
                     type: 'POST',
-                    url: '/isUsernameAvailable',
+                    url: 'api/v1/users/username/available',
                     data: {
-                        'username': function() { return $('#username').val() }
+                        'username': function () { return $('#username').val() }
                     },
                     dataType: 'json'
                 }
             },
-            'first-name': {
+            'firstName': {
                 required: true
             },
-            'last-name': {
+            'lastName': {
                 required: true
             },
             'gender': {
                 required: true
             },
-            'birth-date': {
+            'birthDate': {
                 required: true,
                 date: true,
-                dateRange: [ '1900-01-01', dateFormat ]
+                dateRange: ['1900-01-01', dateFormat]
             }
         },
         messages: {
-            'profile-picture': {
+            'profilePicture': {
                 required: 'La foto de perfil no puede estar vacía.',
                 filesize: 'El archivo es demasiado pesado (máximo de 8MB)'
             },
@@ -192,13 +193,13 @@ $(document).ready(function() {
                 minlength: 'El nombre de usuario debe contener más de 3 caracteres',
                 remote: 'El nombre de usuario está siendo usado por alguien más.'
             },
-            'first-name': {
+            'firstName': {
                 required: 'El nombre no puede estar vacío.'
             },
-            'last-name': {
+            'lastName': {
                 required: 'El apellido no puede estar vacío.'
             },
-            'birth-date': {
+            'birthDate': {
                 required: 'La fecha de nacimiento no puede estar vacía.',
                 date: 'La fecha de nacimiento debe tener formato de fecha.',
                 dateRange: 'La fecha de nacimiento no puede ser antes de la fecha actual'
@@ -208,16 +209,14 @@ $(document).ready(function() {
             }
         },
         errorElement: 'small',
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
 
-            if ($(element)[0].name === 'gender')
-            {
+            if ($(element)[0].name === 'gender') {
                 error.insertAfter(element.parent().parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
                 return;
             }
 
-            if ($(element)[0].name === 'profile-picture')
-            {
+            if ($(element)[0].name === 'profile-picture') {
                 error.insertAfter(element).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
                 return;
             }
@@ -262,20 +261,19 @@ $(document).ready(function() {
             }
         },
         errorElement: 'small',
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
             error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
         }
     });
 
     // TODO: Generalizar esto
-    $.fn.password = function(options) {
+    $.fn.password = function (options) {
 
         $(this).on('input', () => {
 
             var value = $(this).val();
 
-            if (value === '') 
-            {
+            if (value === '') {
                 $('.pwd-lowercase').removeClass('text-danger text-success');
                 $('.pwd-uppercase').removeClass('text-danger text-success');
                 $('.pwd-number').removeClass('text-danger text-success');
@@ -283,62 +281,52 @@ $(document).ready(function() {
                 $('.pwd-length').removeClass('text-danger text-success');
                 return;
             }
-    
+
             var lowercase = new RegExp(/[a-z]/g);
             var uppercase = new RegExp(/[A-Z]/g);
             var number = new RegExp(/[0-9]/g);
             var specialchars = new RegExp(/[¡”"#$%&;/=’¿?!:;,.\-_+*{}\[\]]/g);
 
-            if (lowercase.test(value))
-            {
+            if (lowercase.test(value)) {
                 $('.pwd-lowercase').addClass('text-success').removeClass('text-danger');
             }
-            else
-            {
+            else {
                 $('.pwd-lowercase').addClass('text-danger').removeClass('text-success')
             }
 
-            if (uppercase.test(value))
-            {
+            if (uppercase.test(value)) {
                 $('.pwd-uppercase').addClass('text-success').removeClass('text-danger');
             }
-            else
-            {
+            else {
                 $('.pwd-uppercase').addClass('text-danger').removeClass('text-success')
             }
 
-            if (number.test(value))
-            {
+            if (number.test(value)) {
                 $('.pwd-number').addClass('text-success').removeClass('text-danger');
             }
-            else
-            {
+            else {
                 $('.pwd-number').addClass('text-danger').removeClass('text-success')
             }
 
-            if (specialchars.test(value))
-            {
+            if (specialchars.test(value)) {
                 $('.pwd-specialchars').addClass('text-success').removeClass('text-danger');
             }
-            else
-            {
+            else {
                 $('.pwd-specialchars').addClass('text-danger').removeClass('text-success')
             }
 
-            if (value.length >= 8)
-            {
+            if (value.length >= 8) {
                 $('.pwd-length').addClass('text-success').removeClass('text-danger');
             }
-            else
-            {
+            else {
                 $('.pwd-length').addClass('text-danger').removeClass('text-success')
             }
 
         });
-        
+
     }
 
-    $('#btn-old-password').click(function() {
+    $('#btn-old-password').click(function () {
         let mode = $('#old-password').attr('type');
 
         if (mode === 'password') {
@@ -351,7 +339,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#btn-new-password').click(function() {
+    $('#btn-new-password').click(function () {
         let mode = $('#new-password').attr('type');
 
         if (mode === 'password') {
@@ -364,7 +352,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#btn-confirm-new-password').click(function() {
+    $('#btn-confirm-new-password').click(function () {
         let mode = $('#confirm-new-password').attr('type');
 
         if (mode === 'password') {
@@ -382,59 +370,92 @@ $(document).ready(function() {
     $('#new-password').password();
 
 
-    $('#profile-form').submit(function(e) {
+    $('#profile-form').submit(function (e) {
 
         e.preventDefault();
 
-        if($('#profile-form').valid() === false) {
+        if ($('#profile-form').valid() === false) {
             return;
         }
 
         $.ajax({
             url: `/api/v1/users/${id}`,
-            method: 'PUT',
-            data: $(this).serialize(),
-            success: function(response)
-            {
+            method: 'POST',
+            data: new FormData(this),
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Completado!',
+                        text: 'La información se ha actualizado con éxito',
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                }
+            },
+            error: function (response, status, error) {
+                const responseText = response.responseJSON;
+
+                if (!responseText.status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: responseText.message,
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                }
+            },
+            complete: function () {
 
             }
         });
-        
+
     });
 
 
-    $('#password-form').submit(function(e) {
+    $('#password-form').submit(function (e) {
 
         e.preventDefault();
 
-        if($('#password-form').valid() === false) {
+        if ($('#password-form').valid() === false) {
             return;
         }
+
+        $.ajax({
+            url: `/api/v1/users/${id}/password`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                console.log(response);
+            }
+        });
 
     });
 
 
 
 
-    $('#profile-picture').on('change', function(e) {
-            
+    $('#profile-picture').on('change', function (e) {
+
         // Si se le da Cancelar, se pone la imagen por defecto y el path vacio
         //if($(this)[0].files[0].size === 0){
         //    let img = document.getElementById('picture-box');
         //    img.setAttribute('src', 'Assets/blank-profile-picture.svg');
-            
+
         //    var fileInputPhoto = document.getElementById('photo');
         //    fileInputPhoto.value = '';
         //    return;
         //}
-        
+
         let fReader = new FileReader();
         fReader.readAsDataURL($(this)[0].files[0]);
-        
+
         // A PARTIR DE AQUI ES TEST PARA VALIDAR QUE SOLO SE INGRESEN IMAGENES
         var filePath = $('#profile-picture').val();
-            
-        fReader.onloadend = function(e) {
+
+        fReader.onloadend = function (e) {
             let img = $('#picture-box');
             img.attr('src', e.target.result);
         };

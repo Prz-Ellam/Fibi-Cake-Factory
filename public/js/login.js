@@ -3,12 +3,12 @@ import '../vendor/node_modules/jquery-validation/dist/jquery.validate.min.js';
 import '../vendor/node_modules/bootstrap/dist/js/bootstrap.min.js';
 import 'https://kit.fontawesome.com/48ce36e499.js';
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Reglas del formulario de login
     $('#login-form').validate({
         rules: {
-            'login-or-email': {
+            'loginOrEmail': {
                 required: true,
                 email: false
             },
@@ -17,7 +17,7 @@ $(document).ready(function() {
             }
         },
         messages: {
-            'login-or-email' : {
+            'loginOrEmail': {
                 required: 'El usuario o correo electrónico no puede estar vacío.'
             },
             'password': {
@@ -25,12 +25,12 @@ $(document).ready(function() {
             }
         },
         errorElement: 'small',
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
             error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
         }
     });
 
-    $.validator.addMethod('email5322', function(value, element) {
+    $.validator.addMethod('email5322', function (value, element) {
         return this.optional(element) || /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(value);
     }, 'Please enter a valid email');
 
@@ -49,12 +49,12 @@ $(document).ready(function() {
             }
         },
         errorElement: 'small',
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
             error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
         }
     });
 
-    $('#btn-password').click(function() {
+    $('#btn-password').click(function () {
         let mode = $('#password').attr('type');
 
         if (mode === 'password') {
@@ -67,7 +67,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#login-form').submit(function(event) {
+    $('#login-form').submit(function (event) {
 
         event.preventDefault();
 
@@ -77,28 +77,37 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            method: 'POST',
             url: 'api/v1/session',
+            method: 'POST',
             data: $(this).serialize(),
-            success: function(response) {
-                // Debe devolver el token
-                if (response.status)
-                {
+            timeout: 0,
+            success: function (response) {
+                console.log(response);
+                if (response.status) {
                     window.location.href = '/home';
                 }
             },
-            error: function(response, status, error) {
-                // Debe devolver un error
-                console.log(error);
+            error: function (response, status, error) {
+
+                const responseText = response.responseJSON;
+
+                if (!responseText.status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: responseText.message,
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                }
             },
-            complete: function() {
-                
+            complete: function () {
+
             }
         });
 
     });
 
-    $('#send-mail').submit(function(event) {
+    $('#send-mail').submit(function (event) {
 
         event.preventDefault();
 
@@ -119,20 +128,20 @@ $(document).ready(function() {
             method: 'POST',
             url: 'api/v1/email',
             headers: {
-                'Accept' : 'application/json',
-                'Content-Type' : 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             dataType: 'json',
             data: JSON.stringify(requestBody),
-            success: function(response) {
+            success: function (response) {
                 // Debe devolver el token
                 console.log(response);
             },
-            error: function(response, status, error) {
+            error: function (response, status, error) {
                 // Puede fallar en caso de que no exista un usuario con ese correo
                 console.log(status);
             },
-            complete: function() {
+            complete: function () {
 
             }
         });

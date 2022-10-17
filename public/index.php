@@ -10,6 +10,7 @@ use CakeFactory\Controllers\OrderController;
 use CakeFactory\Controllers\ProductController;
 use CakeFactory\Controllers\ReportController;
 use CakeFactory\Controllers\ReviewController;
+use CakeFactory\Controllers\SessionController;
 use CakeFactory\Controllers\ShoppingCartController;
 use CakeFactory\Controllers\ShoppingCartItemController;
 use CakeFactory\Controllers\UserController;
@@ -19,6 +20,7 @@ use CakeFactory\Controllers\WishlistObjectController;
 use CakeFactory\Models\Category;
 use CakeFactory\Models\ChatParticipant;
 use CakeFactory\Repositories\OrderRepository;
+use CakeFactory\Repositories\ProductRepository;
 use CakeFactory\Repositories\UserRepository;
 use Dotenv\Dotenv;
 use Fibi\Core\Application;
@@ -58,7 +60,7 @@ $app->get('/', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === true)
     {
@@ -74,7 +76,7 @@ $app->get('/login', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === true)
     {
@@ -90,7 +92,7 @@ $app->get('/signup', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === true)
     {
@@ -114,7 +116,7 @@ $app->get('/home', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -144,7 +146,7 @@ $app->get('/product', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -159,7 +161,7 @@ $app->get('/products', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -181,7 +183,7 @@ $app->get('/wishlist', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -196,7 +198,7 @@ $app->get('/wishlists', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -211,7 +213,7 @@ $app->get('/checkout', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -226,7 +228,7 @@ $app->get('/chat', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -241,7 +243,7 @@ $app->get('/shopping-cart', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -256,7 +258,7 @@ $app->get('/create-product', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -271,7 +273,7 @@ $app->get('/update-product', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -286,7 +288,7 @@ $app->get('/sales-report', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -301,7 +303,7 @@ $app->get('/orders-report', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -316,7 +318,7 @@ $app->get('/profile', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -327,18 +329,18 @@ $app->get('/profile', function(Request $request, Response $response) {
     $id = $request->getQuery('id');
     if ($id === null)
     {
-        $response->redirect('/profile?id=' . $session->get('user_id'));
+        $response->redirect('/profile?id=' . $session->get('userId'));
         return;
     }
 
-    if ($id === $session->get('user_id'))
+    if ($id === $session->get('userId'))
         $response->view('profile', 'auth-layout');
     else
     {
         $userId = $request->getQuery('id');
 
         $userRepository = new UserRepository();
-        $user = $userRepository->getUser($userId);
+        $user = $userRepository->getOne($userId);
 
         if ($user === [])
         {
@@ -354,7 +356,7 @@ $app->get('/search', function(Request $request, Response $response) {
 
     $session = new PhpSession();
 
-    $login = $session->has('token');
+    $login = $session->has('userId');
 
     if ($login === false)
     {
@@ -366,13 +368,25 @@ $app->get('/search', function(Request $request, Response $response) {
 });
 
 // API
-$app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
 $app->post('/api/v1/users', [ new UserController(), 'create' ]);
 $app->post('/api/v1/users/{userId}', [ new UserController(), 'update' ]);
+$app->post('/api/v1/users/{userId}/password', [ new UserController(), 'updatePassword' ]);
+$app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
+$app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
 $app->get('/api/v1/users/{userId}', [ new UserController(), 'getUser' ]);
 $app->delete('/api/v1/users/{userId}', function() {});
 
-$app->post('/api/v1/login', [ new UserController(), 'login' ]);
+$app->post('/api/v1/login', [ new SessionController(), 'login' ]);
+$app->post('/api/v1/session', [ new SessionController(), 'login' ]);
+$app->get('/api/v1/session', [ new SessionController(), 'session' ]);
+
+$app->post('/api/v1/users/email/available', [ new UserController(), 'isEmailAvailable' ]);
+$app->post('/api/v1/users/username/available', [ new UserController(), 'isUsernameAvailable' ]);
+
+
+
+
+
 
 // Wishlists
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
@@ -383,7 +397,7 @@ $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUs
 
 
 
-$app->post('/api/v1/session', [ new UserController(), 'login' ]);
+
 
 // Categories
 $app->post('/api/v1/categories', [ new CategoryController(), 'create' ]);
@@ -401,7 +415,6 @@ $app->delete('/api/v1/products/{productId}', [ new ProductController(), 'delete'
 $app->get('/api/v1/users/{userId}/products', [ new ProductController(), 'getUserProducts' ]);
 $app->get('/api/v1/products/action/recents', [ new ProductController(), 'getRecentProducts' ]);
 
-$app->get('/api/v1/session', [ new UserController(), 'session' ]);
 
 
 $app->post('/api/v1/shopping-cart-item', [ new ShoppingCartItemController(), 'addItem' ]);
@@ -453,8 +466,12 @@ $app->get('/api/v1/reports/sales-report', [ new ReportController(), 'getSalesRep
 
 $app->get('/api/v1/users/filter/search', [ new UserController(), 'getAllByFilter' ]);
 
-$app->get('/testing', function (Request $request, Response $response) {
+$app->get('/api/v1/products/order/price', [ new ProductController(), 'getAllByPrice' ]);
+$app->get('/api/v1/products/order/ships', [ new ProductController(), 'getAllByShips' ]);
+$app->get('/api/v1/products/order/alpha', [ new ProductController(), 'getAllByAlpha' ]);
 
+$app->get('/testing', function (Request $request, Response $response) {
+/*
     $orderRepository = new OrderRepository();
     $results = $orderRepository->getOrderReport("95ee300d-6466-4f43-86fd-35c2737da7f8", null, null, null);
     foreach ($results as &$result)
@@ -462,6 +479,11 @@ $app->get('/testing', function (Request $request, Response $response) {
         $result["categories"] = explode(',', $result["categories"]);
     }
 
+    $response->json($results);
+*/
+
+    $productRepository = new ProductRepository();
+    $results = $productRepository->getAllByShips();
     $response->json($results);
 });
 

@@ -68,7 +68,7 @@ $(document).ready(function() {
 
     $('#sign-up-form').validate({
         rules: {
-            'profile-picture': {
+            'profilePicture': {
                 required: true,
                 filesize: 8
             },
@@ -78,7 +78,7 @@ $(document).ready(function() {
                 email5322: true,
                 remote: {
                     type: 'POST',
-                    url: 'api/v1/isEmailAvailable',
+                    url: 'api/v1/users/email/available',
                     data: {
                         'email': function() { return $('#email').val() }
                     },
@@ -90,18 +90,18 @@ $(document).ready(function() {
                 username: true,
                 remote: {
                     type: 'POST',
-                    url: 'api/v1/isUsernameAvailable',
+                    url: 'api/v1/users/username/available',
                     data: {
                         'username': function() { return $('#username').val() }
                     },
                     dataType: 'json'
                 }
             },
-            'first-name': {
+            'firstName': {
                 required: true,
                 regex: /^[a-zA-Z \u00C0-\u00FF]+$/
             },
-            'last-name': {
+            'lastName': {
                 required: true,
                 regex: /^[a-zA-Z \u00C0-\u00FF]+$/
             },
@@ -111,7 +111,7 @@ $(document).ready(function() {
             'gender': {
                 required: true
             },
-            'birth-date': {
+            'birthDate': {
                 required: true,
                 date: true,
                 dateRange: [ '1900-01-01', dateFormat ]
@@ -124,13 +124,13 @@ $(document).ready(function() {
                 numbers: true,
                 specialchars: true
             },
-            'confirm-password': {
+            'confirmPassword': {
                 required: true,
                 equalTo: '#password' // Igual que la contraseña
             }
         },
         messages: {
-            'profile-picture': {
+            'profilePicture': {
                 required: 'La foto de perfil no puede estar vacía.',
                 filesize: 'El archivo es demasiado pesado (máximo de 8MB)'
             },
@@ -144,18 +144,18 @@ $(document).ready(function() {
                 username: 'El nombre de usuario debe contener más de 3 caracteres',
                 remote: 'El nombre de usuario está siendo usado por alguien más.'
             },
-            'first-name': {
+            'firstName': {
                 required: 'El nombre no puede estar vacío.',
                 regex: 'El nombre solo puede contener letras.'
             },
-            'last-name': {
+            'lastName': {
                 required: 'El apellido no puede estar vacío.',
                 regex: 'El apellido solo puede contener letras'
             },
             'visibility': {
                 required: 'La visibilidad de usuario es requerida'
             },
-            'birth-date': {
+            'birthDate': {
                 required: 'La fecha de nacimiento no puede estar vacía.',
                 date: 'La fecha de nacimiento debe tener formato de fecha.',
                 dateRange: 'La fecha de nacimiento no puede ser antes de la fecha actual'
@@ -171,7 +171,7 @@ $(document).ready(function() {
                 numbers: 'Faltan requerimentos de la contraseña',
                 specialchars: 'Faltan requerimentos de la contraseña'
             },
-            'confirm-password': {
+            'confirmPassword': {
                 required: 'Confirmar contraseña no puede estar vacío.',
                 equalTo: 'Confirmar contraseña no coincide con contraseña'
             }
@@ -185,7 +185,7 @@ $(document).ready(function() {
                 return;
             }
 
-            if ($(element)[0].name === 'profile-picture')
+            if ($(element)[0].name === 'profilePicture')
             {
                 error.insertAfter(element).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
                 return;
@@ -247,6 +247,12 @@ $(document).ready(function() {
         var regexpImages = /^(image\/.*)/i;
         if (!regexpImages.exec(file.type))
         {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La imagen que ingresaste no es permitida',
+                confirmButtonColor: "#FF5E1F",
+            });
             $(this).val('');
             fileReader.onloadend = function(e) {
                 $('#picture-box').attr('src', './assets/img/blank-profile-picture.svg');

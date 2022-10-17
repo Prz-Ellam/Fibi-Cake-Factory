@@ -5,7 +5,7 @@ use CakeFactory\Repositories\UserRepository;
     $var = $_GET["id"];
 
     $userRepository = new UserRepository();
-    $user = $userRepository->getUser($var);
+    $user = $userRepository->getOne($var);
 
 ?>
 
@@ -66,7 +66,7 @@ use CakeFactory\Repositories\UserRepository;
                 <hr class="mb-5">
 
                 <?php
-                    switch($user[0]["userRole"]) { 
+                    switch($user["userRole"]) { 
                         case "Super Administrador":
                 ?>
 

@@ -57,6 +57,20 @@ class ReportController extends Controller
         $orderRepository = new OrderRepository();
 
         $results = $orderRepository->getSalesReport($userId, $categoryId, $from, $to);
+
+/*
+        $output = fopen("php://output",'w') or die("Can't open php://output");
+        fputcsv($output, array_keys($results[0]));
+        foreach($results as $element) {
+            fputcsv($output, $element);
+        }
+        fclose($output) or die("Can't close php://output");
+        header('Content-Type: text/csv');
+       header('Content-Disposition: attachment; filename="export.csv"');
+       header('Pragma: no-cache');    
+       header('Expires: 0');
+       */
+
         foreach ($results as &$result)
         {
             $result["categories"] = explode(',', $result["categories"]);

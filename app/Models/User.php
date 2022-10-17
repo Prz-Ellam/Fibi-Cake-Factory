@@ -26,7 +26,7 @@ class User implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $userId;
+    private ?string $userId = null;
 
     /**
      * Correo electrónico del usuario
@@ -36,7 +36,7 @@ class User implements Model
     #[Required]
     #[Email]
     #[MaxLength(255)]
-    private ?string $email;
+    private ?string $email = null;
 
     /**
      * Undocumented variable
@@ -46,7 +46,7 @@ class User implements Model
     #[Required]
     #[MinLength(3)]
     #[MaxLength(18)]
-    private ?string $username;
+    private ?string $username = null;
 
     /**
      * Undocumented variable
@@ -55,7 +55,7 @@ class User implements Model
      */
     #[Required]
     #[MaxLength(50)]
-    private ?string $firstName;
+    private ?string $firstName = null;
 
     /**
      * Undocumented variable
@@ -64,7 +64,7 @@ class User implements Model
      */
     #[Required]
     #[MaxLength(50)]
-    private ?string $lastName;
+    private ?string $lastName = null;
 
     /**
      * Undocumented variable
@@ -72,7 +72,7 @@ class User implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $birthDate;
+    private ?string $birthDate = null;
 
     /**
      * Undocumented variable
@@ -80,7 +80,7 @@ class User implements Model
      * @var bool|null
      */
     #[Required]
-    private ?bool $visible;
+    private ?bool $visible = null;
 
     /**
      * Undocumented variable
@@ -88,7 +88,7 @@ class User implements Model
      * @var integer|null
      */
     #[Required]
-    private ?int $gender;
+    private ?int $gender = null;
 
     /**
      * Undocumented variable
@@ -103,7 +103,7 @@ class User implements Model
     #[HasNumber]
     #[HasSpecialChars]
     //#[EqualTo('confirmPassword')]
-    private ?string $password;
+    private ?string $password = null;
 
     /**
      * Undocumented variable
@@ -111,7 +111,7 @@ class User implements Model
      * @var integer|null
      */
     #[Required]
-    private ?string $userRole;
+    private ?string $userRole = null;
 
     /**
      * Undocumented variable
@@ -120,7 +120,7 @@ class User implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $profilePicture;
+    private ?string $profilePicture = null;
 
     public function getUserId() : ?string
     {
@@ -254,5 +254,3 @@ class User implements Model
         return array_keys(get_class_vars(self::class));
     }
 }
-
-?>

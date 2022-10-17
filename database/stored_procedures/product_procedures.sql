@@ -232,8 +232,6 @@ DELIMITER ;
 
 
 
-
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_recent_products $$
 
@@ -396,8 +394,6 @@ DELIMITER ;
 
 
 
-
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_product_approve $$
 
@@ -420,7 +416,6 @@ DELIMITER ;
 
 
 
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_product_denied $$
 
@@ -440,7 +435,6 @@ BEGIN
 
 END $$
 DELIMITER ;
-
 
 
 
@@ -500,7 +494,6 @@ DELIMITER ;
 
 
 
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_user_products_denied $$
 
@@ -554,7 +547,6 @@ BEGIN
 
 END $$
 DELIMITER ;
-
 
 
 
@@ -615,9 +607,9 @@ DELIMITER ;
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_products_get_all_by_sells $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_ships $$
 
-CREATE PROCEDURE sp_products_get_all_by_sells(
+CREATE PROCEDURE sp_products_get_all_by_ships(
     IN _order                       VARCHAR(4),
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
@@ -626,9 +618,10 @@ CREATE PROCEDURE sp_products_get_all_by_sells(
 BEGIN
 
     SELECT
-        BIN_TO_UUID(p.product_id),
+        BIN_TO_UUID(p.product_id) id,
         name,
-        IFNULL(SUM(s.quantity), 0)
+        price,
+        IFNULL(SUM(s.quantity), 0) sells
     FROM
         products AS p
     LEFT JOIN
@@ -638,6 +631,7 @@ BEGIN
     WHERE
         p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
         AND p.active = TRUE
+        AND approved = TRUE
     GROUP BY
         p.product_id,
         name
@@ -650,57 +644,102 @@ DELIMITER ;
 
 
 
-
-
-
 -- El precio
-SELECT
-    BIN_TO_UUID(p.product_id),
-    name,
-    price
-FROM
-    products AS p
-WHERE
-    active = TRUE
-    AND approved = TRUE
-ORDER BY
-    price DESC;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_price $$
+
+CREATE PROCEDURE sp_products_get_all_by_price(
+    IN _order                       VARCHAR(4),
+    IN _filter                      VARCHAR(255),
+    IN _limit                       INT,
+    IN _offset                      INT
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        name,
+        price
+    FROM
+        products AS p
+    WHERE
+        name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+        AND active = TRUE
+        AND approved = TRUE
+    ORDER BY
+        CASE _order WHEN 'asc'  THEN price END ASC,
+        CASE _order WHEN 'desc' THEN price END DESC;
+
+END $$
+DELIMITER ;
+
 
 
 -- Alfabetico
-SELECT
-    BIN_TO_UUID(p.product_id),
-    name,
-    price
-FROM
-    products AS p
-WHERE
-    active = TRUE
-    AND approved = TRUE
-ORDER BY
-    name ASC;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_alpha $$
+
+CREATE PROCEDURE sp_products_get_all_by_alpha(
+    IN _order                       VARCHAR(4),
+    IN _filter                      VARCHAR(255),
+    IN _limit                       INT,
+    IN _offset                      INT
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        name,
+        price
+    FROM
+        products AS p
+    WHERE
+        name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+        AND active = TRUE
+        AND approved = TRUE
+    ORDER BY
+        CASE _order WHEN 'asc'  THEN name END ASC,
+        CASE _order WHEN 'desc' THEN name END DESC;
+
+END $$
+DELIMITER ;
+
 
 
 -- Mejor calificados
-SELECT
-    BIN_TO_UUID(p.product_id),
-    p.name,
-    IFNULL(AVG(r.rate), 'No reviews')
-FROM
-    products AS p
-LEFT JOIN
-    reviews AS r
-ON
-    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(r.product_id)
-WHERE
-    p.active = TRUE
-    AND p.approved = TRUE
-GROUP BY
-    BIN_TO_UUID(p.product_id),
-    p.name
-ORDER BY
-    AVG(r.rate) DESC;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_rate $$
 
+CREATE PROCEDURE sp_products_get_all_by_rate(
+    IN _order                       VARCHAR(4),
+    IN _filter                      VARCHAR(255),
+    IN _limit                       INT,
+    IN _offset                      INT
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        p.name,
+        IFNULL(AVG(r.rate), 'No reviews') rate
+    FROM
+        products AS p
+    LEFT JOIN
+        reviews AS r
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(r.product_id)
+    WHERE
+        p.active = TRUE
+        AND p.approved = TRUE
+    GROUP BY
+        BIN_TO_UUID(p.product_id),
+        p.name
+    ORDER BY
+        CASE _order WHEN 'asc'  THEN AVG(r.rate) END ASC,
+        CASE _order WHEN 'desc' THEN AVG(r.rate) END DESC;
+
+END $$
+DELIMITER ;
 
 
 
@@ -710,20 +749,33 @@ SELECT BIN_TO_UUID(category_id), name FROM categories;
 -- 06c69dc0-af3a-4663-b504-01b5a449c5f2 (Frutas)
 -- 3d7ad7f2-674d-47c2-a1ca-6c8e0170941d (A)
 
-SELECT
-    BIN_TO_UUID(p.product_id),
-    p.name
-FROM
-    products AS p
-INNER JOIN
-    products_categories AS pc
-ON
-    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
-WHERE
-    p.active = TRUE
-    AND p.approved = TRUE
-    AND BIN_TO_UUID(pc.category_id) = '3d7ad7f2-674d-47c2-a1ca-6c8e0170941d'
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_category $$
 
+CREATE PROCEDURE sp_products_get_all_by_category(
+    IN _category_id                 VARCHAR(36),
+    IN _filter                      VARCHAR(255),
+    IN _limit                       INT,
+    IN _offset                      INT
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(p.product_id),
+        p.name
+    FROM
+        products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    WHERE
+        p.active = TRUE
+        AND p.approved = TRUE
+        AND BIN_TO_UUID(pc.category_id) = '3d7ad7f2-674d-47c2-a1ca-6c8e0170941d'
+
+END $$
+DELIMITER ;
 
 
 

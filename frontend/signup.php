@@ -11,6 +11,9 @@
 
     <!-- Bootstrap 5.0.0 -->
     <link rel="stylesheet" href="vendor/node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Sweet Alert -->
+    <link rel="stylesheet" href="vendor/node_modules/sweetalert2/dist/sweetalert2.min.css">
     
     <!-- CSS -->
     <link rel="stylesheet" href="./styles/navbar.css">
@@ -135,7 +138,7 @@
                 <div class="mb-4">
                     <label for="confirm-password" class="form-label" role="button">Confirmar Contraseña</label>
                     <div class="input-group">
-                        <input type="password" name="confirm-password" id="confirmPassword" class="form-control shadow-none">
+                        <input type="password" name="confirmPassword" id="confirm-password" class="form-control shadow-none">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-orange btn-password input-group-text shadow-none rounded-0 rounded-end shadow-none" id="btn-confirm-password"><i id="confirm-password-icon" class="fas fa-solid fa-eye"></i></button>
                         </div>
@@ -155,6 +158,9 @@
     </section>
 
     @footer
+
+    <!-- Sweet Alert -->
+    <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
     <script type="module" src="./js/sign-up.js"></script>
 </body>

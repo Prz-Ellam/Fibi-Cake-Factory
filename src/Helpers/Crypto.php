@@ -11,6 +11,6 @@ class Crypto
 
     public static function verify(string $hash, string $input) : bool
     {
-        return password_verify($hash, $input);
+        return password_verify($input, $hash);
     }
 }

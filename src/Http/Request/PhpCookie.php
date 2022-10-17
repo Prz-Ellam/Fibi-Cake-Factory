@@ -4,9 +4,9 @@ namespace Fibi\Http\Request;
 
 class PhpCookie implements Cookie
 {
-    public function get(string $key) : string
+    public function get(string $key) : ?string
     {
-        return $_COOKIE[$key];
+        return $_COOKIE[$key] ?? null;
     }
 
     public function set(string $key, string $value, int $timeout = 0) : void

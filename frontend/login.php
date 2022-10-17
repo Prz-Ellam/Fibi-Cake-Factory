@@ -1,3 +1,9 @@
+<?php
+
+use Fibi\Http\Request\PhpCookie;
+
+$cookies = new PhpCookie();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,14 +45,16 @@
                 <div class="mb-4">
                     <label class="form-label" for="login-or-email" role="button">Correo electrónico o nombre de usuario</label>
                     <div class="input-group">
-                        <input type="email" class="form-control shadow-none rounded-1" name="loginOrEmail" id="login-or-email" placeholder="">
+                        <input type="email" class="form-control shadow-none rounded-1" name="loginOrEmail" id="login-or-email" placeholder=""
+                        value=<?= $cookies->get('loginOrEmail') ?? "" ?>>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label" for="password" role="button">Contraseña</label>
                     <div class="input-group">
-                        <input type="password" class="form-control shadow-none rounded-start" aria-describedby="basic-addon2" name="password" id="password">
+                        <input type="password" class="form-control shadow-none rounded-start" aria-describedby="basic-addon2" name="password" id="password"
+                        value=<?= $cookies->get('password') ?? "" ?>>
                         <div class="input-group-append">
                             <button type="button" class="btn btn-orange btn-password input-group-text shadow-none rounded-0 rounded-end" id="btn-password"><i class="fas fa-solid fa-eye"></i></button>
                         </div>
@@ -54,11 +62,12 @@
                 </div>
     
                 <div class="mb-4">
-                    <input type="checkbox" class="form-check-input shadow-none rounded-1" name="remember" id="remember" value="1" role="button">
+                    <input type="checkbox" class="form-check-input shadow-none rounded-1" name="remember" id="remember" value="1" role="button"
+                    <?php if ($cookies->get('remember')) print("checked") ?>>
                     <label class="form-label" for="remember" role="button">Recuérdame</label>
                 </div>
     
-                <button type="submit" class="btn btn-orange mb-4 w-100 shadow-none rounded-1" id="btn-login">Iniciar sesión</button>
+                <button type="submit" class="btn btn-orange w-100 mb-4 shadow-none rounded-1" id="btn-login">Iniciar sesión</button>
 
                 <div class="text-center">
                     <p class="mb-0">¿Aún no tienes cuenta?</p>
@@ -99,6 +108,7 @@
 
     @footer
 
+    <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script type="module" src="./js/login.js"></script>
 </body>
 </html>

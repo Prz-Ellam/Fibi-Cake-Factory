@@ -234,6 +234,6 @@
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
     <!-- JavaScript -->
-    <script type="text/javascript" src="./js/checkout.js"></script>
+    <script type="module" src="./js/checkout.js"></script>
 </body>
 </html>

@@ -133,7 +133,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 
@@ -201,7 +201,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 

@@ -9,11 +9,6 @@ const chatComponent = /*html*/`
 <hr>
 `;
 
-for (let i = 0; i < 8; i++)
-{
-    //$('#chats-container').append(chatComponent);
-}
-
 var id;
 $.ajax({
     url: 'api/v1/session',

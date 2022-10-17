@@ -29,8 +29,7 @@ class ChatController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             $response->json([
                 "status" => false,
                 "message" => $feedback
@@ -39,8 +38,7 @@ class ChatController extends Controller
         }
 
         $result = $chatRepository->create($chat);
-        if (!$result)
-        {
+        if (!$result) {
             $response->json([
                 "status" => false,
                 "message" => "No se pudo crear el chat"
@@ -51,7 +49,6 @@ class ChatController extends Controller
 
     public function getChatMessages(Request $request, Response $response)
     {
-        
     }
 
     /**
@@ -71,9 +68,10 @@ class ChatController extends Controller
 
         $required = new Required();
         $uuid = new Rules\Uuid();
-        if (!$required->isValid($userId1) || !$required->isValid($userId2) ||
-            !$uuid->isValid($userId1) || !$uuid->isValid($userId2))
-        {
+        if (
+            !$required->isValid($userId1) || !$required->isValid($userId2) ||
+            !$uuid->isValid($userId1) || !$uuid->isValid($userId2)
+        ) {
             $response->json([
                 "status" => false
             ]);
@@ -82,8 +80,7 @@ class ChatController extends Controller
 
         $chatRepository = new ChatRepository();
         $status = $chatRepository->findOneByUsers($userId1, $userId2);
-        if (count((array)$status) > 0)
-        {
+        if (count((array)$status) > 0) {
             $response->json([
                 "id" => $status["id"]
             ]);
@@ -100,8 +97,7 @@ class ChatController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             $response->json([
                 "status" => false,
                 "message" => $feedback
@@ -110,8 +106,7 @@ class ChatController extends Controller
         }
 
         $result = $chatRepository->create($chat);
-        if (!$result)
-        {
+        if (!$result) {
             $response->json([
                 "status" => false,
                 "message" => "No se pudo crear el chat"
@@ -119,12 +114,11 @@ class ChatController extends Controller
             return;
         }
 
-        $usersId = [ $userId1, $userId2 ];
-        for ($i = 0; $i < 2; $i++)
-        {
+        $usersId = [$userId1, $userId2];
+        for ($i = 0; $i < 2; $i++) {
             $chatParticipantRepository = new ChatParticipantRepository();
             $chatParticipantId = Uuid::uuid4()->toString();
-    
+
             $chatParticipant = new ChatParticipant();
             $chatParticipant
                 ->setChatParticipantId($chatParticipantId)
@@ -134,19 +128,17 @@ class ChatController extends Controller
             $validator = new Validator($chatParticipant);
             $feedback = $validator->validate();
             $status = $validator->getStatus();
-    
-            if (!$status)
-            {
+
+            if (!$status) {
                 $response->json([
                     "status" => false,
                     "message" => $feedback
                 ])->setStatusCode(400);
                 return;
             }
-    
+
             $result = $chatParticipantRepository->create($chatParticipant);
-            if (!$result)
-            {
+            if (!$result) {
                 $response->json([
                     "status" => false,
                     "message" => "No se pudo crear un participante"
@@ -168,8 +160,7 @@ class ChatController extends Controller
         $userId2 = $request->getBody("userId2");
 
         $required = new Required();
-        if (!$required->isValid($userId1) || !$required->isValid($userId2))
-        {
+        if (!$required->isValid($userId1) || !$required->isValid($userId2)) {
             $response->json(["status" => false]);
             return;
         }
@@ -181,5 +172,3 @@ class ChatController extends Controller
         $response->json($status[0] ?? (object)null);
     }
 }
-
-?>

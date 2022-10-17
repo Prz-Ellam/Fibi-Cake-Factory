@@ -17,15 +17,14 @@ class ImageController extends Controller
      * @param Response $response
      * @return void
      */
-    public function get(Request $request, Response $response) : void
+    public function get(Request $request, Response $response): void
     {
         $imageId = $request->getRouteParams('imageId');
 
         $imageRepository = new ImageRepository();
         $result = $imageRepository->getImage($imageId);
 
-        if (count($result) < 1)
-        {
+        if (count($result) < 1) {
             $response->setStatusCode(404);
             $response->json(["response" => "error"]);
             return;
@@ -40,5 +39,3 @@ class ImageController extends Controller
         $response->setBody($result[0]["content"]);
     }
 }
-
-?>

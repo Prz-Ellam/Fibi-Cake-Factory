@@ -66,7 +66,7 @@ class Response
         return $this;
     }
     
-    public function json(array|object $content) : self
+    public function json(mixed $content) : self
     {
         $this->setContentType("application/json")
                 ->setBody(json_encode($content));
@@ -84,6 +84,22 @@ class Response
     {
         $this->setHeader("Location", $uri);
         return $this;
+    }
+
+    public function csv(array $content) : self
+    {
+        $this->setContentType("text/csv");
+        $this->setHeader("Content-Disposition", "attachment; filename=export.csv");
+        $this->setHeader("Pragma", "no-cache");
+        $this->setHeader("Expires", "0");
+
+        // TODO: Mal
+        $output = fopen("php://output",'w') or die("Can't open php://output");
+        fputcsv($output, array('id','name','description'));
+        foreach($content as $element) {
+            fputcsv($output, $element);
+        }
+        fclose($output) or die("Can't close php://output");
     }
 
     public function view(string $view, ?string $layout = null) : self

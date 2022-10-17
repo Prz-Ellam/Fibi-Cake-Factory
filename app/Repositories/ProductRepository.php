@@ -23,10 +23,10 @@ class ProductRepository
     private const GET_ALL_BY_USER_DENIED = "CALL sp_get_user_products_denied(:userId)";
     private const GET_ALL_BY_USER_PENDING = "CALL sp_get_user_products_pending(:userId)";
     // GET_ALL_BY_ADMIN_APPROVE
-    private const GET_ALL_BY_ALPHA_ORDER = "CALL sp_products_get_all_by_alpha_order";
-    private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate";
-    private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price";
-    private const GET_ALL_BY_SHIPS = "CALL sp_products_get_all_by_ships";
+    private const GET_ALL_BY_ALPHA = "CALL sp_products_get_all_by_alpha(:order, :filter, :limit, :offset)";
+    private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate(:order, :filter, :limit, :offset)";
+    private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price(:order, :filter, :limit, :offset)";
+    private const GET_ALL_BY_SHIPS = "CALL sp_products_get_all_by_ships(:order, :filter, :limit, :offset)";
     private const GET_ALL_BY_CATEGORY = "CALL sp_products_get_all_by_category";
     private const GET_ALL_BY_USER_RECOMENDATIONS = "CALL sp_products_get_all_by_user_recomendations";
 
@@ -134,6 +134,46 @@ class ProductRepository
             "productId" => $productId,
             "userId" => $userId
         ]) > 0;
+    }
+
+    public function getAllByAlpha() : array
+    {
+        return DB::executeReader(self::GET_ALL_BY_ALPHA, [
+            "order" => "asc",
+            "filter" => null,
+            "limit" => null,
+            "offset" => null
+        ]);
+    }
+
+    public function getAllByRate() : array
+    {
+        return DB::executeReader(self::GET_ALL_BY_RATE, [
+            "order" => "asc",
+            "filter" => null,
+            "limit" => null,
+            "offset" => null
+        ]);
+    }
+
+    public function getAllByPrice() : array
+    {
+        return DB::executeReader(self::GET_ALL_BY_PRICE, [
+            "order" => "asc",
+            "filter" => null,
+            "limit" => null,
+            "offset" => null
+        ]);
+    }
+
+    public function getAllByShips() : array
+    {
+        return DB::executeReader(self::GET_ALL_BY_SHIPS, [
+            "order" => "asc",
+            "filter" => null,
+            "limit" => null,
+            "offset" => null
+        ]);
     }
 }
 

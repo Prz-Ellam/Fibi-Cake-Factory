@@ -72,5 +72,3 @@ class DatabaseDriver extends DbConnection
     }
 
 }
-
-?>

@@ -68,7 +68,7 @@
                     <div class="modal-body">
 
                         <div class="mb-4">
-                            <label for="add-images-transfer" label="form-label" role="button">Imágenes (mínimo 3)</label>
+                            <label for="add-images-transfer" label="form-label" role="button">Imágenes</label>
                             <div class="input-group">
                                 <label for="add-images-transfer" role="button" class="btn btn-blue rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir imágenes</label>
                                 <input type="file" class="position-absolute" style="scale: 0.01" name="images[]" id="images" accept="image/*" multiple>
@@ -124,7 +124,7 @@
                     <div class="modal-body">
 
                         <div class="mb-4">
-                            <label for="edit-images-transfer" label="form-label" role="button">Imágenes (mínimo 3)</label>
+                            <label for="edit-images-transfer" label="form-label" role="button">Imágenes</label>
                             <div class="input-group">
                                 <label for="edit-images-transfer" role="button" class="btn btn-primary rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir imágenes</label>
                                 <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="images[]" id="edit-images" multiple accept="image/*">

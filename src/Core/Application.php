@@ -120,7 +120,7 @@ class Application
      * @param Closure|array $action
      * @return void
      */
-    public function get(string $uri, Closure|array $action)
+    public function get(string $uri, Closure|array $action): void
     {
         $this->router->get($uri, $action);
     }
@@ -132,7 +132,7 @@ class Application
      * @param Closure|array $action
      * @return void
      */
-    public function post(string $uri, Closure|array $action)
+    public function post(string $uri, Closure|array $action): void
     {
         $this->router->post($uri, $action);
     }
@@ -144,17 +144,17 @@ class Application
      * @param Closure|array $action
      * @return void
      */
-    public function put(string $uri, Closure|array $action)
+    public function put(string $uri, Closure|array $action): void
     {
         $this->router->put($uri, $action);
     }
 
-    public function patch(string $uri, Closure|array $action)
+    public function patch(string $uri, Closure|array $action): void
     {
         $this->router->patch($uri, $action);
     }
 
-    public function delete(string $uri, Closure|array $action)
+    public function delete(string $uri, Closure|array $action): void
     {
         $this->router->delete($uri, $action);
     }

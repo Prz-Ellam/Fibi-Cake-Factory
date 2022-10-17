@@ -26,17 +26,30 @@ $.ajax({
     }
 });
 
+$.ajax({
+    url: `api/v1/users/${id}`,
+    method: "GET",
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
+    }
+});
 
-        $.ajax({
-            url: `api/v1/users/${id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
+$.ajax({
+    url: 'api/v1/categories',
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response)
+    {
+        response.forEach((category) =>
+        {
+            $('#categories').append(`<option value="${category.id}">${category.name}</option>`)
         });
+    }
+});
 
 
 const productSearchCard = /*html*/`
@@ -50,6 +63,41 @@ const productSearchCard = /*html*/`
     </div>
 </div>
 `;
+
+function ProductSearchCard(product)
+{
+    var fmt = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    return /*html*/`
+    <div class="bg-white col-lg-4 col-md-6 col-sm-12  text-center p-5">
+        <a href="/product"><img src="assets/img/E001S011649.jpg" class="img-fluid p-3"></a>
+        <h5 class="fw-bold mb-0">${fmt.format(product.price)}</h5>
+        <p>${product.name}</p>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
+            <button class="btn btn-danger shadow-none rounded-1 add-wishlists" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
+        </div>
+    </div>
+    `;
+}
+
+
+$.ajax({
+    url: `api/v1/products/order/ships`,
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        response.forEach((element) =>
+        {
+            $('#product-search-container').append(ProductSearchCard(element));
+        });
+    }
+});
+
 
 // $('#product-search-container').append(productSearchCard);
 
@@ -67,27 +115,19 @@ function WishlistItem(wishlist)
 }
 
 $.ajax({
-    url: "api/v1/session",
+    url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
     timeout: 0,
-    async: false,
     success: function(response) {
-        console.log(response.id);
-
-        $.ajax({
-            url: `api/v1/users/${response.id}/wishlists`,
-            method: 'GET',
-            timeout: 0,
-            success: function(response) {
-                response.forEach(function(wishlist) {
-                    $('#wishlists-list').append(WishlistItem(wishlist));
-                });
-            }
+        response.forEach(function(wishlist) {
+            $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }
 });
 
 $(document).ready(function() {
+
+    $('body').removeClass('d-none');
 
     // Con esto cambiamos entre los tabs
     $("#main-tab li a").click(function(e) {

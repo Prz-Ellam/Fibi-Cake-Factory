@@ -599,6 +599,25 @@ class ProductController extends Controller
             "status" => true
         ]);
     }
-}
 
-?>
+    public function getAllByPrice(Request $request, Response $response)
+    {
+        $productRepository = new ProductRepository();
+        $results = $productRepository->getAllByPrice();
+        $response->json($results);
+    }
+
+    public function getAllByShips(Request $request, Response $response)
+    {
+        $productRepository = new ProductRepository();
+        $results = $productRepository->getAllByShips();
+        $response->json($results);
+    }
+
+    public function getAllByAlpha(Request $request, Response $response)
+    {
+        $productRepository = new ProductRepository();
+        $results = $productRepository->getAllByAlpha();
+        $response->json($results);
+    }
+}

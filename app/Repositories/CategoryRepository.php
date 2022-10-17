@@ -12,7 +12,7 @@ class CategoryRepository
     private const UPDATE = "CALL sp_update_category(:categoryId, :name, :description)";
     private const DELETE = "CALL sp_delete_category(:categoryId)";
     private const GET_ALL = "CALL sp_get_categories()";
-    private const GET_ALL_BY_PRODUCT = "";
+    private const GET_ALL_BY_PRODUCT = "CALL sp_categories_get_all_by_product(:productId)";
 
     public function create(Category $category) : bool
     {
@@ -44,7 +44,9 @@ class CategoryRepository
 
     public function getAllByProduct(string $productId) : array
     {
-        return [];
+        return DB::executeReader(self::GET_ALL_BY_PRODUCT, [
+            "productId" => $productId
+        ]);
     }
 }
 

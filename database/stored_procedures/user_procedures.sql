@@ -48,12 +48,64 @@ END$$
 DELIMITER ;
 
 
-CREATE PROCEDURE sp_update_user();
 
-CREATE PROCEDURE sp_update_user_password();
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_user $$
+
+CREATE PROCEDURE sp_update_user(
+    IN _user_id                 VARCHAR(36),
+    IN _email                   VARCHAR(255),
+    IN _username                VARCHAR(18),
+    IN _first_name              VARCHAR(50),
+    IN _last_name               VARCHAR(50),
+    IN _birth_date              DATE,
+    IN _gender                  INT,
+    IN _profile_picture         VARCHAR(36)
+)
+BEGIN
+
+    UPDATE
+        users
+    SET
+        email = IFNULL(_email, email),
+        username = IFNULL(_username, username),
+        first_name = IFNULL(_first_name, first_name),
+        last_name = IFNULL(_last_name, last_name),
+        birth_date = IFNULL(_birth_date, birth_date),
+        gender = IFNULL(_gender, gender),
+        profile_picture = IFNULL(UUID_TO_BIN(_profile_picture), profile_picture)
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id
+        AND active = TRUE;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_user_password $$
+
+CREATE PROCEDURE sp_update_user_password(
+    IN _user_id                 VARCHAR(36),
+    IN _password                VARCHAR(255)
+)
+BEGIN
+
+    UPDATE
+        users
+    SET
+        password = IFNULL(_password, password)
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id
+        AND active = TRUE;
+
+END $$
+DELIMITER ;
+
+
 
 CREATE PROCEDURE sp_delete_user();
-
 
 
 
@@ -107,7 +159,6 @@ DELIMITER ;
 
 
 
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_user $$
 
@@ -132,7 +183,9 @@ BEGIN
     ON
         BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
     WHERE
-        BIN_TO_UUID(user_id) = _user_id;
+        BIN_TO_UUID(user_id) = _user_id
+    LIMIT
+        1;
 
 END $$
 DELIMITER ;
@@ -174,17 +227,21 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_email_exists $$
+
 CREATE PROCEDURE sp_email_exists(
+    IN _user_id         VARCHAR(36),
     IN _email           VARCHAR(255)
 )
 BEGIN
 
     SELECT
-        IF(COUNT(email) > 0, TRUE, FALSE)
+        IF(COUNT(email) > 0, TRUE, FALSE) 'result'
     FROM
         users
     WHERE
-        email = _email;
+        email = _email
+        AND BIN_TO_UUID(user_id) <> _user_id;
 
 END $$
 DELIMITER ;
@@ -192,17 +249,21 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_username_exists $$
+
 CREATE PROCEDURE sp_username_exists(
+    IN _user_id             VARCHAR(36),
     IN _username            VARCHAR(18)
 )
 BEGIN
 
     SELECT
-        IF(COUNT(username) > 0, TRUE, FALSE)
+        IF(COUNT(username) > 0, TRUE, FALSE) 'result'
     FROM
         users
     WHERE
-        username = _username;
+        username = _username
+        AND BIN_TO_UUID(user_id) <> _user_id;
 
 END $$
 DELIMITER ;
@@ -232,11 +293,3 @@ BEGIN
 
 END $$
 DELIMITER ;
-
-
-
-SELECT *, BIN_TO_UUID(user_role) FROM users;
-
-UPDATE users SET user_role = UUID_TO_BIN('62be423f-10fd-4cae-b066-b853cc30fe43') WHERE username = 'Grace';
-
-SELECT *, BIN_TO_UUID(user_role_id) FROM user_roles;

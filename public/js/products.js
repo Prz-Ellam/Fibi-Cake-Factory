@@ -13,7 +13,15 @@ $.ajax({
         $('.nav-link img').attr('src', url);
     }
 });
-
+/*
+$.getJSON(`/api/v1/users/${id}/products/approved`, {
+    format: 'json',
+}).done(function(response) {
+    response.forEach(function(product) {
+        $('#products-container').append(ProductCard(product));
+    });
+});
+*/
 
 const productCard = /*html*/`
     <div class="col-lg-4 col-md-6 col-sm-12 text-center p-5">
@@ -47,11 +55,11 @@ function ProductCard(product)
     `;
 }
 
-
 $.ajax({
     url: `/api/v1/users/${id}/products/approved`,
     method: 'GET',
     timeout: 0,
+    async: false,
     success: function(response)
     {
         response.forEach(function(product) {
@@ -60,9 +68,10 @@ $.ajax({
     }
 });
 
-
+$('body').removeClass('d-none');
 
 $(document).ready(function() {
+
 
     $("#main-tab li a").click(function(e) {
         e.preventDefault();

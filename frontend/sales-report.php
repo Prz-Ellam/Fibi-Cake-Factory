@@ -35,7 +35,7 @@
         <div class="row gy-2 gx-3 align-items-center">
             <div class="col-auto">
                 <label for="from" class="">Categorías:</label>
-                <select class="form-select shadow-none rounded-1">
+                <select class="form-select shadow-none rounded-1" id="categories">
                     <option>Categoria</option>
                 </select>
             </div>
@@ -48,6 +48,7 @@
                 <input type="date" class="form-control shadow-none rounded-1" name="to" id="to">
             </div>
         </div>
+        
 
         <br>
 

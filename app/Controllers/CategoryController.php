@@ -37,8 +37,7 @@ class CategoryController extends Controller
         $description = $request->getBody("description");
         $userId = $session->get("user_id");
 
-        if (!$userId)
-        {
+        if (!$userId) {
             $response->setStatusCode(401)->json([
                 "status" => false,
                 "message" => "Not authorized"
@@ -57,8 +56,7 @@ class CategoryController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             $response->setStatusCode(400)->json([
                 "status" => $status,
                 "data" => $feedback
@@ -69,8 +67,7 @@ class CategoryController extends Controller
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->create($category);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->setStatusCode(400)->json([
                 "status" => $result,
                 "data" => "No se pudo crear el objeto en la base de datos"
@@ -108,8 +105,7 @@ class CategoryController extends Controller
         $description = $request->getBody('description');
         $userId = $session->get('user_id');
 
-        if (!$userId)
-        {
+        if (!$userId) {
             $response->setStatusCode(401)->json([
                 "status" => false,
                 "message" => "Not authorized"
@@ -128,8 +124,7 @@ class CategoryController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             $response->setStatusCode(400)->json([
                 "status" => $status,
                 "data" => $feedback
@@ -169,8 +164,7 @@ class CategoryController extends Controller
         $requiredRule = new Required();
         $uuidRule = new _Uuid();
 
-        if (!$requiredRule->isValid($categoryId) || !$uuidRule->isValid($categoryId))
-        {
+        if (!$requiredRule->isValid($categoryId) || !$uuidRule->isValid($categoryId)) {
             $response->setStatusCode(400)->json([
                 "status" => false,
                 "data" => "Uuid invalido"
@@ -203,5 +197,3 @@ class CategoryController extends Controller
         $response->json($categories);
     }
 }
-
-?>

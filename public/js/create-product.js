@@ -37,6 +37,7 @@ $(document).ready(function() {
 
     $('#cotizar').click(function() {
         $('#price').attr('disabled', 'true');
+        $('#price').val('0.00');
     });
     
     $('#categories').multipleSelect({

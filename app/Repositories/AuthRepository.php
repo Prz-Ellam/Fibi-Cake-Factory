@@ -14,7 +14,7 @@ class AuthRepository
             "loginOrEmail" => $loginOrEmail
         ]);
 
-        return $result;
+        return $result[0] ?? [];
     }
 }
 

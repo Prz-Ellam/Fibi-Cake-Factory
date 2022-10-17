@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="./styles/colors.css">
     <link rel="stylesheet" href="./styles/footer.css">
 </head>
-<body>
+<body class="d-none">
     @navbar
 
     <section class="container my-4">
@@ -46,7 +46,7 @@
                     <div class="row d-flex justify-content-between">
                         <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
-                                <select class="form-select shadow-none" name="categories" id="basic-addon1">
+                                <select class="form-select shadow-none" name="categories" id="categories">
                                     <option value="1">Categorías</option>
                                 </select>
                                 <input type="text" class="form-control shadow-none" placeholder="Producto" aria-label="Username" aria-describedby="basic-addon1">

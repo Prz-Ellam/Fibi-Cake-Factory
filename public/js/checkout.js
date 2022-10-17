@@ -1,3 +1,20 @@
+import { getSession } from './utils/session.js';
+
+const id = getSession();
+
+$.ajax({
+    url: `api/v1/users/${id}`,
+    method: "GET",
+    async: false,
+    timeout: 0,
+    success: function(response) {
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
+    }
+});
+
+// TODO: Checkout inaccesible si no hay productos en el carrito de compras
+
 var fmt = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

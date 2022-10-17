@@ -14,6 +14,20 @@ $.ajax({
 });
 
 $.ajax({
+    url: 'api/v1/categories',
+    method: 'GET',
+    async: false,
+    timeout: 0,
+    success: function(response)
+    {
+        response.forEach((category) =>
+        {
+            $('#categories').append(`<option value="${category.id}">${category.name}</option>`)
+        });
+    }
+});
+
+$.ajax({
     url: '/api/v1/reports/order-report',
     method: 'GET',
     timeout: 0,

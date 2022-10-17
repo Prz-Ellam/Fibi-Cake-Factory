@@ -10,7 +10,6 @@ use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
 use CakeFactory\Repositories\UserRoleRepository;
-use Fibi\Core\Storage;
 use Fibi\Database\DB;
 use Fibi\Helpers\Crypto;
 use Fibi\Http\Controller;
@@ -21,7 +20,6 @@ use Fibi\Session\PhpSession;
 use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Uuid;
-use Firebase\JWT\JWT;
 
 class UserController extends Controller
 {
@@ -35,7 +33,7 @@ class UserController extends Controller
      * @param Response $response
      * @return void
      */
-    public function create(Request $request, Response $response) : void
+    public function create(Request $request, Response $response): void
     {
         $userId = Uuid::uuid4()->toString();
         $email = $request->getBody('email');
@@ -49,7 +47,7 @@ class UserController extends Controller
         $confirmPassword = $request->getBody('confirmPassword');
         $profilePicture = $request->getFile('profilePicture');
         //Storage::set('confirmPassword', $confirmPassword);
-        
+
         $session = new PhpSession();
         // Solo un super administrado logueado puede dar de alta otro tipo de usuarios
         if ($session->get("role") === "Super Administrador")
@@ -77,8 +75,7 @@ class UserController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             // Errors
             $response->json([
                 "response" => $status,
@@ -92,8 +89,7 @@ class UserController extends Controller
         $imageRepository = new ImageRepository();
         $result = $imageRepository->create($image);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->json([
                 "status" => false,
                 "message" => "No se pudo crear la foto de perfil"
@@ -103,9 +99,8 @@ class UserController extends Controller
 
         $userRoleRepository = new UserRoleRepository();
         $userRoleObj = $userRoleRepository->getOneByName($userRole);
-        
-        if (!$userRoleObj || count($userRoleObj) < 1)
-        {
+
+        if (!$userRoleObj || count($userRoleObj) < 1) {
             $response->json([
                 "status" => "No se encontro el rol de usuario"
             ])->setStatusCode(400);
@@ -131,8 +126,7 @@ class UserController extends Controller
         $results = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             // Errors
             $response->json([
                 "response" => $results,
@@ -146,27 +140,24 @@ class UserController extends Controller
         $userRepository = new UserRepository();
         $result = $userRepository->create($user);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
 
         // Solo los compradores y vendedores (clientes) tienen carrito
-        if ($userRole !== "Super Administrador" || $userRole !== "Administrador")
-        {
+        if ($userRole !== "Super Administrador" || $userRole !== "Administrador") {
             $shoppingCartId = Uuid::uuid4()->toString();
             $shoppingCart = new ShoppingCart();
             $shoppingCart
                 ->setShoppingCartId($shoppingCartId)
                 ->setUserId($userId);
-        
+
             $validator = new Validator($user);
             $results = $validator->validate();
             $status = $validator->getStatus();
-    
-            if (!$status)
-            {
+
+            if (!$status) {
                 // Errors
                 $response->json([
                     "response" => $status,
@@ -174,28 +165,17 @@ class UserController extends Controller
                 ])->setStatusCode(400);
                 return;
             }
-                
+
             $shoppingCartRepository = new ShoppingCartRepository();
             $result = $shoppingCartRepository->create($shoppingCart);
-            if (!$result)
-            {
+            if (!$result) {
                 $response->json([
                     "response" => "No se pudo crear el carrito"
                 ])->setStatusCode(400);
                 return;
             }
 
-            $JWT_SECRET = "3bb515fea33c5a653a5bbdcd20d958c8b7e49a91db0c74e91a04a0faab4f5c3a";
-            $iat = time();
-            $exp = $iat + 60 * 60;
-            $token = JWT::encode([ 
-                "login" => $email,
-                "iat" => $iat,
-                "exp" => $exp
-            ], $JWT_SECRET, "HS256");
-    
-            $session->set('token', $token);
-            $session->set('user_id', $userId);
+            $session->set('userId', $userId);
             $session->set('role', $userRole);
         }
 
@@ -214,9 +194,10 @@ class UserController extends Controller
      * @param Response $response
      * @return void
      */
-    public function update(Request $request, Response $response) : void
+    public function update(Request $request, Response $response): void
     {
-        //$userId = Uuid::uuid4()->toString();
+        $session = new PhpSession();   
+        $userId = $session->get("userId");
         $email = $request->getBody('email');
         $username = $request->getBody('username');
         $birthDate = $request->getBody('birthDate');
@@ -228,134 +209,163 @@ class UserController extends Controller
         //$confirmPassword = $request->getBody('confirmPassword');
         $profilePicture = $request->getFile('profilePicture');
 
-        
-        
-    }
+        $imageId = Uuid::uuid4()->toString();
+        $imageName = $profilePicture->getName();
+        $imageType = $profilePicture->getType();
+        $imageSize = $profilePicture->getSize();
+        $imageContent = $profilePicture->getContent();
 
-    public function updatePassword(Request $request, Response $response) : void
-    {
-        $oldPassword = $request->getBody("oldPassword");
-        $newPassword = $request->getBody("newPassword");
-        $confirmNewPassword = $request->getBody("confirmNewPassword");
-    }
+        $image = new Image();
+        $image
+            ->setImageId($imageId)
+            ->setName($imageName)
+            ->setType($imageType)
+            ->setSize($imageSize)
+            ->setContent($imageContent)
+            ->setMultimediaEntityId($userId)
+            ->setMultimediaEntityType("users");
 
-    /**
-     * Undocumented function
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return void
-     */
-    public function delete(Request $request, Response $response) : void
-    {
+        $validator = new Validator($image);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
 
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return void
-     */
-    public function getUser(Request $request, Response $response) : void
-    {
-        $userId = $request->getRouteParams('userId');
-
-        $userRepository = new UserRepository();
-        $user = $userRepository->getUser($userId);
-
-        $response->json($user[0]);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return void
-     */
-    public function login(Request $request, Response $response) : void
-    {
-        $loginOrEmail = $request->getBody('loginOrEmail');
-        $password = $request->getBody('password');
-
-        $required = new Required();
-        if (!$required->isValid($loginOrEmail) || !$required->isValid($password) )
-        {
-            $response->setStatusCode(400)->json([
-                "status" => "Bad request"
-            ]);
-            return;
-        }
-
-        $authRepository = new AuthRepository();
-        $result = $authRepository->login($loginOrEmail);
-
-        if ($result === null || count($result) < 1)
-        {
-            $response->setStatusCode(400)->json([
-                "status" => "Bad request"
-            ])->redirect('/login');
-            return;
-        }
-
-        $passwordHashed = $result[0]["password"];
-        $userId = $result[0]["user_id"];
-        $userRole = $result[0]["user_role"];
-
-        $passwordCheck = password_verify($password, $passwordHashed);
-
-        if ($passwordCheck === false)
-        {
+        if (!$status) {
             $response->json([
-                "status" => false
+                "status" => false,
+                "message" => $feedback
             ])->setStatusCode(400);
             return;
         }
 
-        // Cuida mucho el JWT_SECRET
-        $JWT_SECRET = "3bb515fea33c5a653a5bbdcd20d958c8b7e49a91db0c74e91a04a0faab4f5c3a";
-        $iat = time();
-        $exp = $iat + 60 * 60;
-        $token = JWT::encode([ 
-            "login" => $loginOrEmail,
-            "iat" => $iat,
-            "exp" => $exp
-        ], $JWT_SECRET, "HS256");
+        $imageRepository = new ImageRepository();
+        $result = $imageRepository->create($image);
 
-        $session = new PhpSession();
-        $session->set('token', $token);
-        $session->set('user_id', $userId);
-        $session->set('role', $userRole);
+        if (!$result) {
+            $response->json([
+                "status" => false,
+                "message" => "No se pudo crear la foto de perfil"
+            ])->setStatusCode(400);
+            return;
+        }
 
-        $cookies = new PhpCookie();
-        $cookies->set('token', $token, time() + (60 * 60));
+        $user = new User();
+        $user
+            ->setUserId($userId)
+            ->setEmail($email)
+            ->setUsername($username)
+            ->setBirthDate($birthDate)
+            ->setFirstName($firstName)
+            ->setLastName($lastName)
+            ->setGender($gender)
+            ->setProfilePicture($imageId);
+
+        $userRepository = new UserRepository();
+        $result = $userRepository->update($user);
 
         $response->json([
-            "status" => true,
-            "token" => $token,
-            "userRole" => $userRole
-        ]);//->redirect('/');
+            "status" => true
+        ]);
+
+        // $response->json([$userId, $email, $username, $birthDate, $firstName, $lastName, $gender]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function updatePassword(Request $request, Response $response): void
+    {
+        $userId = $request->getRouteParams("userId");
+        $oldPassword = $request->getBody("oldPassword");
+        $newPassword = $request->getBody("newPassword");
+        $confirmNewPassword = $request->getBody("confirmNewPassword");
+
+        $userRepository = new UserRepository();
+        $user = $userRepository->getOne($userId);
+
+        $authRepository = new AuthRepository();
+        $auth = $authRepository->login($user["email"]);
+
+        $res = Crypto::verify($auth["password"], $oldPassword);
+        if (!$res)
+        {
+            // Esta mal
+        }
+
+        if ($newPassword != $confirmNewPassword)
+        {
+            $response->json([ "Las contraseñas no coinciden" ]);
+            return;
+        }
+
+        $passwordHashed = Crypto::bcrypt($newPassword);
+
+        $result = $userRepository->updatePassword($userId, $passwordHashed);
+        if (!$result)
+        {
+            $response->json([ "No se pudo realizar la operacion" ]);
+            return;
+        }
+
+        // TODO: Test json
+        $response->json([$res]);
+
+        //$userRepository->updatePassword();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function delete(Request $request, Response $response): void
+    {
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function getUser(Request $request, Response $response): void
+    {
+        $userId = $request->getRouteParams('userId');
+
+        $userRepository = new UserRepository();
+        $user = $userRepository->getOne($userId);
+
+        $response->json($user);
     }
 
     public function isEmailAvailable(Request $request, Response $response)
     {
+        $session = new PhpSession();   
+        $userId = $session->get("userId") ?? "-1";
 
+        $email = $request->getBody("email");
+        $userRepository = new UserRepository();
+        $result = $userRepository->isEmailAvailable($userId, $email);
+        $response->json(!boolval($result["result"]));
     }
 
     public function isUsernameAvailable(Request $request, Response $response)
     {
-        
+        $session = new PhpSession();   
+        $userId = $session->get("userId") ?? "-1";
+
+        $username = $request->getBody("username");
+        $userRepository = new UserRepository();
+        $result = $userRepository->isUsernameAvailable($userId, $username);
+        $response->json(!boolval($result["result"]));
     }
 
-    public function session(Request $request, Response $response)
-    {
-        $session = new PhpSession();
-        $userId = $session->get('user_id');
-
-        $response->json(["id" => $userId]);
-    }
 
     /**
      * Sacar todos los usuarios
@@ -364,7 +374,7 @@ class UserController extends Controller
      * @param Response $response
      * @return void
      */
-    public function getAll(Request $request, Response $response) : void
+    public function getAll(Request $request, Response $response): void
     {
         // https://developer.wordpress.org/rest-api/reference/posts/#list-posts
         $search = $request->getQuery('search');
@@ -376,7 +386,7 @@ class UserController extends Controller
         $response->json($users);
     }
 
-    public function getAllByFilter(Request $request, Response $response) : void
+    public function getAllByFilter(Request $request, Response $response): void
     {
         $search = $request->getQuery('search');
 
@@ -385,5 +395,4 @@ class UserController extends Controller
 
         $response->json($users);
     }
-    
 }
