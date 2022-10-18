@@ -258,7 +258,20 @@ class UserController extends Controller
             ->setLastName($lastName)
             ->setGender($gender)
             ->setProfilePicture($imageId);
-
+/*
+            $validator = new Validator($user);
+            $results = $validator->validate();
+            $status = $validator->getStatus();
+    
+            if (!$status) {
+                // Errors
+                $response->json([
+                    "response" => $results,
+                    "message" => "No se pudo crear al usuario"
+                ])->setStatusCode(400);
+                return;
+            }
+*/
         $userRepository = new UserRepository();
         $result = $userRepository->update($user);
 

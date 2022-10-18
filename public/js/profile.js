@@ -439,25 +439,36 @@ $(document).ready(function () {
 
     $('#profile-picture').on('change', function (e) {
 
-        // Si se le da Cancelar, se pone la imagen por defecto y el path vacio
-        //if($(this)[0].files[0].size === 0){
-        //    let img = document.getElementById('picture-box');
-        //    img.setAttribute('src', 'Assets/blank-profile-picture.svg');
+        if ($(this)[0].files.length === 0) {
+            $('#picture-box').attr('src', './assets/img/blank-profile-picture.svg');
+            $('#profile-picture').val('');
+            return;
+        }
 
-        //    var fileInputPhoto = document.getElementById('photo');
-        //    fileInputPhoto.value = '';
-        //    return;
-        //}
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL($(this)[0].files[0]);
 
-        let fReader = new FileReader();
-        fReader.readAsDataURL($(this)[0].files[0]);
+        const file = $(this)[0].files[0];
 
-        // A PARTIR DE AQUI ES TEST PARA VALIDAR QUE SOLO SE INGRESEN IMAGENES
-        var filePath = $('#profile-picture').val();
+        // Allowing file type as image/*
+        var regexpImages = /^(image\/.*)/i;
+        if (!regexpImages.exec(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La imagen que ingresaste no es permitida',
+                confirmButtonColor: "#FF5E1F",
+            });
+            $(this).val('');
+            fileReader.onloadend = function (e) {
+                $('#picture-box').attr('src', './assets/img/blank-profile-picture.svg');
+                $('#profile-picture').val('');
+            };
+            return;
+        }
 
-        fReader.onloadend = function (e) {
-            let img = $('#picture-box');
-            img.attr('src', e.target.result);
+        fileReader.onloadend = function (e) {
+            $('#picture-box').attr('src', e.target.result);
         };
     });
 

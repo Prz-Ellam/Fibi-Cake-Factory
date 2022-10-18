@@ -66,14 +66,26 @@ use CakeFactory\Repositories\UserRepository;
                 <hr class="mb-5">
 
                 <?php
-                    switch($user["userRole"]) { 
-                        case "Super Administrador":
+                    if ($user["visible"] === 0) {
+                ?>                   
+                    <div id="test-2" class="wishlist-container">
+                        <h2 class="text-brown text-center"><i class="fas fa-lock"></i> Esta cuenta es privada</h2>
+                    </div>
+                <?php 
+                    }
+                    else {
                 ?>
 
-                <div id="test-1" class="">
-                    <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
+                <?php
+                    switch($user["userRole"]) { 
+                        case "Super Administrador":
+                        case "Administrador":
+                ?>
 
-                    <div class="row" class="wishlist-container" id="client-wishlist-container">
+                <div>
+                    <h1 class="text-brown text-center mb-4"> Productos autorizados</h1>
+
+                    <div class="row" class="product-container" id="admin-products-container">
                     </div>
                     
                     <nav aria-label="Page navigation example">
@@ -85,16 +97,6 @@ use CakeFactory\Repositories\UserRepository;
                             <li class="page-item"><a class="page-link shadow-none" style="color: #3B1002" href="#">Siguiente</a></li>
                         </ul>
                     </nav>
-                </div>
-
-                <?php
-                            break;
-                        case "Administrador":
-                ?>
-
-                <div id="test-2" class="wishlist-container">
-                    <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
-                    <h4 class="text-brown text-center"><i class="fas fa-lock"></i> Esta cuenta es privada</h4>
                 </div>
 
                 <?php
@@ -137,10 +139,9 @@ use CakeFactory\Repositories\UserRepository;
                         case "Comprador":
                 ?>
             
-                <div id="test-4" class="wishlist-container">
-                    <h1 class="text-brown text-center mb-4">Productos aprobados</h1>
-                    
-                    <div class="row" class="product-container" id="admin-product-container">
+                <div id="test-4" class="wishlist-container">                    
+                    <div class="row" class="product-container" id="customer-wishlist-container">
+                        <h1 class="text-brown text-center mb-4"><i class="fa fa-heart"></i> Listas de deseos</h1>
                     </div>
                     <nav aria-label="Page navigation example">
                         <ul class="mt-4 pagination justify-content-center">
@@ -156,6 +157,7 @@ use CakeFactory\Repositories\UserRepository;
                 <?php
                             break;
                     };
+                }
                 ?>
             </div>
         </div>
@@ -202,6 +204,8 @@ use CakeFactory\Repositories\UserRepository;
 
     <!-- Sweet Alert -->
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
     <script type="module" src="js/others-user-profile.js"></script>
 </body>

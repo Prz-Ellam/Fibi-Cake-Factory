@@ -173,6 +173,7 @@ BEGIN
         u.first_name AS firstName,
         u.last_name AS lastName,
         u.birth_date AS birthDate,
+        u.visible AS visible,
         u.gender AS gender,
         ur.name AS userRole,
         BIN_TO_UUID(u.profile_picture) AS profilePicture
@@ -189,7 +190,6 @@ BEGIN
 
 END $$
 DELIMITER ;
-
 
 
 

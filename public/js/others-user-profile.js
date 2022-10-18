@@ -15,30 +15,34 @@ $.ajax({
 
 
 const wishlistCard = /*html*/`
+{{#each this}}
 <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch">
     <div class="card mx-auto" style="width: 18rem;">
         <div class="ratio ratio-4x3">
-            <img src="assets/img/wishlist.png" class="card-img-top w-100 h-100">
+            <img src="api/v1/images/{{images.[0]}}" class="card-img-top w-100 h-100">
         </div>
         <div class="card-body">
-            <h5 class="card-title">Nombre de la lista</h5>
-            <p class="card-text">Descripción de la lista</p>
-            <a href="/wishlist" class="btn btn-orange shadow-none rounded-1">Ver más</a>
+            <h5 class="card-title">{{name}}</h5>
+            <p class="card-text">{{description}}</p>
+            <a href="/wishlist?search={{id}}" class="btn btn-orange shadow-none rounded-1">Ver más</a>
         </div>
     </div>
 </div>
+{{/each}}
 `;
 
 const productCard = /*html*/`
+{{#each this}}
 <div class="col-lg-4 col-md-6 col-sm-12 car-prueba bg-white text-center car-prueba p-5">
-    <a href="/product"><img src="assets/img/E001S011649.jpg" class="img-fluid p-3"></a>
-    <h5 class="fw-bold price mb-0">$297.00</h5>
-    <p>Tentación de frutas</p>
+    <a href="/product?search={{id}}"><img src="api/v1/images/{{images.[0]}}" class="img-fluid p-3"></a>
+    <h5 class="fw-bold price mb-0">{{price}}</h5>
+    <p>{{name}}</p>
     <div class="d-flex justify-content-center">
         <button class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
         <button class="btn btn-red shadow-none rounded-1 add-wishlists" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
     </div>
 </div>
+{{/each}}
 `;
 
 const userId = new URLSearchParams(location.search).get('id') || '0';
@@ -48,8 +52,7 @@ $.ajax({
     url: `/api/v1/users/${new URLSearchParams(location.search).get('id') || '0'}`,
     method: 'GET',
     timeout: 0,
-    success: function(response)
-    {
+    success: function(response) {
         $('#username').text(response.username);
         $('#email').text(response.email);
         $('#name').text(response.firstName + ' ' + response.lastName);
@@ -60,28 +63,36 @@ $.ajax({
 });
 
 $.ajax({
-    url: `/api/v1/users/${id}/products/approved`,
+    url: `/api/v1/users/${userId}/products/approved`,
     method: 'GET',
     timeout: 0,
-    success: function(response)
-    {
-        response.forEach(function(product) {
-            $('#seller-product-container').append(productCard);
-        });
+    success: function(response) {
+        const template = Handlebars.compile(productCard);
+        $('#seller-product-container').append(template(response));
     }
 });
 
 $.ajax({
-    url: `api/v1/users/${id}/wishlists/public`,
+    url: `api/v1/users/${userId}/wishlists/public`,
     method: 'GET',
     timeout: 0,
     success: function(response) {
+        const template = Handlebars.compile(wishlistCard);
+        $('#customer-wishlist-container').append(template(response));
+        $('#seller-wishlist-container').append(template(response));
+        /*
         response.forEach(function(element) {
-            $('#seller-wishlist-container').append(wishlistCard);
+
+            const template = Handlebars.compile(wishlistCard);
+
+
+            //$('#seller-wishlist-container').append(wishlistCard);
+            $('#customer-wishlist-container').append(template(element));
             //var carouselDOM = $(wishlist).find('.card .carousel')[0];
             //var carousel = new bootstrap.Carousel(carouselDOM);
             //carousel.cycle();
         });
+        */
      }
 });
 
@@ -89,7 +100,7 @@ $.ajax({
 
 $(document).ready(function() {
 
-    $(`#test-${userId}`).removeClass('d-none');
+    //$(`#test-${userId}`).removeClass('d-none');
 
     $("#main-tab li a").click(function(e) {
         e.preventDefault();

@@ -86,25 +86,7 @@ DELIMITER ;
 
 
 
-SELECT
-    BIN_TO_UUID(p.product_id) product_id,
-    p.name,
-    BIN_TO_UUID(p.user_id) user_id,
-    BIN_TO_UUID(i.image_id) image_id,
-    BIN_TO_UUID(v.video_id) video_id
-FROM
-    products AS p
-INNER JOIN
-    images AS i
-ON
-    p.product_id = i.multimedia_entity_id
-INNER JOIN
-    videos AS v
-ON
-    p.product_id = v.multimedia_entity_id;
 
-
-SELECT * FROM products_categories;
 
 
 
@@ -124,6 +106,66 @@ SELECT BIN_TO_UUID(product_id), BIN_TO_UUID(user_id), name FROM products;
 
 CALL sp_get_user_products('516a3887-06b1-4203-ad59-07dc13d1e0fe');
 CALL sp_get_user_products('b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb');
+
+-- TODO: Obtener todos los aprobados de un men
+SELECT * FROM products WHERE approved = TRUE and active = TRUE
+and BIN_TO_UUID(approved_by) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb';
+
+    SELECT
+        BIN_TO_UUID(p.product_id) id,
+        p.name,
+        p.description,
+        p.is_quotable,
+        p.price,
+        p.stock,
+        p.approved,
+        JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
+    FROM
+        products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    INNER JOIN
+        categories AS c
+    ON
+        BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(c.category_id)
+    INNER JOIN
+        images AS i
+    ON
+        p.product_id = i.multimedia_entity_id
+    INNER JOIN
+        videos AS v
+    ON
+        p.product_id = v.multimedia_entity_id
+    WHERE
+        approved = TRUE
+        AND p.active = TRUE
+        AND BIN_TO_UUID(approved_by) = '7d03c6b7-9b86-4266-9405-f509b9841b98'
+    GROUP BY
+        p.product_id, 
+        p.name, 
+        p.description, 
+        p.is_quotable, 
+        p.price, 
+        p.stock, 
+        p.approved;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 DELIMITER $$
 
