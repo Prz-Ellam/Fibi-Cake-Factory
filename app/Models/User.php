@@ -2,9 +2,10 @@
 
 namespace CakeFactory\Models;
 
+use DateTime;
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\DateRange;
 use Fibi\Validation\Rules\Email;
-use Fibi\Validation\Rules\EqualTo;
 use Fibi\Validation\Rules\HasLower;
 use Fibi\Validation\Rules\HasNumber;
 use Fibi\Validation\Rules\HasSpecialChars;
@@ -33,9 +34,9 @@ class User implements Model
      *
      * @var string|null
      */
-    #[Required]
-    #[Email]
-    #[MaxLength(255)]
+    #[Required("El correo electrónico no puede estar vacío")]
+    #[Email("El correo electrónico no es válido")]
+    #[MaxLength(255, "El correo electrónico es muy largo")]
     private ?string $email = null;
 
     /**
@@ -43,9 +44,9 @@ class User implements Model
      *
      * @var string|null
      */
-    #[Required]
-    #[MinLength(3)]
-    #[MaxLength(18)]
+    #[Required("El nombre de usuario no puede estar vacío")]
+    #[MinLength(3, "El nombre de usuario es muy corto")]
+    #[MaxLength(18, "El nombre de usuario es muy largo")]
     private ?string $username = null;
 
     /**
@@ -53,8 +54,8 @@ class User implements Model
      *
      * @var string|null
      */
-    #[Required]
-    #[MaxLength(50)]
+    #[Required("El nombre no puede estar vacío")]
+    #[MaxLength(50, "El nombre es muy largo")]
     private ?string $firstName = null;
 
     /**
@@ -62,8 +63,8 @@ class User implements Model
      *
      * @var string|null
      */
-    #[Required]
-    #[MaxLength(50)]
+    #[Required("El apellido no puede estar vacío")]
+    #[MaxLength(50, "El apellido es muy largo")]
     private ?string $lastName = null;
 
     /**
@@ -71,7 +72,8 @@ class User implements Model
      *
      * @var string|null
      */
-    #[Required]
+    #[Required("La fecha de nacimiento no puede estar vacía")]
+    #[DateRange("1900-01-01", "now", "La fecha que ingresó no es valida")]
     private ?string $birthDate = null;
 
     /**
@@ -79,7 +81,7 @@ class User implements Model
      *
      * @var bool|null
      */
-    #[Required]
+    #[Required("La visibilidad no puede estar vacía")]
     private ?bool $visible = null;
 
     /**
@@ -87,7 +89,7 @@ class User implements Model
      *
      * @var integer|null
      */
-    #[Required]
+    #[Required("El sexo no puede estar vacío")]
     private ?int $gender = null;
 
     /**
@@ -95,30 +97,30 @@ class User implements Model
      *
      * @var string|null
      */
-    #[Required]
-    #[MinLength(8)]
-    #[MaxLength(255)]
-    #[HasUpper]
-    #[HasLower]
-    #[HasNumber]
-    #[HasSpecialChars]
+    #[Required("La contraseña no puede estar vacía")]
+    #[MinLength(8, "La contraseña es muy corta")]
+    #[MaxLength(255, "La contraseña es muy larga")]
+    #[HasUpper("La contraseña debe tener al menos una mayúscula")]
+    #[HasLower("La contraseña debe tener al menos una minuscula")]
+    #[HasNumber("La contraseña debe tener al menos un número")]
+    #[HasSpecialChars("La contraseña debe tener al menos un caracter especial")]
     //#[EqualTo('confirmPassword')]
     private ?string $password = null;
 
     /**
-     * Undocumented variable
+     * Rol que ocupa el usuario en la aplicacion
      *
      * @var integer|null
      */
-    #[Required]
+    #[Required("El rol de usuario no puede estar vacío")]
     private ?string $userRole = null;
 
     /**
-     * Undocumented variable
+     * Identificador de la foto de perfil del usuario
      *
      * @var string|null
      */
-    #[Required]
+    #[Required("La foto de perfil no puede estar vacía")]
     #[Uuid]
     private ?string $profilePicture = null;
 
@@ -188,12 +190,12 @@ class User implements Model
         return $this;
     }
 
-    public function getVisibility() : ?bool
+    public function getVisible() : ?bool
     {
         return $this->visible;
     }
 
-    public function setVisibility(?bool $visible) : self
+    public function setVisible(?bool $visible) : self
     {
         $this->visible = $visible;
         return $this;

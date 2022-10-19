@@ -10,18 +10,18 @@ class ShoppingCartItem implements Model
 {
     #[Required]
     #[Uuid]
-    private ?string $shoppingCartItemId;
+    private ?string $shoppingCartItemId = null;
 
     #[Required]
     #[Uuid]
-    private ?string $shoppingCartId;
+    private ?string $shoppingCartId = null;
 
     #[Required]
     #[Uuid]
-    private ?string $productId;
+    private ?string $productId = null;
     
     #[Required]
-    private ?int $quantity;
+    private ?int $quantity = null;
 
     public function getShoppingCartItemId() : ?string
     {

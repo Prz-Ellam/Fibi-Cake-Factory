@@ -7,14 +7,29 @@ use Fibi\Validation\Rules\Required;
 
 class ChatParticipant implements Model
 {
+    /**
+     * ID del participante del chat
+     *
+     * @var string|null
+     */
     #[Required]
-    private ?string $chatParticipantId;
+    private ?string $chatParticipantId = null;
 
+    /**
+     * ID del chat
+     *
+     * @var string|null
+     */
     #[Required]
-    private ?string $chatId;
+    private ?string $chatId = null;
     
+    /**
+     * ID del usuario
+     *
+     * @var string|null
+     */
     #[Required]
-    private ?string $userId;
+    private ?string $userId = null;
 
     public function getChatParticipantId() : ?string
     {

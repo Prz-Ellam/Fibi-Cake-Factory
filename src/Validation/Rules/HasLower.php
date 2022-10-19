@@ -10,6 +10,18 @@ class HasLower implements RuleValidation
     private const REGEX = "/[a-z]/";
     private string $message;
 
+    public function __construct(?string $message = null) {
+
+        if (is_null($message))
+        {
+            $this->message = "Por favor ingrese un valor";
+        }
+        else
+        {
+            $this->message = $message;
+        }
+    }
+
     public function isValid(mixed $input) : bool
     {
         return preg_match("/[a-z]/", $input);
@@ -17,8 +29,6 @@ class HasLower implements RuleValidation
 
     public function message() : string
     {
-        return "";
+        return $this->message;
     }
 }
-
-?>

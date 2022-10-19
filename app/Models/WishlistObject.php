@@ -13,7 +13,7 @@ class WishlistObject implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $wishlistObjectId;
+    private ?string $wishlistObjectId = null;
 
     /**
      * Undocumented variable
@@ -21,7 +21,7 @@ class WishlistObject implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $wishlistId;
+    private ?string $wishlistId = null;
 
     /**
      * Undocumented variable
@@ -29,7 +29,7 @@ class WishlistObject implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $productId;
+    private ?string $productId = null;
 
     public function getWishlistObjectId() : ?string
     {

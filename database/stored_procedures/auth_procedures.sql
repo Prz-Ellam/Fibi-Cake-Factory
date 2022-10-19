@@ -31,4 +31,4 @@ DELIMITER ;
 CALL sp_login('PerezAlex088@outlook.com')
 
 
-SELECT image_id, created_at FROM images;
+SELECT image_id, name, created_at FROM images;

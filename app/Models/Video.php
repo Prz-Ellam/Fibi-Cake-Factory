@@ -8,25 +8,25 @@ use Fibi\Validation\Rules\Required;
 class Video implements Model
 {
     #[Required]
-    private ?string $videoId;
+    private ?string $videoId = null;
 
     #[Required]
-    private ?string $name;
+    private ?string $name = null;
 
     #[Required]
-    private ?int $size;
+    private ?int $size = null;
 
     #[Required]
-    private mixed $content;
+    private mixed $content = null;
 
     #[Required]
-    private ?string $type;
+    private ?string $type = null;
 
     #[Required]
-    private ?string $multimediaEntityId;
+    private ?string $multimediaEntityId = null;
 
     #[Required]
-    private ?string $multimediaEntityType;
+    private ?string $multimediaEntityType = null;
 
     public function getVideoId() : ?string
     {

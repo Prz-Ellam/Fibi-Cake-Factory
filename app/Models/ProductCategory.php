@@ -10,15 +10,15 @@ class ProductCategory implements Model
 {
     #[Required]
     #[Uuid]
-    private ?string $productCategoryId;
+    private ?string $productCategoryId = null;
 
     #[Required]
     #[Uuid]
-    private ?string $productId;
+    private ?string $productId = null;
     
     #[Required]
     #[Uuid]
-    private ?string $categoryId;
+    private ?string $categoryId = null;
 
     public function getProductCategoryId()
     {

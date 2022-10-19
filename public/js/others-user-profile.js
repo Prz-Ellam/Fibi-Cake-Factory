@@ -73,6 +73,16 @@ $.ajax({
 });
 
 $.ajax({
+    url: `/api/v1/users/${userId}/products/approves`,
+    method: 'GET',
+    timeout: 0,
+    success: function(response) {
+        const template = Handlebars.compile(productCard);
+        $('#admin-products-container').append(template(response));
+    }
+});
+
+$.ajax({
     url: `api/v1/users/${userId}/wishlists/public`,
     method: 'GET',
     timeout: 0,

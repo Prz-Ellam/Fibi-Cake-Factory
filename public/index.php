@@ -383,7 +383,7 @@ $app->get('/api/v1/session', [ new SessionController(), 'session' ]);
 $app->post('/api/v1/users/email/available', [ new UserController(), 'isEmailAvailable' ]);
 $app->post('/api/v1/users/username/available', [ new UserController(), 'isUsernameAvailable' ]);
 
-
+$app->get('/api/v1/users/{userId}/products/approves', [ new ProductController(), 'getApprovedProdcuts' ]);
 
 
 

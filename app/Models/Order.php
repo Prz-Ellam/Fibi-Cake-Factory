@@ -8,25 +8,25 @@ use Fibi\Validation\Rules\Required;
 class Order implements Model
 {
     #[Required]
-    private ?string $orderId;
+    private ?string $orderId = null;
 
     #[Required]
-    private ?string $userId;
+    private ?string $userId = null;
 
     #[Required]
-    private ?string $phone;
+    private ?string $phone = null;
 
     #[Required]
-    private ?string $address;
+    private ?string $address = null;
 
     #[Required]
-    private ?string $city;
+    private ?string $city = null;
 
     #[Required]
-    private ?string $state;
+    private ?string $state = null;
     
     #[Required]
-    private ?string $postalCode;
+    private ?string $postalCode = null;
 
     public function getOrderId() : ?string
     {

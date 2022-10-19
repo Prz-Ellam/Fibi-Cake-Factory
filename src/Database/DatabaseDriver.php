@@ -23,6 +23,7 @@ class DatabaseDriver extends DbConnection
      * @param string $query
      * @param array $parameters
      * @return integer Cantidad de registros que fueron afectos
+     * @throws PDOException Si falla  
      */
     public function executeNonQuery(string $query, array $parameters = []) : int|string
     {
@@ -40,7 +41,15 @@ class DatabaseDriver extends DbConnection
             {
                 $this->pdo->rollback();
             }
-
+/*
+            echo json_encode([
+                "status" => false, 
+                "message" => [ "profilePicture" => 
+                [ "Error" => "Hubo un error con la base de datos" ] 
+                ] 
+            ]);
+            http_response_code(500);
+            */
             die($ex->getMessage());
         }
     }

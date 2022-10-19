@@ -15,7 +15,7 @@ class Chat implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $chatId;
+    private ?string $chatId = null;
 
     public function getChatId() : ?string
     {

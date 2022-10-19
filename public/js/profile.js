@@ -227,10 +227,10 @@ $(document).ready(function () {
 
     $('#password-form').validate({
         rules: {
-            'old-password': {
+            'oldPassword': {
                 required: true
             },
-            'new-password': {
+            'newPassword': {
                 required: true,
                 minlength: 8,
                 lower: true,
@@ -238,16 +238,16 @@ $(document).ready(function () {
                 numbers: true,
                 regex: /[¡”"#$%&;/=’?!¿:;,.\-_+*{}\[\]]/g
             },
-            'confirm-new-password': {
+            'confirmNewPassword': {
                 required: true,
                 equalTo: '#new-password'
             }
         },
         messages: {
-            'old-password': {
+            'oldPassword': {
                 required: 'La contraseña no puede estar vacía.'
             },
-            'new-password': {
+            'newPassword': {
                 required: 'La nueva contraseña no puede estar vacía.',
                 minlength: 'Faltan requerimentos de la nueva contraseña',
                 lower: 'Faltan requerimentos de la nueva contraseña',
@@ -255,7 +255,7 @@ $(document).ready(function () {
                 numbers: 'Faltan requerimentos de la nueva contraseña',
                 regex: 'Faltan requerimentos de la nueva contraseña'
             },
-            'confirm-new-password': {
+            'confirmNewPassword': {
                 required: 'Confirmar nueva contraseña no puede estar vacío.',
                 equalTo: 'Confirmar nueva contraseña no coincide con nueva contraseña'
             }
@@ -434,9 +434,6 @@ $(document).ready(function () {
 
     });
 
-
-
-
     $('#profile-picture').on('change', function (e) {
 
         if ($(this)[0].files.length === 0) {
@@ -471,6 +468,5 @@ $(document).ready(function () {
             $('#picture-box').attr('src', e.target.result);
         };
     });
-
 
 });

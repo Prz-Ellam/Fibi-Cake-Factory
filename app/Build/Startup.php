@@ -113,7 +113,7 @@ class Startup
             ->setBirthDate($birthDate)
             ->setFirstName($firstName)
             ->setLastName($lastName)
-            ->setVisibility($visible)
+            ->setVisible($visible)
             ->setGender($gender)
             ->setPassword($password)
             ->setUserRole($superAdminRoleId)

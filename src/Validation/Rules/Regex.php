@@ -5,12 +5,13 @@ namespace Fibi\Validation\Rules;
 use Attribute;
 
 #[Attribute]
-class HasNumber implements RuleValidation
+class Regex implements RuleValidation
 {
-    private const REGEX = "/[0-9]/";
+    private string $regex;
     private string $message;
 
-    public function __construct(?string $message = null) {
+    public function __construct(string $regex, ?string $message = null) {
+        $this->regex = $regex;
         if (is_null($message))
         {
             $this->message = "Por favor ingrese un valor";
@@ -21,9 +22,9 @@ class HasNumber implements RuleValidation
         }
     }
 
-    public function isValid(mixed $input) : bool
+    public function isValid(mixed $value) : bool
     {
-        return preg_match("/[0-9]/", $input);
+        return preg_match($this->regex, $value);
     }
 
     public function message() : string
@@ -31,5 +32,3 @@ class HasNumber implements RuleValidation
         return $this->message;
     }
 }
-
-?>

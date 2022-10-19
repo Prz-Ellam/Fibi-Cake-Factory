@@ -4,29 +4,31 @@ namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
 use Fibi\Validation\Rules\Required;
+use Fibi\Validation\Rules\Regex;
 
 class Image implements Model
 {
     #[Required]
-    private ?string $imageId;
+    private ?string $imageId = null;
+
+    #[Required("El nombre de la imagen no puede estar vacío")]
+    private ?string $name = null;
+
+    #[Required("El tamaño de la imagen no puede estar vacío")]
+    private ?int $size = null;
 
     #[Required]
-    private ?string $name;
+    private mixed $content = null;
 
     #[Required]
-    private ?int $size;
+    #[Regex("/^(image\/.*)/i", "La extensión del archivo no es válido")]
+    private ?string $type = null;
 
     #[Required]
-    private mixed $content;
-
-    #[Required]
-    private ?string $type;
-
-    #[Required]
-    private ?string $multimediaEntityId;
+    private ?string $multimediaEntityId = null;
     
     #[Required]
-    private ?string $multimediaEntityType;
+    private ?string $multimediaEntityType = null;
 
     public function getImageId() : ?string
     {

@@ -10,6 +10,7 @@ use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
 use CakeFactory\Repositories\UserRoleRepository;
+use Exception;
 use Fibi\Database\DB;
 use Fibi\Helpers\Crypto;
 use Fibi\Http\Controller;
@@ -19,8 +20,12 @@ use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
 use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Validator;
+use PDOException;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * Controlador de usuarios
+ */
 class UserController extends Controller
 {
     /**
@@ -35,6 +40,8 @@ class UserController extends Controller
      */
     public function create(Request $request, Response $response): void
     {
+        $result = null;
+
         $userId = Uuid::uuid4()->toString();
         $email = $request->getBody('email');
         $username = $request->getBody('username');
@@ -46,14 +53,10 @@ class UserController extends Controller
         $password = $request->getBody('password');
         $confirmPassword = $request->getBody('confirmPassword');
         $profilePicture = $request->getFile('profilePicture');
-        //Storage::set('confirmPassword', $confirmPassword);
 
         $session = new PhpSession();
-        // Solo un super administrado logueado puede dar de alta otro tipo de usuarios
-        if ($session->get("role") === "Super Administrador")
-            $userRole = $request->getBody("userRole");
-        else
-            $userRole = "Comprador";
+        $userRole = ($session->get("role") === "Super Administrador") ? 
+            $request->getBody("userRole") : "Comprador";
 
         $imageId = Uuid::uuid4()->toString();
         $imageName = $profilePicture->getName();
@@ -76,10 +79,9 @@ class UserController extends Controller
         $status = $validator->getStatus();
 
         if (!$status) {
-            // Errors
             $response->json([
-                "response" => $status,
-                "data" => $feedback
+                "status" => $status,
+                "message" =>  $feedback
             ])->setStatusCode(400);
             return;
         }
@@ -87,12 +89,26 @@ class UserController extends Controller
         DB::beginTransaction();
 
         $imageRepository = new ImageRepository();
-        $result = $imageRepository->create($image);
+
+        try {
+            $result = $imageRepository->create($image);
+        }
+        catch (PDOException $ex) {
+            $response->json([
+                "status" => false,
+                "message" => [
+                    "profilePicture" => [ "Error" => "Hubo un error con la base de datos" ]
+                ]
+            ])->setStatusCode(500);
+            return;
+        }
 
         if (!$result) {
             $response->json([
                 "status" => false,
-                "message" => "No se pudo crear la foto de perfil"
+                "message" => [
+                    "profilePicture" => [ "Error" => "No se pudo crear la foto de perfil" ]
+                ]
             ])->setStatusCode(400);
             return;
         }
@@ -102,12 +118,12 @@ class UserController extends Controller
 
         if (!$userRoleObj || count($userRoleObj) < 1) {
             $response->json([
-                "status" => "No se encontro el rol de usuario"
+                "status" => false,
+                "message" => "No se encontro el rol de usuario"
             ])->setStatusCode(400);
             return;
         }
 
-        // 4 - Comprador
         $user = new User();
         $user
             ->setUserId($userId)
@@ -116,10 +132,10 @@ class UserController extends Controller
             ->setBirthDate($birthDate)
             ->setFirstName($firstName)
             ->setLastName($lastName)
-            ->setVisibility($visible)
+            ->setVisible($visible)
             ->setGender($gender)
             ->setPassword($password)
-            ->setUserRole($userRoleObj[0]["userRoleId"])
+            ->setUserRole($userRoleObj["userRoleId"])
             ->setProfilePicture($imageId);
 
         $validator = new Validator($user);
@@ -127,10 +143,9 @@ class UserController extends Controller
         $status = $validator->getStatus();
 
         if (!$status) {
-            // Errors
             $response->json([
-                "response" => $results,
-                "message" => "No se pudo crear al usuario"
+                "status" => false,
+                "message" => $results
             ])->setStatusCode(400);
             return;
         }
@@ -139,9 +154,11 @@ class UserController extends Controller
 
         $userRepository = new UserRepository();
         $result = $userRepository->create($user);
-
         if (!$result) {
-            $response->json(["response" => "No"])->setStatusCode(400);
+            $response->json([
+                "status" => $result,
+                "message" => "No se pudo crear al usuario"
+            ])->setStatusCode(400);
             return;
         }
 
@@ -158,10 +175,9 @@ class UserController extends Controller
             $status = $validator->getStatus();
 
             if (!$status) {
-                // Errors
                 $response->json([
-                    "response" => $status,
-                    "data" => $results
+                    "status" => $status,
+                    "message" => $results
                 ])->setStatusCode(400);
                 return;
             }
@@ -170,18 +186,22 @@ class UserController extends Controller
             $result = $shoppingCartRepository->create($shoppingCart);
             if (!$result) {
                 $response->json([
-                    "response" => "No se pudo crear el carrito"
+                    "status" => false,
+                    "message" => "No se pudo crear el carrito"
                 ])->setStatusCode(400);
                 return;
             }
 
-            $session->set('userId', $userId);
-            $session->set('role', $userRole);
+            $session->set("userId", $userId);
+            $session->set("role", $userRole);
         }
 
         DB::endTransaction();
 
-        $response->json(["response" => "Si"]);
+        $response->json([
+            "status" => true,
+            "message" => "El usuario se creó exitosamente"
+        ]);
     }
 
     /**
@@ -278,12 +298,10 @@ class UserController extends Controller
         $response->json([
             "status" => true
         ]);
-
-        // $response->json([$userId, $email, $username, $birthDate, $firstName, $lastName, $gender]);
     }
 
     /**
-     * Undocumented function
+     * Actualiza la contraseña del usuario
      *
      * @param Request $request
      * @param Response $response
@@ -357,6 +375,13 @@ class UserController extends Controller
         $response->json($user);
     }
 
+    /**
+     * Verifica si existe un usuario con un email
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return boolean
+     */
     public function isEmailAvailable(Request $request, Response $response)
     {
         $session = new PhpSession();   
@@ -368,6 +393,13 @@ class UserController extends Controller
         $response->json(!boolval($result["result"]));
     }
 
+    /**
+     * Verifica si existe un usuario con ese username
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return boolean
+     */
     public function isUsernameAvailable(Request $request, Response $response)
     {
         $session = new PhpSession();   
@@ -378,7 +410,6 @@ class UserController extends Controller
         $result = $userRepository->isUsernameAvailable($userId, $username);
         $response->json(!boolval($result["result"]));
     }
-
 
     /**
      * Sacar todos los usuarios

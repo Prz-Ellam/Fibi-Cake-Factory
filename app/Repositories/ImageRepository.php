@@ -11,6 +11,13 @@ class ImageRepository
     private const GET_ONE = "CALL sp_get_image(:imageId)";
     private const DELETE_MULTIMEDIA_ENTITY_IMAGES = "CALL sp_delete_multimedia_entity_images(:multimedia_entity_id, :multimedia_entity_type)";
 
+    /**
+     * Undocumented function
+     *
+     * @param Image $image
+     * @return boolean
+     * @throws PDOException Si falla el query
+     */
     public function create(Image $image) : bool
     {
         $result = DB::executeNonQuery(self::CREATE, [

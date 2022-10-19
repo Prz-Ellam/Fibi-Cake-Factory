@@ -16,7 +16,7 @@ class Category implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $categoryId;
+    private ?string $categoryId = null;
 
     /**
      * Nombre de la categoría
@@ -25,7 +25,7 @@ class Category implements Model
      */
     #[Required]
     #[MaxLength(50)]
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * Descripcion de la categoría
@@ -33,7 +33,7 @@ class Category implements Model
      * @var string|null
      */
     #[MaxLength(200)]
-    private ?string $description;
+    private ?string $description = null;
 
     /**
      * UUID del identificador del usuario que creó la categoría
@@ -42,7 +42,7 @@ class Category implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $userId;
+    private ?string $userId = null;
 
     public function getCategoryId() : ?string
     {

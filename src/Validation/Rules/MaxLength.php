@@ -12,6 +12,7 @@ class MaxLength implements RuleValidation
 
     public function __construct(int $maxlength, ?string $message = null)
     {
+        $this->message = $message ?? "Por favor ingrese un valor";
         $this->maxlength = $maxlength;    
     }
 
@@ -22,8 +23,6 @@ class MaxLength implements RuleValidation
 
     public function message() : string
     {
-        return "El campo es demasiado largo";
+        return $this->message;
     }
 }
-
-?>

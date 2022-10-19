@@ -16,7 +16,7 @@ class Wishlist implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $wishlistId;
+    private ?string $wishlistId = null;
 
     /**
      * Undocumented variable
@@ -25,7 +25,7 @@ class Wishlist implements Model
      */
     #[Required]
     #[MaxLength(50)]
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * Undocumented variable
@@ -34,7 +34,7 @@ class Wishlist implements Model
      */
     #[Required]
     #[MaxLength(200)]
-    private ?string $description;
+    private ?string $description = null;
 
     /**
      * Undocumented variable
@@ -42,7 +42,7 @@ class Wishlist implements Model
      * @var boolean|null
      */
     #[Required]
-    private ?int $visible;
+    private ?bool $visible = null;
 
     /**
      * Undocumented variable
@@ -51,7 +51,7 @@ class Wishlist implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $userId;
+    private ?string $userId = null;
 
     public function getWishlistId() : ?string
     {
@@ -86,12 +86,12 @@ class Wishlist implements Model
         return $this;
     }
 
-    public function isVisible() : ?int
+    public function isVisible() : ?bool
     {
         return $this->visible;
     }
 
-    public function setVisible(?int $visible) : self
+    public function setVisible(?bool $visible) : self
     {
         $this->visible = $visible;
         return $this;

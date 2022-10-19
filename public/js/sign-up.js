@@ -105,7 +105,7 @@ $(document).ready(function () {
                 required: true,
                 regex: /^[a-zA-Z \u00C0-\u00FF]+$/
             },
-            'visibility': {
+            'visible': {
                 required: true
             },
             'gender': {
@@ -152,7 +152,7 @@ $(document).ready(function () {
                 required: 'El apellido no puede estar vacío.',
                 regex: 'El apellido solo puede contener letras'
             },
-            'visibility': {
+            'visible': {
                 required: 'La visibilidad de usuario es requerida'
             },
             'birthDate': {
@@ -345,13 +345,34 @@ $(document).ready(function () {
             success: function (response) {
                 // Debe devolver un token con el inicio de sesion
                 console.log(response);
-                window.location.href = "/home";
+               // window.location.href = "/home";
             },
-            error: function (response, status, error) {
-                console.log(status);
+            error: function (xhr, status, error) {
+                const response = xhr.responseJSON;
+                console.log(response);
+
+                const responseText = xhr.responseJSON;
+                let htmlText = '<ul>';
+                for (const [key, value] of Object.entries(responseText.message)) {
+                   
+                    for (const [key2, value2] of Object.entries(value)) {
+                        console.log(value2);
+                        htmlText += `<li>${value2}</li>`;
+                    }
+                }
+                htmlText += '</ul>';
+
+                if (!responseText.status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        html: htmlText,
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                }
             },
             complete: function () {
-                console.log('Complete');
+                //console.log('Complete');
             }
         });
 

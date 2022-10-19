@@ -3,6 +3,7 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Max;
 use Fibi\Validation\Rules\MaxLength;
 use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Rules\Uuid;
@@ -16,7 +17,7 @@ class Review implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $reviewId;
+    private ?string $reviewId = null;
 
     /**
      * Undocumented variable
@@ -25,7 +26,7 @@ class Review implements Model
      */
     #[Required]
     #[MaxLength(255)]
-    private ?string $message;
+    private ?string $message = null;
 
     /**
      * Undocumented variable
@@ -33,8 +34,8 @@ class Review implements Model
      * @var integer|null
      */
     #[Required]
-    #[MaxLength(5)]
-    private ?int $rate;
+    #[Max(5)]
+    private ?int $rate = null;
 
     /**
      * Undocumented variable
@@ -43,7 +44,7 @@ class Review implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $productId;
+    private ?string $productId = null;
 
     /**
      * Undocumented variable
@@ -52,7 +53,7 @@ class Review implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $userId;
+    private ?string $userId = null;
 
     public function getReviewId() : ?string
     {

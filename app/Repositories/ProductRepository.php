@@ -30,6 +30,8 @@ class ProductRepository
     private const GET_ALL_BY_CATEGORY = "CALL sp_products_get_all_by_category";
     private const GET_ALL_BY_USER_RECOMENDATIONS = "CALL sp_products_get_all_by_user_recomendations";
 
+    private const GET_ALL_BY_APPROVED_BY = "CALL sp_products_get_all_by_approved_by(:approved_by)";
+
     public function create(Product $product) : bool
     {
         $parameters = Parser::SP(self::CREATE);
@@ -175,6 +177,11 @@ class ProductRepository
             "offset" => null
         ]);
     }
-}
 
-?>
+    public function getAllByApprovedBy(string $approvedBy) : array
+    {
+        return DB::executeReader(self::GET_ALL_BY_APPROVED_BY, [
+            "approved_by" => $approvedBy
+        ]);
+    }
+}

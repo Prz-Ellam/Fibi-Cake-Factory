@@ -24,6 +24,6 @@ class UserRoleRepository
         $result = DB::executeReader(self::GET_ONE_BY_NAME, [
             "name" => $name
         ]);
-        return $result;
+        return $result[0] ?? [];
     }
 }

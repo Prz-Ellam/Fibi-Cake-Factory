@@ -88,28 +88,14 @@ DELIMITER ;
 
 
 
-
-
-
-
-
-
-SELECT *, BIN_TO_UUID(category_id) category_id FROM categories;
-
-SELECT *, 
-BIN_TO_UUID(product_category_id) product_category_id,
-BIN_TO_UUID(product_id) product_id,
-BIN_TO_UUID(category_id) category_id
-FROM products_categories;
-
-SELECT BIN_TO_UUID(product_id), BIN_TO_UUID(user_id), name FROM products;
-
-CALL sp_get_user_products('516a3887-06b1-4203-ad59-07dc13d1e0fe');
-CALL sp_get_user_products('b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb');
-
 -- TODO: Obtener todos los aprobados de un men
-SELECT * FROM products WHERE approved = TRUE and active = TRUE
-and BIN_TO_UUID(approved_by) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb';
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_approved_by $$
+
+CREATE PROCEDURE sp_products_get_all_by_approved_by(
+    IN _approved_by                 VARCHAR(36)
+)
+BEGIN
 
     SELECT
         BIN_TO_UUID(p.product_id) id,
@@ -143,7 +129,7 @@ and BIN_TO_UUID(approved_by) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb';
     WHERE
         approved = TRUE
         AND p.active = TRUE
-        AND BIN_TO_UUID(approved_by) = '7d03c6b7-9b86-4266-9405-f509b9841b98'
+        AND BIN_TO_UUID(approved_by) = _approved_by
     GROUP BY
         p.product_id, 
         p.name, 
@@ -153,7 +139,8 @@ and BIN_TO_UUID(approved_by) = 'b6cc9bbd-fbb2-4935-bb29-b3c0e40ca7bb';
         p.stock, 
         p.approved;
 
-
+END $$
+DELIMITER ;
 
 
 

@@ -620,4 +620,26 @@ class ProductController extends Controller
         $results = $productRepository->getAllByAlpha();
         $response->json($results);
     }
+
+    public function getApprovedProdcuts(Request $request, Response $response)
+    {
+        $userId = $request->getRouteParams("userId");
+
+        $productRepository = new ProductRepository();
+        $results = $productRepository->getAllByApprovedBy($userId);
+
+        foreach ($results as &$element)
+        {
+            $element["categories"] = json_decode($element["categories"], true);
+            foreach ($element["categories"] as &$category)
+            {
+                $category = json_decode($category, true);
+            }
+            
+            $element["images"] = explode(',', $element["images"]);
+            $element["videos"] = explode(',', $element["videos"]);
+        }
+
+        $response->json($results);
+    }
 }

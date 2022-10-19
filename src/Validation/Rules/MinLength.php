@@ -12,6 +12,7 @@ class MinLength implements RuleValidation
 
     public function __construct(int $minlength, ?string $message = null)
     {
+        $this->message = $message ?? "No";
         $this->minlength = $minlength;
     }
 
@@ -22,7 +23,7 @@ class MinLength implements RuleValidation
 
     public function message() : string
     {
-        return "No";
+        return $this->message;
     }
 }
 

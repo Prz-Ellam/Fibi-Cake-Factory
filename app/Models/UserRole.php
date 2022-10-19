@@ -6,8 +6,8 @@ use Fibi\Model\Model;
 
 class UserRole implements Model
 {
-    private ?string $userRoleId;
-    private ?string $name;
+    private ?string $userRoleId = null;
+    private ?string $name = null;
 
     public function getUserRoleId() : ?string
     {

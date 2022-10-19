@@ -92,7 +92,7 @@
                         <select class="form-select shadow-none rounded-1" name="visible" id="visibility" role="button">
                             <option value="">Seleccionar</option>
                             <option value="1">Público</option>
-                            <option value="2">Privado</option>
+                            <option value="0">Privado</option>
                         </select>
                     </div>
                 </div>

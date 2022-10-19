@@ -16,7 +16,7 @@ $.ajax({
             $('#users-section').append(/*html*/`
                 <a href="/profile?id=${user.id}" class="col-lg-4 col-md-6 col-sm-12  text-decoration-none text-brown">
                     <div class="bg-white text-center p-5">
-                        <img src="api/v1/images/${user.profilePicture}" class="img-fluid p-3 rounded-circle" alt="A">
+                        <img src="api/v1/images/${user.profilePicture}" class="img-fluid p-3 rounded-circle" style="width: 256px; height: 256px; object-fit: cover" alt="A">
                         <h5 class="fw-bold mb-0">${user.username}</h5>
                         <p>${user.firstName + ' ' + user.lastName}</p>
                     </div>

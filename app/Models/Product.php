@@ -6,19 +6,19 @@ use Fibi\Model\Model;
 
 class Product implements Model
 {
-    private ?string $productId;
+    private ?string $productId = null;
 
-    private ?string $name;
+    private ?string $name = null;
 
-    private ?string $description;
+    private ?string $description = null;
 
-    private ?int $typeOfSell;
+    private ?int $typeOfSell = null;
 
-    private ?int $stock;
+    private ?int $stock = null;
 
-    private ?float $price;
+    private ?float $price = null;
     
-    private ?string $userId;
+    private ?string $userId = null;
 
     public function getProductId() : ?string
     {

@@ -6,15 +6,15 @@ use Fibi\Model\Model;
 
 class Shopping implements Model
 {
-    private ?string $shoppingId;
+    private ?string $shoppingId = null;
 
-    private ?string $orderId;
+    private ?string $orderId = null;
 
-    private ?string $productId;
+    private ?string $productId = null;
 
-    private ?int $quantity;
+    private ?int $quantity = null;
     
-    private ?float $amount;
+    private ?float $amount = null;
 
     public function getShoppingId() : ?string
     {

@@ -122,7 +122,7 @@ $(document).ready(function() {
                 required: true,
                 maxlength: 50
             },
-            'visibility': {
+            'visible': {
                 required: true
             }
         },
@@ -135,7 +135,7 @@ $(document).ready(function() {
                 required: 'La descripción de la lista de deseos no puede estar vacía.',
                 maxlength: 'La descripción de la lista es demasiado larga'
             },
-            'visibility': {
+            'visible': {
                 required: 'La visibilidad no puede estar vacía.'
             }
         },
@@ -155,8 +155,9 @@ $(document).ready(function() {
                 required: true,
                 maxlength: 50
             },
-            'visibility': {
-                required: true
+            'visible': {
+                required: true,
+                min: 0
             }
         },
         messages: {
@@ -168,8 +169,9 @@ $(document).ready(function() {
                 required: 'La descripción de la lista de deseos no puede estar vacía.',
                 maxlength: 'La descripción de la lista es demasiado larga'
             },
-            'visibility': {
-                required: 'La visibilidad no puede estar vacía.'
+            'visible': {
+                required: 'La visibilidad no puede estar vacía.',
+                min: 'La visbilidad no puede estar vacía' 
             }
         },
         errorElement: 'small',

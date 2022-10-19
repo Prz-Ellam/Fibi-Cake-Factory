@@ -10,6 +10,17 @@ class HasSpecialChars implements RuleValidation
     private const REGEX = "/[¡”\"#$%&;\/=’?!¿:;,.\-_+*{}\[\]]/";
     private string $message;
 
+    public function __construct(?string $message = null) {
+        if (is_null($message))
+        {
+            $this->message = "Por favor ingrese un valor";
+        }
+        else
+        {
+            $this->message = $message;
+        }
+    }
+
     public function isValid(mixed $input) : bool
     {
         return preg_match(self::REGEX, $input);
@@ -17,7 +28,7 @@ class HasSpecialChars implements RuleValidation
 
     public function message() : string
     {
-        return "";
+        return $this->message;
     }
 }
 

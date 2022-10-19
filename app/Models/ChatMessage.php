@@ -13,7 +13,7 @@ class ChatMessage implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $chatMessageId;
+    private ?string $chatMessageId = null;
 
     /**
      * Undocumented variable
@@ -21,7 +21,7 @@ class ChatMessage implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $chatParticipantId;
+    private ?string $chatParticipantId = null;
 
     /**
      * Undocumented variable
@@ -29,7 +29,7 @@ class ChatMessage implements Model
      * @var string|null
      */
     #[Required]
-    private ?string $messageContent;
+    private ?string $messageContent = null;
 
     public function getChatMessageId() : ?string
     {

@@ -1,6 +1,6 @@
 $.ajax({
     url: "api/v1/session",
-    method: "GET",
+    method: 'GET',
     async: false,
     timeout: 0,
     success: function(response) {

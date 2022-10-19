@@ -38,7 +38,38 @@ class WishlistController extends Controller
         $description = $request->getBody("description");
         $visible = $request->getBody("visible");
         $images = $request->getFileArray("images");
-        $userId = $session->get('user_id');
+        $userId = $session->get('userId');
+
+        $wishlist = new Wishlist();
+        $wishlist
+            ->setWishlistId($wishlistId)
+            ->setName($name)
+            ->setDescription($description)
+            ->setVisible($visible)
+            ->setUserId($userId);
+
+        $validator = new Validator($wishlist);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+
+        if (!$status)
+        {
+            // Errors
+            $response->json([
+                "response" => $status,
+                "data" => $feedback
+            ])->setStatusCode(400);
+            return;
+        }
+
+        $wishlistRepository = new WishlistRepository();
+        $result = $wishlistRepository->create($wishlist);
+
+        if (!$result)
+        {
+            $response->json(["status" => $result])->setStatusCode(400);
+            return;
+        }
 
         // TODO: Las imagenes de listas borradas no deben poder ser accedidas
         $imagesId = [];
@@ -65,10 +96,9 @@ class WishlistController extends Controller
 
             if (!$status)
             {
-                // Errors
                 $response->json([
-                    "response" => $status,
-                    "data" => $feedback
+                    "status" => $status,
+                    "message" => $feedback
                 ])->setStatusCode(400);
                 return;
             }
@@ -84,37 +114,7 @@ class WishlistController extends Controller
             $imagesId[] = $imageId;
         }
 
-        $wishlist = new Wishlist();
-        $wishlist
-            ->setWishlistId($wishlistId)
-            ->setName($name)
-            ->setDescription($description)
-            ->setVisible($visible)
-            ->setUserId($userId);
-
-
-        $validator = new Validator($wishlist);
-        $feedback = $validator->validate();
-        $status = $validator->getStatus();
-
-        if (!$status)
-        {
-            // Errors
-            $response->json([
-                "response" => $status,
-                "data" => $feedback
-            ])->setStatusCode(400);
-            return;
-        }
-
-        $wishlistRepository = new WishlistRepository();
-        $result = $wishlistRepository->create($wishlist);
-
-        if (!$result)
-        {
-            $response->json(["status" => $result])->setStatusCode(400);
-            return;
-        }
+        
 
         $response->json([
             "status" => $result,

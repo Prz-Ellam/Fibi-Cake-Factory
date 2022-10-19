@@ -15,7 +15,7 @@ class ShoppingCart implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $shoppingCartId;
+    private ?string $shoppingCartId = null;
     
     /**
      * Identificador del usuario al que le pertenece el carrito
@@ -24,7 +24,7 @@ class ShoppingCart implements Model
      */
     #[Required]
     #[Uuid]
-    private ?string $userId;
+    private ?string $userId = null;
 
     public function getShoppingCartId() : ?string
     {
