@@ -43,21 +43,22 @@ class UserController extends Controller
         $result = null;
 
         $userId = Uuid::uuid4()->toString();
-        $email = $request->getBody('email');
-        $username = $request->getBody('username');
-        $birthDate = $request->getBody('birthDate');
-        $firstName = $request->getBody('firstName');
-        $lastName = $request->getBody('lastName');
-        $visible = $request->getBody('visible');
-        $gender = $request->getBody('gender');
-        $password = $request->getBody('password');
-        $confirmPassword = $request->getBody('confirmPassword');
-        $profilePicture = $request->getFile('profilePicture');
+        $email = $request->getBody("email");
+        $username = $request->getBody("username");
+        $birthDate = $request->getBody("birthDate");
+        $firstName = $request->getBody("firstName");
+        $lastName = $request->getBody("lastName");
+        $visible = $request->getBody("visible");
+        $gender = $request->getBody("gender");
+        $password = $request->getBody("password");
+        $confirmPassword = $request->getBody("confirmPassword");
+        $profilePicture = $request->getFile("profilePicture");
 
         $session = new PhpSession();
         $userRole = ($session->get("role") === "Super Administrador") ? 
-            $request->getBody("userRole") : "Comprador";
+            "Administrador" : "Comprador";
 
+        // Images
         $imageId = Uuid::uuid4()->toString();
         $imageName = $profilePicture->getName();
         $imageType = $profilePicture->getType();
@@ -218,16 +219,13 @@ class UserController extends Controller
     {
         $session = new PhpSession();   
         $userId = $session->get("userId");
-        $email = $request->getBody('email');
-        $username = $request->getBody('username');
-        $birthDate = $request->getBody('birthDate');
-        $firstName = $request->getBody('firstName');
-        $lastName = $request->getBody('lastName');
-        //$visible = $request->getBody('visible');
-        $gender = $request->getBody('gender');
-        //$password = $request->getBody('password');
-        //$confirmPassword = $request->getBody('confirmPassword');
-        $profilePicture = $request->getFile('profilePicture');
+        $email = $request->getBody("email");
+        $username = $request->getBody("username");
+        $birthDate = $request->getBody("birthDate");
+        $firstName = $request->getBody("firstName");
+        $lastName = $request->getBody("lastName");
+        $gender = $request->getBody("gender");
+        $profilePicture = $request->getFile("profilePicture");
 
         $imageId = Uuid::uuid4()->toString();
         $imageName = $profilePicture->getName();
@@ -248,7 +246,6 @@ class UserController extends Controller
         $validator = new Validator($image);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->json([
                 "status" => false,
@@ -259,7 +256,6 @@ class UserController extends Controller
 
         $imageRepository = new ImageRepository();
         $result = $imageRepository->create($image);
-
         if (!$result) {
             $response->json([
                 "status" => false,
@@ -294,6 +290,13 @@ class UserController extends Controller
 */
         $userRepository = new UserRepository();
         $result = $userRepository->update($user);
+        if (!$result) {
+            $response->json([
+                "status" => false,
+                "message" => "No se pudo editar el usuario"
+            ])->setStatusCode(400);
+            return;
+        }
 
         $response->json([
             "status" => true
@@ -302,6 +305,7 @@ class UserController extends Controller
 
     /**
      * Actualiza la contraseña del usuario
+     * Endpoint: /api/v1/users/:userId/password
      *
      * @param Request $request
      * @param Response $response
@@ -348,7 +352,7 @@ class UserController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Elimina un usuario de la base de datos
      *
      * @param Request $request
      * @param Response $response
@@ -359,7 +363,7 @@ class UserController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Obtiene un usuario en base a su ID
      *
      * @param Request $request
      * @param Response $response
@@ -412,7 +416,7 @@ class UserController extends Controller
     }
 
     /**
-     * Sacar todos los usuarios
+     * Obtiene todos los usuarios
      *
      * @param Request $request
      * @param Response $response
@@ -427,7 +431,9 @@ class UserController extends Controller
         $userRepository = new UserRepository();
         $users = $userRepository->getAllExcept($id);
 
-        $response->json($users);
+        $response
+            ->setHeader("Access-Control-Allow-Origin", "*")
+            ->json($users);
     }
 
     public function getAllByFilter(Request $request, Response $response): void

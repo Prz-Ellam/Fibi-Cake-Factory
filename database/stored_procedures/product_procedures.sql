@@ -1,5 +1,7 @@
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_product $$
+
 CREATE PROCEDURE sp_create_product(
     IN _product_id              VARCHAR(36),
     IN _name                    VARCHAR(50),
@@ -29,6 +31,13 @@ BEGIN
         _stock,
         UUID_TO_BIN(_user_id)
     );
+
+    UPDATE
+        users
+    SET
+        user_role = (SELECT user_role_id FROM user_roles WHERE name = 'Vendedor')
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id;
 
 END $$
 DELIMITER ;
@@ -82,6 +91,7 @@ BEGIN
 
 END $$
 DELIMITER ;
+
 
 
 
@@ -648,15 +658,20 @@ BEGIN
 
     SELECT
         BIN_TO_UUID(p.product_id) id,
-        name,
-        price,
-        IFNULL(SUM(s.quantity), 0) sells
+        p.name,
+        p.price,
+        IFNULL(SUM(s.quantity), 0) sells,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images
     FROM
         products AS p
     LEFT JOIN
         shoppings AS s
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
+    INNER JOIN
+        images AS i
+    ON
+        p.product_id = i.multimedia_entity_id
     WHERE
         p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
         AND p.active = TRUE

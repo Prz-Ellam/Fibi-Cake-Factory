@@ -52,16 +52,28 @@ $.ajax({
 });
 
 
-const productSearchCard = /*html*/`
+
+Handlebars.registerHelper('currency', function(number) {
+    var fmt = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    
+    return fmt.format(number);
+});
+
+const productCard = /*html*/`
+{{#each this}}
 <div class="bg-white col-lg-4 col-md-6 col-sm-12  text-center p-5">
-    <a href="/product"><img src="assets/img/E001S011649.jpg" class="img-fluid p-3"></a>
-    <h5 class="fw-bold mb-0">$299.00</h5>
-    <p>Tentación de frutas</p>
+    <a href="/product?search={{id}}"><img src="api/v1/images/{{images.[0]}}" class="img-fluid p-3"></a>
+    <h5 class="fw-bold mb-0">{{currency price}}</h5>
+    <p>{{name}}</p>
     <div class="d-flex justify-content-center">
         <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
         <button class="btn btn-danger shadow-none rounded-1 add-wishlists" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
     </div>
 </div>
+{{/each}}
 `;
 
 function ProductSearchCard(product)
@@ -91,10 +103,8 @@ $.ajax({
     async: false,
     timeout: 0,
     success: function(response) {
-        response.forEach((element) =>
-        {
-            $('#product-search-container').append(ProductSearchCard(element));
-        });
+        const template = Handlebars.compile(productCard);
+        $('#product-search-container').append(template(response));
     }
 });
 

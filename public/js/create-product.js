@@ -290,13 +290,12 @@ $(document).ready(function() {
         const requestBody = new FormData(this);
 
         $.ajax({
-            method: 'POST',
             url: 'api/v1/categories',
-            timeout: 0,
+            method: 'POST',
             data: $(this).serialize(),
-            //dataType: 'json',
             success: function(response) {
-                $('#categories').append(`<option value="${response.id}">${response.name}</option>`);
+                console.log(response);
+                $('#categories').append(`<option value="${response.data.id}">${response.data.name}</option>`);
                 $('#categories').multipleSelect('refresh');
             },
             error: function(response, status, error) {

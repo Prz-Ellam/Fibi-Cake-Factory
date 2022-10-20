@@ -99,10 +99,6 @@ function CarouselCard(product)
 }
 
 
-//$('#recomendations').append(carouselCard);
-//$('#sellers').append(carouselCard);
-//$('#stars').append(carouselCard);
-
 var id;
 $.ajax({
     url: 'api/v1/session',
@@ -151,9 +147,8 @@ function WishlistItem(wishlist)
 }
 
 $.ajax({
-    url: "api/v1/session",
+    url: 'api/v1/session',
     method: 'GET',
-    timeout: 0,
     async: false,
     success: function(response) {
         console.log(response.id);
@@ -193,10 +188,9 @@ $(document).ready(function()
         event.preventDefault();
 
         $.ajax({
-            url: "api/v1/shopping-cart-item",
+            url: 'api/v1/shopping-cart-item',
             method: 'POST',
             data: $(this).serialize(),
-            timeout: 0,
             success: function(response) {
 
                 console.log(response);

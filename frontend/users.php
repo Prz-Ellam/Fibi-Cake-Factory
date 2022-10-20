@@ -56,7 +56,7 @@
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="table-body">
                                 </tbody>
                             </table>
                         </div>
@@ -81,7 +81,7 @@
                                 <label for="profile-picture" role="button" class="profile-picture-label text-white position-absolute rounded-circle"></label>
                                 <img class="img img-fluid rounded-circle" id="picture-box" src="assets/img/blank-profile-picture.svg">
                             </div>
-                            <input type="file" accept="image/*" class="form-control shadow-none rounded-1 position-absolute" name="profile-picture" id="profile-picture" >
+                            <input type="file" accept="image/*" class="form-control shadow-none rounded-1 position-absolute" name="profilePicture" id="profile-picture" >
                         </div>
                         
                         <div class="mb-4">
@@ -101,28 +101,28 @@
                         <div class="form-group mb-4">
                             <label class="form-label" for="birth-date" role="button">Fecha de nacimiento</label>
                             <div class="input-group">
-                                <input type="date" class="form-control shadow-none rounded-1" name="birth-date" id="add-birth-date">
+                                <input type="date" class="form-control shadow-none rounded-1" name="birthDate" id="add-birth-date">
                             </div>
                         </div>
         
                         <div class="form-group mb-4">
                             <label class="form-label" for="first-name" role="button">Nombre</label>
                             <div class="input-group">
-                                <input type="text" class="form-control shadow-none rounded-1" name="first-name" id="add-first-name">
+                                <input type="text" class="form-control shadow-none rounded-1" name="firstName" id="add-first-name">
                             </div>
                         </div>
         
                         <div class="form-group mb-4">
                             <label class="form-label" for="last-name" role="button">Apellido(s)</label>
                             <div class="input-group">
-                                <input type="text" class="form-control shadow-none rounded-1" name="last-name" id="add-last-name">
+                                <input type="text" class="form-control shadow-none rounded-1" name="lastName" id="add-last-name">
                             </div>
                         </div>
         
                         <div class="form-group mb-4">
                             <label class="form-label" for="visibility" role="button">Visibilidad</label>
                             <div class="input-group">
-                                <select class="form-select shadow-none rounded-1" name="visibility" id="add-visibility" role="button">
+                                <select class="form-select shadow-none rounded-1" name="visible" id="add-visibility" role="button">
                                     <option value="">Seleccionar</option>
                                     <option value="1">Público</option>
                                     <option value="2">Privado</option>
@@ -151,7 +151,7 @@
                         <div class="form-group mb-4">
                             <label class="form-label" for="password" role="button">Contraseña</label>
                             <div class="input-group">
-                                <input type="password" class="form-control shadow-none" name="password" id="add-password">
+                                <input type="password" class="form-control shadow-none" name="password" id="password">
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-orange btn-password input-group-text shadow-none rounded-0 rounded-end" id="btn-password">
                                         <i id="add-password-icon" class="fas fa-solid fa-eye"></i></button>
@@ -172,7 +172,7 @@
                         <div class="form-group mb-4">
                             <label class="form-label" for="confirm-password" role="button">Confirmar Contraseña</label>
                             <div class="input-group">
-                                <input type="password" name="confirm-password" id="add-confirm-password" class="form-control shadow-none">
+                                <input type="password" name="confirmPassword" id="add-confirm-password" class="form-control shadow-none">
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-orange btn-password input-group-text shadow-none rounded-0 rounded-end" id="btn-confirm-password">
                                         <i id="add-confirm-password-icon" class="fas fa-solid fa-eye"></i></button>
@@ -339,6 +339,8 @@
     
     <!-- Bootstrap 5.0.0 -->
     <script src="vendor/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     
     <!-- jQuery DataTable -->
     <script src="http://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>

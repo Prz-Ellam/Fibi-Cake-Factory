@@ -13,7 +13,7 @@ class ShoppingCartController extends Controller
     public function getUserCart(Request $request, Response $response)
     {
         $session = new PhpSession();
-        $userId = $session->get('user_id');
+        $userId = $session->get('userId');
 
         $shoppingCartRepository = new ShoppingCartRepository();
         $shoppingCartId = $shoppingCartRepository->getUserCart($userId);

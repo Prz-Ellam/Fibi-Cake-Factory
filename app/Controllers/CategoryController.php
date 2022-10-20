@@ -35,7 +35,7 @@ class CategoryController extends Controller
         $categoryId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
 
         if (!$userId) {
             $response->setStatusCode(401)->json([
@@ -103,7 +103,7 @@ class CategoryController extends Controller
         $categoryId = $request->getRouteParams('categoryId');
         $name = $request->getBody('name');
         $description = $request->getBody('description');
-        $userId = $session->get('user_id');
+        $userId = $session->get('userId');
 
         if (!$userId) {
             $response->setStatusCode(401)->json([

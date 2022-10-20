@@ -28,13 +28,13 @@ class ReviewController
         $reviewId = Uuid::uuid4()->toString();
         $message = $request->getBody("message");
         $productId = $request->getRouteParams("productId");
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
 
         $review = new Review();
         $review
             ->setReviewId($reviewId)
             ->setMessage($message)
-            ->setRate(10)
+            ->setRate(5)
             ->setProductId($productId)
             ->setUserId($userId);
 

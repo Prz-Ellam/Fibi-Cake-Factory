@@ -30,7 +30,6 @@ $.ajax({
 $.ajax({
     url: '/api/v1/reports/order-report',
     method: 'GET',
-    timeout: 0,
     async: false,
     success: function(response)
     {

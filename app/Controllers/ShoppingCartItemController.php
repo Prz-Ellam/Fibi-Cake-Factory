@@ -18,7 +18,7 @@ class ShoppingCartItemController extends Controller
         $shoppingCartItemId = Uuid::uuid4()->toString(); 
         $productId = $request->getBody("product-id");
         $quantity = $request->getBody("quantity");
-        $userId = (new PhpSession())->get('user_id');
+        $userId = (new PhpSession())->get('userId');
 
         $shoppingCartRepository = new ShoppingCartRepository();
         $shoppingCartId = $shoppingCartRepository->getUserCart($userId);
@@ -53,7 +53,7 @@ class ShoppingCartItemController extends Controller
 
     public function getShoppingCartItems(Request $request, Response $response)
     {
-        $userId = (new PhpSession())->get('user_id');
+        $userId = (new PhpSession())->get('userId');
 
         $shoppingCartRepository = new ShoppingCartRepository();
         $shoppingCartId = $shoppingCartRepository->getUserCart($userId);

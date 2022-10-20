@@ -17,7 +17,7 @@ class ReportController extends Controller
         $categoryId = $request->getQuery("category");
 
         $session = new PhpSession();
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
 
         $orderRepository = new OrderRepository();
 
@@ -37,7 +37,7 @@ class ReportController extends Controller
         $categoryId = $request->getQuery("category");
 
         $session = new PhpSession();
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
 
         $orderRepository = new OrderRepository();
 
@@ -52,7 +52,7 @@ class ReportController extends Controller
         $categoryId = $request->getQuery("category");
 
         $session = new PhpSession();
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
 
         $orderRepository = new OrderRepository();
 

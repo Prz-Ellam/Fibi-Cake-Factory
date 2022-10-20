@@ -23,7 +23,7 @@ class OrderController extends Controller
         $session = new PhpSession();
 
         $orderId = Uuid::uuid4()->toString();
-        $userId = $session->get('user_id');
+        $userId = $session->get('userId');
 
         $names = $request->getBody("names");
         $lastName = $request->getBody("last-name");

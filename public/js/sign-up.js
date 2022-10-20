@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     // Username
     $.validator.addMethod("username", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){2,18}$/.test(value);
+        return this.optional(element) || /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}$/.test(value);
     }, 'Please enter a valid username');
 
     // Data size (no puede pesar mas de 8MB)
@@ -332,20 +332,20 @@ $(document).ready(function () {
             return;
         }
 
-        const requestBody = new FormData(this);
         // Send Sign Up Request
         $.ajax({
             method: 'POST',
             url: 'api/v1/users',
-            data: requestBody,
-            //dataType: 'json',
+            data: new FormData(this),
             cache: false,
             contentType: false,
             processData: false,
             success: function (response) {
                 // Debe devolver un token con el inicio de sesion
                 console.log(response);
-               // window.location.href = "/home";
+                if (response.status) {
+                    window.location.href = "/home";
+                }
             },
             error: function (xhr, status, error) {
                 const response = xhr.responseJSON;

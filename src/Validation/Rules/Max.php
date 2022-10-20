@@ -10,7 +10,7 @@ class Max implements RuleValidation
     private int $max;
     private string $message;
 
-    public function __construct(int $max, ?string $message)
+    public function __construct(int $max, ?string $message = null)
     {
         $this->max = $max;
         if (is_null($message))
@@ -25,7 +25,7 @@ class Max implements RuleValidation
 
     public function isValid(mixed $value) : bool
     {
-        return $value < $this->max;
+        return $value <= $this->max;
     }
 
     public function message() : string

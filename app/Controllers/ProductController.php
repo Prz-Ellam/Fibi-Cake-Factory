@@ -46,7 +46,7 @@ class ProductController extends Controller
 
         $userId = $request->getBody("user-id");
         if (is_null($userId))
-            $userId = (new PhpSession())->get('user_id');
+            $userId = (new PhpSession())->get('userId');
 
         DB::beginTransaction();
 
@@ -63,9 +63,7 @@ class ProductController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
-            // Errors
+        if (!$status) {
             $response->json([
                 "response" => $status,
                 "data" => $feedback
@@ -76,16 +74,14 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->create($product);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
 
         $imagesId = [];
 
-        if (count($images) < 1)
-        {
+        if (count($images) < 1) {
             $response->json([
                 "status" => false,
                 "message" => "No hay imagenes"
@@ -93,8 +89,7 @@ class ProductController extends Controller
             return;
         }
 
-        foreach ($images as $image)
-        {
+        foreach ($images as $image) {
             $imageId = Uuid::uuid4()->toString();
             $imageName = $image->getName();
             $imageType = $image->getType();
@@ -110,14 +105,12 @@ class ProductController extends Controller
                 ->setContent($imageContent)
                 ->setMultimediaEntityId($productId)
                 ->setMultimediaEntityType('products');
-            
+
             $validator = new Validator($image);
             $feedback = $validator->validate();
             $status = $validator->getStatus();
 
-            if (!$status)
-            {
-                // Errors
+            if (!$status) {
                 $response->json([
                     "response" => $status,
                     "data" => $feedback
@@ -127,9 +120,7 @@ class ProductController extends Controller
 
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
-
-            if (!$result)
-            {
+            if (!$result) {
                 $response->json(["response" => "No"])->setStatusCode(400);
                 return;
             }
@@ -137,9 +128,7 @@ class ProductController extends Controller
             $imagesId[] = $imageId;
         }
 
-
-        if (count($videos) < 1)
-        {
+        if (count($videos) < 1) {
             $response->json([
                 "status" => false,
                 "message" => "No hay videos"
@@ -148,8 +137,7 @@ class ProductController extends Controller
         }
 
         $videosId = [];
-        foreach ($videos as $video)
-        {
+        foreach ($videos as $video) {
             $videoId = Uuid::uuid4()->toString();
             $videoName = $video->getName();
             $videoType = $video->getType();
@@ -157,7 +145,8 @@ class ProductController extends Controller
             $videoContent = $video->getContent();
 
             $video = new Video();
-            $video->setVideoId($videoId)
+            $video
+                ->setVideoId($videoId)
                 ->setName($videoName)
                 ->setType($videoType)
                 ->setSize($videoSize)
@@ -169,9 +158,7 @@ class ProductController extends Controller
             $feedback = $validator->validate();
             $status = $validator->getStatus();
 
-            if (!$status)
-            {
-                // Errors
+            if (!$status) {
                 $response->json([
                     "response" => $status,
                     "data" => $feedback
@@ -182,8 +169,7 @@ class ProductController extends Controller
             $videoRepository = new VideoRepository();
             $result = $videoRepository->create($video);
 
-            if (!$result)
-            {
+            if (!$result) {
                 $response->json(["response" => "No"])->setStatusCode(400);
                 return;
             }
@@ -191,8 +177,7 @@ class ProductController extends Controller
             $videosId[] = $videoId;
         }
 
-        if (count($categories) < 1)
-        {
+        if (count($categories) < 1) {
             $response->json([
                 "status" => false,
                 "message" => "No hay categorias"
@@ -200,8 +185,7 @@ class ProductController extends Controller
             return;
         }
 
-        foreach ($categories as $categoryId)
-        {
+        foreach ($categories as $categoryId) {
             // TODO: Validar que este category Id si existe realmente, porque viene desde el
             // DOM y cualquiera lo puede manipular
 
@@ -217,9 +201,7 @@ class ProductController extends Controller
             $feedback = $validator->validate();
             $status = $validator->getStatus();
 
-            if (!$status)
-            {
-                // Errors
+            if (!$status) {
                 $response->json([
                     "response" => $status,
                     "data" => $feedback
@@ -230,8 +212,7 @@ class ProductController extends Controller
             $productCategoryRepository = new ProductCategoryRepository();
             $result = $productCategoryRepository->create($productCategory);
 
-            if (!$result)
-            {
+            if (!$result) {
                 $response->json(["response" => "No"])->setStatusCode(400);
                 return;
             }
@@ -272,10 +253,10 @@ class ProductController extends Controller
             ->setTypeOfSell($typeOfSell)
             ->setPrice($price)
             ->setStock($stock);
-    
+
         $productRepository = new ProductRepository();
         $result = $productRepository->update($product);
-    
+
         $response->json([
             "status" => $result,
             "data" => [
@@ -325,14 +306,12 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->getUserProducts($userId);
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["categories"] = json_decode($element["categories"], true);
-            foreach ($element["categories"] as &$category)
-            {
+            foreach ($element["categories"] as &$category) {
                 $category = json_decode($category, true);
             }
-            
+
             $element["images"] = explode(',', $element["images"]);
             $element["videos"] = explode(',', $element["videos"]);
         }
@@ -354,20 +333,18 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $product = $productRepository->getProduct($productId);
 
-        if ($product === [])
-        {
+        if ($product === []) {
             $response->json((object)null);
             return;
         }
         $product = $product[0];
 
         $product["categories"] = json_decode($product["categories"], true);
-        
-        foreach ($product["categories"] as &$category)
-        {
+
+        foreach ($product["categories"] as &$category) {
             $category = json_decode($category, true);
         }
-            
+
         $product["images"] = explode(',', $product["images"]);
         $product["videos"] = explode(',', $product["videos"]);
 
@@ -390,14 +367,12 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $products = $productRepository->getUserProducts($userId);
 
-        foreach ($products as &$element)
-        {
+        foreach ($products as &$element) {
             $element["categories"] = json_decode($element["categories"], true);
-            foreach ($element["categories"] as &$category)
-            {
+            foreach ($element["categories"] as &$category) {
                 $category = json_decode($category, true);
             }
-            
+
             $element["images"] = explode(',', $element["images"]);
             $element["videos"] = explode(',', $element["videos"]);
         }
@@ -410,8 +385,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->getRecentProducts();
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = explode(",", $element["images"]);
             $element["videos"] = explode(",", $element["videos"]);
         }
@@ -424,8 +398,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->findAllByPending();
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = explode(",", $element["images"]);
             $element["videos"] = explode(",", $element["videos"]);
         }
@@ -440,8 +413,7 @@ class ProductController extends Controller
         $required = new Required();
         $uuid = new RulesUuid();
 
-        if (!$required->isValid($userId) || !$uuid->isValid($userId))
-        {
+        if (!$required->isValid($userId) || !$uuid->isValid($userId)) {
             $response->json(["Esta mal"])->setStatusCode(400);
             return;
         }
@@ -449,8 +421,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->getAllByUserPending($userId);
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = explode(",", $element["images"]);
             $element["videos"] = explode(",", $element["videos"]);
         }
@@ -460,7 +431,6 @@ class ProductController extends Controller
 
     public function getDeniedProducts(Request $request, Response $response)
     {
-
     }
 
     public function getUserDeniedProducts(Request $request, Response $response)
@@ -470,8 +440,7 @@ class ProductController extends Controller
         $required = new Required();
         $uuid = new RulesUuid();
 
-        if (!$required->isValid($userId) || !$uuid->isValid($userId))
-        {
+        if (!$required->isValid($userId) || !$uuid->isValid($userId)) {
             $response->json(["Esta mal"])->setStatusCode(400);
             return;
         }
@@ -479,8 +448,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->getAllByUserDenied($userId);
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = explode(",", $element["images"]);
             $element["videos"] = explode(",", $element["videos"]);
         }
@@ -490,20 +458,18 @@ class ProductController extends Controller
 
     public function getApproveProducts(Request $request, Response $response)
     {
-
     }
 
     public function getUserApproveProducts(Request $request, Response $response)
     {
         //$session = new PhpSession();
-        //$userId = $session->get("user_id");
+        //$userId = $session->get("userid");
         $userId = $request->getRouteParams("userId");
 
         $required = new Required();
         $uuid = new RulesUuid();
 
-        if (!$required->isValid($userId) || !$uuid->isValid($userId))
-        {
+        if (!$required->isValid($userId) || !$uuid->isValid($userId)) {
             $response->json(["Esta mal"])->setStatusCode(400);
             return;
         }
@@ -511,8 +477,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->getAllByUserApprove($userId);
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = explode(",", $element["images"]);
             $element["videos"] = explode(",", $element["videos"]);
         }
@@ -527,19 +492,17 @@ class ProductController extends Controller
         $required = new Required();
         $uuid = new RulesUuid();
 
-        if (!$required->isValid($productId) || !$required->isValid($productId))
-        {
+        if (!$required->isValid($productId) || !$required->isValid($productId)) {
             $response->json(["Esta mal"])->setStatusCode(400);
             return;
         }
 
         // Validar sesión
         $session = new PhpSession();
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
         $role = $session->get('role');
 
-        if ($role !== "Super Administrador" && $role !== "Administrador")
-        {
+        if ($role !== "Super Administrador" && $role !== "Administrador") {
             $response->json([
                 "status" => "Unauthorized"
             ])->setStatusCode(401);
@@ -549,8 +512,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->approve($productId, $userId);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
@@ -567,8 +529,7 @@ class ProductController extends Controller
         $required = new Required();
         $uuid = new RulesUuid();
 
-        if (!$required->isValid($productId) || !$required->isValid($productId))
-        {
+        if (!$required->isValid($productId) || !$required->isValid($productId)) {
             $response->json(["Esta mal"])->setStatusCode(400);
             return;
         }
@@ -576,10 +537,9 @@ class ProductController extends Controller
         // Validar sesión
         $session = new PhpSession();
         $role = $session->get('role');
-        $userId = $session->get("user_id");
+        $userId = $session->get("userId");
 
-        if ($role !== "Super Administrador" && $role !== "Administrador")
-        {
+        if ($role !== "Super Administrador" && $role !== "Administrador") {
             $response->json([
                 "status" => "Unauthorized"
             ])->setStatusCode(401);
@@ -589,8 +549,7 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->denied($productId, $userId);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->json(["response" => "No"])->setStatusCode(400);
             return;
         }
@@ -611,6 +570,11 @@ class ProductController extends Controller
     {
         $productRepository = new ProductRepository();
         $results = $productRepository->getAllByShips();
+
+        foreach ($results as &$element) {
+            $element["images"] = explode(",", $element["images"]);
+        }
+
         $response->json($results);
     }
 
@@ -628,14 +592,12 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $results = $productRepository->getAllByApprovedBy($userId);
 
-        foreach ($results as &$element)
-        {
+        foreach ($results as &$element) {
             $element["categories"] = json_decode($element["categories"], true);
-            foreach ($element["categories"] as &$category)
-            {
+            foreach ($element["categories"] as &$category) {
                 $category = json_decode($category, true);
             }
-            
+
             $element["images"] = explode(',', $element["images"]);
             $element["videos"] = explode(',', $element["videos"]);
         }

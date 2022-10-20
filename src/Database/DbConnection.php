@@ -21,7 +21,7 @@ abstract class DbConnection
     /**
      * Conecta PHP a la base de datos
      */
-    public function __construct() 
+    public function __construct()
     {
         $protocol = $_ENV["PROTOCOL"];
         $host = $_ENV["HOST"];
@@ -32,17 +32,13 @@ abstract class DbConnection
 
         $dsn = "$protocol:host=$host;port=$port;dbname=$database;charset=utf8";
 
-        try
-        {
+        try {
             $this->pdo = new PDO($dsn, $username, $password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        }
-        catch (PDOException $ex)
-        {
+        } catch (PDOException $ex) {
             die($ex->getMessage());
         }
-        
     }
 
     /**
@@ -50,7 +46,7 @@ abstract class DbConnection
      *
      * @return void
      */
-    public function close() : void
+    public function close(): void
     {
         //$this->pdo = null;
     }

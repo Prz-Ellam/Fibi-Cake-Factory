@@ -52,12 +52,10 @@ class WishlistController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
-            // Errors
+        if (!$status) {
             $response->json([
-                "response" => $status,
-                "data" => $feedback
+                "status" => $status,
+                "message" => $feedback
             ])->setStatusCode(400);
             return;
         }
@@ -65,16 +63,13 @@ class WishlistController extends Controller
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->create($wishlist);
 
-        if (!$result)
-        {
+        if (!$result) {
             $response->json(["status" => $result])->setStatusCode(400);
             return;
         }
 
         // TODO: Las imagenes de listas borradas no deben poder ser accedidas
-        $imagesId = [];
-        foreach ($images as $image)
-        {
+        foreach ($images as $image) {
             $imageId = Uuid::uuid4()->toString();
             $imageName = $image->getName();
             $imageType = $image->getType();
@@ -94,8 +89,7 @@ class WishlistController extends Controller
             $feedback = $validator->validate();
             $status = $validator->getStatus();
 
-            if (!$status)
-            {
+            if (!$status) {
                 $response->json([
                     "status" => $status,
                     "message" => $feedback
@@ -106,25 +100,15 @@ class WishlistController extends Controller
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
 
-            if (!$result)
-            {
+            if (!$result) {
                 $response->json(["response" => "No"])->setStatusCode(400);
                 return;
             }
-            $imagesId[] = $imageId;
         }
-
-        
 
         $response->json([
             "status" => $result,
-            "data" => [
-                "id" => $wishlistId,
-                "name" => $name,
-                "images" => $imagesId,
-                "visibility" => $visible,
-                "description" => $description
-            ]
+            "message" => "La lista de deseos ha sido creada con éxito"
         ]);
     }
 
@@ -143,14 +127,13 @@ class WishlistController extends Controller
         $description = $request->getBody("description");
         $visibility = $request->getBody("visible");
         $images = $request->getFileArray("images");
-        $userId = (new PhpSession())->get('user_id');
+        $userId = (new PhpSession())->get('userId');
 
         // TODO: El tema de las imagenes
         $imageRepository = new ImageRepository();
         $imageRepository->deleteMultimediaEntityImages($wishlistId, 'wishlists');
         $imagesId = [];
-        foreach ($images as $image)
-        {
+        foreach ($images as $image) {
             $imageId = Uuid::uuid4()->toString();
             $imageName = $image["name"];
             $imageType = $image["type"];
@@ -169,8 +152,7 @@ class WishlistController extends Controller
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
 
-            if ($result === false)
-            {
+            if ($result === false) {
                 $response->json(["response" => "No"]);
                 return;
             }
@@ -238,7 +220,7 @@ class WishlistController extends Controller
      * @param Response $response
      * @return void
      */
-    public function getUserWishlists(Request $request, Response $response) : void
+    public function getUserWishlists(Request $request, Response $response): void
     {
         $count = $request->getQuery("count") ?? 12;
         $page = $request->getQuery("page") ?? 1;
@@ -252,21 +234,19 @@ class WishlistController extends Controller
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->getUserWishlists($userId, $count, $offset);
 
-        if (is_null($result))
-        {
+        if (is_null($result)) {
             $response->setStatusCode(404)->json(["status" => "Not found"]);
             return;
         }
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = json_decode($element["images"]);
         }
 
         $response->json($result);
     }
 
-    public function getUserPublicWishlists(Request $request, Response $response) : void
+    public function getUserPublicWishlists(Request $request, Response $response): void
     {
         $count = $request->getQuery("count") ?? 12;
         $page = $request->getQuery("page") ?? 1;
@@ -280,14 +260,12 @@ class WishlistController extends Controller
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->getAllByUserPublic($userId, $count, $offset);
 
-        if (is_null($result))
-        {
+        if (is_null($result)) {
             $response->setStatusCode(404)->json(["status" => "Not found"]);
             return;
         }
 
-        foreach ($result as &$element)
-        {
+        foreach ($result as &$element) {
             $element["images"] = json_decode($element["images"]);
         }
 

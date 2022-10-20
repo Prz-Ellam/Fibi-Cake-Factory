@@ -77,20 +77,18 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'api/v1/session',
+            url: '/api/v1/session',
             method: 'POST',
             data: $(this).serialize(),
-            timeout: 0,
             success: function (response) {
+                // TODO: console for debug
                 console.log(response);
                 if (response.status) {
                     window.location.href = '/home';
                 }
             },
             error: function (response, status, error) {
-
                 const responseText = response.responseJSON;
-
                 if (!responseText.status) {
                     Swal.fire({
                         icon: 'error',

@@ -133,6 +133,8 @@
      
     <!-- Bootstrap 5.0.0 -->
     <script src="vendor/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>

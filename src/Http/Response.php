@@ -43,6 +43,7 @@ class Response
     public function setHeader(string $header, string $value)
     {
         $this->headers[$header] = $value;
+        return $this;
     }
 
     public function removeHeader(string $header)

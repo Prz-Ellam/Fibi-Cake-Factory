@@ -25,23 +25,19 @@ class DatabaseDriver extends DbConnection
      * @return integer Cantidad de registros que fueron afectos
      * @throws PDOException Si falla  
      */
-    public function executeNonQuery(string $query, array $parameters = []) : int|string
+    public function executeNonQuery(string $query, array $parameters = []): int|string
     {
-        try
-        {
+        try {
             $statement = $this->pdo->prepare($query);
             $statement->execute($parameters);
             $rowCount = $statement->rowCount();
             $statement = null;
             return $rowCount;
-        }
-        catch (PDOException $ex)
-        {
-            if ($this->pdo->inTransaction())
-            {
+        } catch (PDOException $ex) {
+            if ($this->pdo->inTransaction()) {
                 $this->pdo->rollback();
             }
-/*
+            /*
             echo json_encode([
                 "status" => false, 
                 "message" => [ "profilePicture" => 
@@ -61,23 +57,18 @@ class DatabaseDriver extends DbConnection
      * @param array $parameters
      * @return array Datos obtenidos
      */
-    public function executeReader(string $query, array $parameters = []) : array
+    public function executeReader(string $query, array $parameters = []): array
     {
-        try
-        {
+        try {
             $statement = $this->pdo->prepare($query);
             $statement->execute($parameters);
             return $statement->fetchAll(PDO::FETCH_ASSOC);
-        }
-        catch (PDOException $ex)
-        {
-            if ($this->pdo->inTransaction())
-            {
+        } catch (PDOException $ex) {
+            if ($this->pdo->inTransaction()) {
                 $this->pdo->rollback();
             }
-            
+
             die($ex->getMessage());
         }
     }
-
 }

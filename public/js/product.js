@@ -1,5 +1,4 @@
-function CommentComponent(comment)
-{
+function CommentComponent(comment) {
     return /*html*/`
     <div class="d-flex">
         <img src="api/v1/images/${comment.profilePicture}" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
@@ -7,11 +6,11 @@ function CommentComponent(comment)
             <div class="col-12">
                 <a href="/profile?id=${comment.userId}" class="mt-0 me-1">${comment.username}</a>
                 <span class="rating">
-                    <i class="rating-star ${ (comment.rate >= 1) ? 'fas' : 'far'} fa-star" value="1"></i>
-                    <i class="rating-star ${ (comment.rate >= 2) ? 'fas' : 'far'} fa-star" value="2"></i>
-                    <i class="rating-star ${ (comment.rate >= 3) ? 'fas' : 'far'} fa-star" value="3"></i>
-                    <i class="rating-star ${ (comment.rate >= 4) ? 'fas' : 'far'} fa-star" value="4"></i>
-                    <i class="rating-star ${ (comment.rate >= 5) ? 'fas' : 'far'} fa-star" value="5"></i>
+                    <i class="rating-star ${(comment.rate >= 1) ? 'fas' : 'far'} fa-star" value="1"></i>
+                    <i class="rating-star ${(comment.rate >= 2) ? 'fas' : 'far'} fa-star" value="2"></i>
+                    <i class="rating-star ${(comment.rate >= 3) ? 'fas' : 'far'} fa-star" value="3"></i>
+                    <i class="rating-star ${(comment.rate >= 4) ? 'fas' : 'far'} fa-star" value="4"></i>
+                    <i class="rating-star ${(comment.rate >= 5) ? 'fas' : 'far'} fa-star" value="5"></i>
                 </span>
                 <p class="mb-0">${comment.message}</p>
                 <small>${comment.createdAt}</small><br>
@@ -31,7 +30,7 @@ getSession = () => {
         method: 'GET',
         async: false,
         timeout: 0,
-        success: function(response) {
+        success: function (response) {
             value = response.id;
         }
     });
@@ -41,16 +40,16 @@ getSession = () => {
 const productId = new URLSearchParams(window.location.search).get("search");
 const id = getSession();
 
-        $.ajax({
-            url: `api/v1/users/${id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
-        });
+$.ajax({
+    url: `api/v1/users/${id}`,
+    method: "GET",
+    async: false,
+    timeout: 0,
+    success: function (response) {
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
+    }
+});
 
 
 
@@ -58,8 +57,7 @@ $.ajax({
     url: `/api/v1/products/${productId || '0'}`,
     method: 'GET',
     timeout: 0,
-    success: function(response)
-    {
+    success: function (response) {
         console.log(response);
         const product = response;
 
@@ -84,15 +82,14 @@ $.ajax({
     url: `/api/v1/products/${productId}/comments`,
     method: 'GET',
     timeout: 0,
-    success: function(response)
-    {
+    success: function (response) {
         response.forEach((comment) => {
             $('#comment-section').append(CommentComponent(comment));
         })
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $('.sellers').owlCarousel({
         loop: true,
@@ -132,23 +129,23 @@ $(document).ready(function() {
         }
     });
 
-    $(".rating-star").click(function() {
+    $(".rating-star").click(function () {
 
         const stars = $(this).parent().children();
-    
+
         //let position = $(this).position();
         let starIndex = parseInt($(this).attr('value'));
 
         for (let i = 0; i < 5; i++) {
             stars[i].className = 'rating-star far fa-star';
         }
-        
+
         for (let i = starIndex; i > 0; i--) {
             stars[i - 1].className = 'rating-star fas fa-star';
         }
-        
+
     });
-    
+
     /*
     $(".zoom").ezPlus({
         zoomType: 'inner',
@@ -174,26 +171,26 @@ $(document).ready(function() {
         showCloseButton: true,
         timer: 1500,
         didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     });
 
-    $('.add-cart').click(function() {
+    $('.add-cart').click(function () {
         Toast.fire({
             icon: 'success',
             title: 'Tu producto ha sido añadido al carrito'
         });
     });
 
-    $('#add-cart').click(function() {
+    $('#add-cart').click(function () {
         Toast.fire({
             icon: 'success',
             title: 'Tu producto ha sido añadido al carrito'
         });
     });
 
-    $('#add-wishlists').submit(function(event) {
+    $('#add-wishlists').submit(function (event) {
         event.preventDefault();
 
         modal = document.getElementById('select-wishlist');
@@ -206,8 +203,7 @@ $(document).ready(function() {
         })
     });
 
-    $('#send-message').click(function()
-    {
+    $('#send-message').click(function () {
         const text = $('#message-box').val();
 
         $.ajax({
@@ -215,17 +211,15 @@ $(document).ready(function() {
             method: 'POST',
             data: `message=${text}`,
             timeout: 0,
-            success: function(response)
-            {
+            success: function (response) {
                 console.log(response);
             }
         });
 
-        
+
         $('#message-box').val('');
 
-        if (text === '')
-        {
+        if (text === '') {
             return;
         }
 
@@ -233,7 +227,7 @@ $(document).ready(function() {
         <div class="d-flex">
             <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
             <div class="col-9">
-                <a href="/sandbox" class="mt-0 me-1">Eliam Rodríguez Pérez</a>
+                <a href="/sandbox" class="mt-0 me-1">...</a>
                 <span class="rating">
                     <i class="rating-star far fa-star" value="1"></i>
                     <i class="rating-star far fa-star" value="2"></i>
@@ -242,12 +236,12 @@ $(document).ready(function() {
                     <i class="rating-star far fa-star" value="5"></i>
                 </span>
                 <p class="mb-0">${text}</p>
-                <small>${new Date().toLocaleString('en-US', 
-                { 
-                    timeZone: 'CST',
-                    dateStyle: 'full',
-                    timeStyle: 'full',
-                })}</small><br>
+                <small>${new Date().toLocaleString('en-US',
+            {
+                timeZone: 'CST',
+                dateStyle: 'full',
+                timeStyle: 'full',
+            })}</small><br>
                 <span class="badge bg-primary" role="button">Editar</span>
                 <span class="badge bg-danger" role="button">Eliminar</span>
             </div>

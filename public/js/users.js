@@ -1,16 +1,31 @@
 const userRow = /*html*/`
-    <tr role="button">
-        <td scope="row">1</td>
-        <td>
-        <!--<img class="img-fluid rounded-circle" width="40" height="40" src="https://cdn.pixabay.com/user/2014/05/07/00-10-34-2_250x250.jpg"> -->
-        Eliam</td>
-        <td>eliam@correo.com</td>
-        <td>
-            <button class="btn btn-blue shadow-none rounded-1 edit-user" data-bs-toggle="modal" data-bs-target="#edit-user"><i class="fa fa-pencil"></i></button>
-            <button class="btn btn-red shadow-none rounded-1 btn-delete" data-bs-toggle="modal" data-bs-target="#delete-user"><i class="fa fa-trash"></i></button>
-        </td>
-    </tr>
-    `;
+{{#each this}}
+<tr role="button">
+    <td scope="row">1</td>
+    <td>
+    <!--<img class="img-fluid rounded-circle" width="40" height="40" src="https://cdn.pixabay.com/user/2014/05/07/00-10-34-2_250x250.jpg"> -->
+    {{name}}</td>
+    <td>{{email}}</td>
+    <td>
+        <button class="btn btn-primary shadow-none rounded-1 edit-user" data-bs-toggle="modal" data-bs-target="#edit-user"><i class="fa fa-pencil"></i></button>
+        <button class="btn btn-danger shadow-none rounded-1 btn-delete" data-bs-toggle="modal" data-bs-target="#delete-user"><i class="fa fa-trash"></i></button>
+    </td>
+</tr>
+{{/each}}
+`;
+
+$.ajax({
+    url: '/api/v1/users',
+    method: 'GET',
+    timeout: 0,
+    async: false,
+    success: function(response) {
+        const template = Handlebars.compile(userRow);
+        $('#table-body').append(template(response));
+    }
+})
+
+
 
 $(document).ready(function() {
 
@@ -57,8 +72,6 @@ $(document).ready(function() {
         modalInstance.hide();
 
     });
-
-
 
     // Actual date
     var date = new Date();
@@ -123,7 +136,7 @@ $(document).ready(function() {
 
     $('#admin-form').validate({
         rules: {
-            'profile-picture': {
+            'profilePicture': {
                 required: true,
                 filesize: 8
             },
@@ -133,9 +146,9 @@ $(document).ready(function() {
                 email5322: true,
                 remote: {
                     type: 'POST',
-                    url: 'api/v1/isEmailAvailable',
+                    url: 'api/v1/users/email/available',
                     data: {
-                        'email': function() { return $('#email').val() }
+                        'email': function () { return $('#email').val() }
                     },
                     dataType: 'json'
                 }
@@ -145,29 +158,31 @@ $(document).ready(function() {
                 username: true,
                 remote: {
                     type: 'POST',
-                    url: 'api/v1/isUsernameAvailable',
+                    url: 'api/v1/users/username/available',
                     data: {
-                        'username': function() { return $('#username').val() }
+                        'username': function () { return $('#username').val() }
                     },
                     dataType: 'json'
                 }
             },
-            'first-name': {
-                required: true
+            'firstName': {
+                required: true,
+                regex: /^[a-zA-Z \u00C0-\u00FF]+$/
             },
-            'last-name': {
-                required: true
+            'lastName': {
+                required: true,
+                regex: /^[a-zA-Z \u00C0-\u00FF]+$/
             },
-            'visibility': {
+            'visible': {
                 required: true
             },
             'gender': {
                 required: true
             },
-            'birth-date': {
+            'birthDate': {
                 required: true,
                 date: true,
-                dateRange: [ '1900-01-01', dateFormat ]
+                dateRange: ['1900-01-01', dateFormat]
             },
             'password': {
                 required: true,
@@ -177,13 +192,13 @@ $(document).ready(function() {
                 numbers: true,
                 specialchars: true
             },
-            'confirm-password': {
+            'confirmPassword': {
                 required: true,
-                equalTo: '#add-password' // Igual que la contraseña
+                equalTo: '#password' // Igual que la contraseña
             }
         },
         messages: {
-            'profile-picture': {
+            'profilePicture': {
                 required: 'La foto de perfil no puede estar vacía.',
                 filesize: 'El archivo es demasiado pesado (máximo de 8MB)'
             },
@@ -197,22 +212,24 @@ $(document).ready(function() {
                 username: 'El nombre de usuario debe contener más de 3 caracteres',
                 remote: 'El nombre de usuario está siendo usado por alguien más.'
             },
-            'first-name': {
-                required: 'El nombre no puede estar vacío.'
+            'firstName': {
+                required: 'El nombre no puede estar vacío.',
+                regex: 'El nombre solo puede contener letras.'
             },
-            'last-name': {
-                required: 'El apellido no puede estar vacío.'
+            'lastName': {
+                required: 'El apellido no puede estar vacío.',
+                regex: 'El apellido solo puede contener letras'
             },
-            'visibility': {
+            'visible': {
                 required: 'La visibilidad de usuario es requerida'
             },
-            'birth-date': {
+            'birthDate': {
                 required: 'La fecha de nacimiento no puede estar vacía.',
                 date: 'La fecha de nacimiento debe tener formato de fecha.',
                 dateRange: 'La fecha de nacimiento no puede ser antes de la fecha actual'
             },
             'gender': {
-                required: 'El género no puede estar vacío.'
+                required: 'El sexo no puede estar vacío.'
             },
             'password': {
                 required: 'La contraseña no puede estar vacía.',
@@ -222,22 +239,20 @@ $(document).ready(function() {
                 numbers: 'Faltan requerimentos de la contraseña',
                 specialchars: 'Faltan requerimentos de la contraseña'
             },
-            'confirm-password': {
+            'confirmPassword': {
                 required: 'Confirmar contraseña no puede estar vacío.',
                 equalTo: 'Confirmar contraseña no coincide con contraseña'
             }
         },
         errorElement: 'small',
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
 
-            if ($(element)[0].name === 'gender')
-            {
+            if ($(element)[0].name === 'gender') {
                 error.insertAfter(element.parent().parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
                 return;
             }
 
-            if ($(element)[0].name === 'profile-picture')
-            {
+            if ($(element)[0].name === 'profilePicture') {
                 error.insertAfter(element).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
                 return;
             }
@@ -541,7 +556,7 @@ $(document).ready(function() {
         
     }
 
-    $('#add-password').password();
+    $('#password').password();
 
     $('#admin-form').submit(function(event) {
 
