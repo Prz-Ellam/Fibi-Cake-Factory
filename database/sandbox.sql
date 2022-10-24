@@ -234,3 +234,192 @@ GROUP BY
 
 
 SELECT * FROM wishlists;
+
+
+
+
+
+SELECT BIN_TO_UUID(chat_id) chat_id, created_at, modified_at, active FROM chats;
+
+
+
+SELECT BIN_TO_UUID(chat_participant_id) chat_participant_id,
+BIN_TO_UUID(chat_id) chat_id,
+BIN_TO_UUID(user_id) user_id,
+created_at,
+modified_at,
+active
+FROM chat_participants;
+
+
+SELECT BIN_TO_UUID(chat_message_id) chat_message_id,
+BIN_TO_UUID(chat_participant_id) chat_participant_id,
+message_content,
+created_at,
+modified_at,
+active
+ FROM chat_messages;
+
+
+SELECT *, BIN_TO_UUID(user_id) user_id FROM users;
+
+
+-- kk
+-- EL QUERY!!!!
+SELECT
+    u.email,
+    u.username, 
+    BIN_TO_UUID(u.profile_picture), 
+    cs.chat_id, 
+    cs.last_message 
+FROM users AS u
+INNER JOIN
+(SELECT
+GROUP_CONCAT(DISTINCT
+    IF(BIN_TO_UUID(cp.user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8', null, BIN_TO_UUID(cp.user_id)
+)) user_id,
+BIN_TO_UUID(cp.chat_id) chat_id,
+MAX(cm.created_at) AS last_message
+FROM chat_participants AS cp
+LEFT JOIN chat_messages AS cm
+ON BIN_TO_UUID(cp.chat_participant_id) = BIN_TO_UUID(cm.chat_participant_id)
+WHERE BIN_TO_UUID(cp.chat_id) IN
+(
+    SELECT BIN_TO_UUID(chat_id) chat_id
+    FROM chat_participants
+    WHERE BIN_TO_UUID(user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8'
+)
+GROUP BY
+    chat_id
+HAVING
+    COUNT(cm.chat_message_id) > 0) AS cs
+ON 
+    BIN_TO_UUID(u.user_id) = cs.user_id
+ORDER BY 
+    cs.last_message DESC;
+
+
+SELECT
+BIN_TO_UUID(cp.chat_participant_id) chat_participant_id,
+BIN_TO_UUID(cp.chat_id) chat_id,
+(cm.created_at)
+FROM chat_participants AS cp
+RIGHT JOIN chat_messages AS cm
+ON BIN_TO_UUID(cp.chat_participant_id) = BIN_TO_UUID(cm.chat_participant_id)
+WHERE BIN_TO_UUID(cp.chat_id) IN
+(
+    SELECT BIN_TO_UUID(chat_id) chat_id
+    FROM chat_participants
+    WHERE BIN_TO_UUID(user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8'
+    
+)
+
+
+
+
+
+
+
+SELECT 
+    BIN_TO_UUID(chat_message_id) id, message_content, cm.created_at 
+FROM 
+    chat_messages AS cm
+INNER JOIN 
+    chat_participants AS cp
+ON 
+    BIN_TO_UUID(cm.chat_participant_id) = BIN_TO_UUID(cp.chat_participant_id)
+WHERE
+    BIN_TO_UUID(cp.chat_id) = '6aa279bd-7bb3-444b-9df5-6814c11d91e2';
+
+
+SELECT
+    BIN_TO_UUID(chat_id) id,
+    MAX(cm.created_at) date
+FROM
+    chat_participants AS cp
+INNER JOIN
+    chat_messages AS cm
+ON
+    BIN_TO_UUID(cp.chat_participant_id) = BIN_TO_UUID(cm.chat_participant_id)
+WHERE
+    BIN_TO_UUID(cp.user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8'
+GROUP BY
+    cp.chat_id
+
+
+
+SELECT BIN_TO_UUID(cp.chat_participant_id) FROM chats AS c
+INNER JOIN chat_participants AS cp
+ON BIN_TO_UUID(c.chat_id) = BIN_TO_UUID(cp.chat_id)
+WHERE BIN_TO_UUID(cp.chat_participant_id) IN 
+(
+
+SELECT BIN_TO_UUID(chat_participant_id) FROM chat_participants AS cp1
+INNER JOIN chats AS c1
+ON BIN_TO_UUID(cp1.chat_id) = BIN_TO_UUID(c1.chat_id)
+WHERE BIN_TO_UUID(cp1.chat_id) = '6aa279bd-7bb3-444b-9df5-6814c11d91e2'
+--BIN_TO_UUID(cp.chat_id)
+
+)
+AND BIN_TO_UUID(cp.user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8';
+
+
+
+
+
+SELECT
+    BIN_TO_UUID(chat_id) chat_id
+FROM
+    chat_participants 
+WHERE
+    BIN_TO_UUID(user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8'
+
+
+
+
+
+SELECT * FROM chat_participants
+
+
+
+
+
+
+
+-- k
+SELECT * FROM chats AS c
+INNER JOIN chat_participants AS cp
+ON BIN_TO_UUID(c.chat_id) = BIN_TO_UUID(cp.chat_id)
+WHERE BIN_TO_UUID(user_id) IN ('95ee300d-6466-4f43-86fd-35c2737da7f8');
+
+
+
+SELECT * FROM chat_participants AS cp
+INNER JOIN chats AS c
+ON BIN_TO_UUID(c.chat_id) = 
+(SELECT BIN_TO_UUID(chat_id) FROM chats
+WHERE BIN_TO_UUID(cp.user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8' LIMIT 1) 
+
+
+
+
+
+
+
+
+SELECT
+    * 
+FROM
+    chat_participants
+WHERE 
+    BIN_TO_UUID(user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8'
+
+
+
+SELECT BIN_TO_UUID(chat_id) 
+FROM chat_participants 
+WHERE BIN_TO_UUID(user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8';
+
+
+
+

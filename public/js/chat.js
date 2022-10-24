@@ -1,12 +1,58 @@
+var chatParticipantId = null;
+var chatId = null;
+
+function loadChat(_chatId) {
+    chatId = _chatId;
+    $.ajax({
+        url: '/api/v1/chatParticipants/userId',
+        method: 'POST',
+        data: `userId=${id}&chatId=${chatId}`,
+        async: false,
+        success: function(response)
+        {
+            console.log(response);
+            chatParticipantId = response.id;
+        }
+    });
+
+    $.ajax({
+        url: `/api/v1/chats/${chatId}/messages`,
+        method: 'GET',
+        success: function(response)
+        {
+            $('#comment-box').empty();
+
+            response.forEach(function(message)
+            {
+                $('#comment-box').append((message.user === chatParticipantId) ?
+                `
+                    <div class="d-flex justify-content-end my-3">
+                        <small class="bg-orange text-light p-2 rounded-2 overflow-auto">${message.content}</small>
+                    </div>
+                `
+                :
+                `
+                    <div class="d-flex justify-content-start my-3">
+                        <small class="bg-secondary text-light p-2 rounded-2 overflow-auto">${message.content}</small>
+                    </div>
+                `
+                );
+            });
+        }
+    });
+}
+
 const chatComponent = /*html*/`
-<div class="d-flex chat rounded-1 p-1" role="button">
-    <img style="width: 64px; height: 64px" class="img-fluid rounded-circle" src="assets/img/elp.jpg">
+{{#each this}}
+<div class="d-flex chat rounded-1 p-1" role="button" onclick="loadChat('{{chat-id}}');">
+    <img style="width: 64px; height: 64px" class="img-fluid rounded-circle" src="api/v1/images/{{profile-picture}}">
     <div class="row ms-2 align-self-center" style="white-space: nowrap; width: 75%; text-overflow: ellipsis; overflow: hidden;">
-        <span class="fw-bold">Bryan Duarte</span>
-        <small>Hola</small>
+        <span class="fw-bold">{{username}}</span>
+        <small>{{email}}</small>
     </div>
 </div>
 <hr>
+{{/each}}
 `;
 
 var id;
@@ -18,7 +64,7 @@ $.ajax({
     success: function(response) {
         id = response.id;
         $.ajax({
-            url: `api/v1/users/${response.id}`,
+            url: `/api/v1/users/${response.id}`,
             method: "GET",
             async: false,
             timeout: 0,
@@ -30,17 +76,29 @@ $.ajax({
     }
 });
 
+
+$.ajax({
+    url: `/api/v1/users/${id}/chats`,
+    method: 'GET',
+    async: false,
+    success: function(response) {
+        const template = Handlebars.compile(chatComponent);
+        $('#chats-container').append(template(response));
+    }
+})
+
+
+
 $.ajax({
     url: `/api/v1/users?exclude=${id}`,
     method: 'GET',
     timeout: 0,
     success: function(response) {
-        console.log(response);
+        
     }
 });
 
-var chatParticipantId = null;
-var chatId = null;
+
 
 $(document).ready(function() {
 
@@ -127,23 +185,6 @@ $(document).ready(function() {
         $('#chats-container').addClass('d-md-block d-none');
         $('#messages-container').removeClass('d-md-block d-none');
     });
-
-    var data = ["Boston Celtics", "Chicago Bulls", "Miami Heat", "Orlando Magic", "Atlanta Hawks", "Philadelphia Sixers", "New York Knicks", "Indiana Pacers", "Charlotte Bobcats", "Milwaukee Bucks", "Detroit Pistons", "New Jersey Nets", "Toronto Raptors", "Washington Wizards", "Cleveland Cavaliers"];
-
-    //$("#search").autocomplete({source:data});
-    $("#search").autocomplete({
-        delay: 0,
-        source: data,
-        minLength: 1,
-        open: function(){
-            setTimeout(function () {
-                $('.ui-autocomplete').css('z-index', 99999999999999);
-            }, 0);
-        },
-        select: function(event, ui) {
-            alert("Selecciono: " + ui.item.label);
-        }
-    });
     
     $("#search-users").autocomplete({
         delay: 0,
@@ -210,7 +251,7 @@ $(document).ready(function() {
                 url: '/api/v1/chatParticipants/userId',
                 method: 'POST',
                 data: `userId=${id}&chatId=${chatId}`,
-                timeout: 0,
+                async: false,
                 success: function(response)
                 {
                     console.log(response);
@@ -244,11 +285,6 @@ $(document).ready(function() {
                     });
                 }
             });
-
-
-            
         }
     });
-    
-
 });

@@ -1,0 +1,28 @@
+<div class="col-12 col-md-6 col-lg-4 mb-5 d-flex align-items-stretch" id="{{id}}">
+    <div class="card mx-auto" style="width: 18rem;">
+        <div class="carousel slide" data-bs-ride="carousel" role="button">
+            <div class="carousel-inner">
+                {{#each images}}
+                    <div class="carousel-item" data-bs-interval="10000">
+                    <div class="ratio ratio-4x3">
+                        <img src="/api/v1/images/{{this}}" class="card-img-top w-100 h-100">
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title text-brown wishlist-name">{{name}}</h5>
+            <p class="card-text text-brown wishlist-description mb-2">{{description}}</p>
+            {{#if visible}}
+                <p class="text-brown wishlist-visibility" value="1"><i class="fas fa-users" aria-hidden="true"></i> Pública</p> 
+            {{else}}
+                <p class="text-brown wishlist-visibility" value="2"><i class="fas fa-lock"></i> Privada</p>
+            {{/if}}
+            <div class="d-flex justify-content-start">
+                <a href="#" class="btn btn-blue shadow-none rounded-1 me-1 edit-wishlist" data-bs-toggle="modal" data-bs-target="#edit-wishlist">Editar</a>
+                <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-wishlist">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>

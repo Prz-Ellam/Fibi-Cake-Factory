@@ -25,6 +25,7 @@ use CakeFactory\Repositories\UserRepository;
 use Dotenv\Dotenv;
 use Fibi\Core\Application;
 use Fibi\Http\Request;
+use Fibi\Http\RequestBuilder;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
 use Fibi\Validation\Validator;
@@ -390,7 +391,7 @@ $app->get('/api/v1/users/{userId}/products/approves', [ new ProductController(),
 
 // Wishlists
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
-$app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
+$app->post('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
 $app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
 $app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWishlist' ]);
 $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
@@ -421,6 +422,9 @@ $app->post('/api/v1/shopping-cart-item', [ new ShoppingCartItemController(), 'ad
 $app->delete('/api/v1/shopping-cart-items/{shoppingCartItemId}', [ new ShoppingCartItemController(), 'removeItem' ]);
 $app->get('/api/v1/shopping-cart', [ new ShoppingCartItemController(), 'getShoppingCartItems' ]);
 
+$app->post('/api/v1/shopping-carts/{shopping-cart-item-id}', [ new ShoppingCartItemController(), 'update' ]);
+
+
 
 // Images
 $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
@@ -438,7 +442,7 @@ $app->post('/api/v1/checkout', [ new OrderController(), 'checkout' ]);
 
 $app->post('/api/v1/chats/check', [ new ChatController(), 'checkIfExists' ]);
 $app->post('/api/v1/chats/findOrCreate', [ new ChatController(), 'findOrCreateChat' ]);
-
+$app->get('/api/v1/users/{userId}/chats', [ new ChatController(), 'getRecentChats' ]);
 
 $app->post('/api/v1/chatParticipants/userId', [ new ChatParticipantController(), 'getOneByUserId' ]);
 
@@ -525,8 +529,27 @@ $app->get('/prueba', function(Request $request, Response $response) {
 
 });
 
-$app->get('/run', function(Request $req, Response $res) {
+$app->post('/test', function(Request $req, Response $res) {
 
+    $out = [];
+	foreach ($_FILES as $key => $file) {
+		if (isset($file['name']) && is_array($file['name'])) {
+			$new = [];
+			foreach (['name', 'type', 'tmp_name', 'error', 'size'] as $k) {
+				array_walk_recursive($file[$k], function (&$data, $key, $k) {
+					$data = [$k => $data];
+				}, $k);
+				$new = array_replace_recursive($new, $file[$k]);
+			}
+			$out[$key] = $new;
+		} else {
+			$out[$key] = $file;
+		}
+	}
+    $_FILES = $out;
+
+    var_dump($out);
+    die;
     
 
 });
@@ -534,25 +557,4 @@ $app->get('/run', function(Request $req, Response $res) {
 $app->run();
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

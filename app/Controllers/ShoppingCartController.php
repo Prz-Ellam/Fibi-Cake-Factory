@@ -17,9 +17,14 @@ class ShoppingCartController extends Controller
 
         $shoppingCartRepository = new ShoppingCartRepository();
         $shoppingCartId = $shoppingCartRepository->getUserCart($userId);
+        if (!$shoppingCartId) {
+            $response->json([
+                "status" => false,
+                "message" => "Error encontrando al usuario"
+            ])->setStatusCode(400);
+            return;
+        }
 
         $response->json([$shoppingCartId]);
     }
 }
-
-?>

@@ -12,6 +12,7 @@ use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Rules;
+use Fibi\Validation\Rules\Uuid as RulesUuid;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
@@ -28,7 +29,6 @@ class ChatController extends Controller
         $validator = new Validator($chat);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->json([
                 "status" => false,
@@ -45,6 +45,11 @@ class ChatController extends Controller
             ])->setStatusCode(400);
             return;
         }
+
+        $response->json([
+            "status" => true,
+            "message" => "El chat fue creado con éxito"
+        ]);
     }
 
     public function getChatMessages(Request $request, Response $response)
@@ -96,7 +101,6 @@ class ChatController extends Controller
         $validator = new Validator($chat);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->json([
                 "status" => false,
@@ -170,5 +174,24 @@ class ChatController extends Controller
 
         // TODO: Index peligroso si no existe
         $response->json($status[0] ?? (object)null);
+    }
+
+    public function getRecentChats(Request $request, Response $response): void
+    {
+        $userId = $request->getRouteParams("userId");
+
+        $required = new Required();
+        $uuid = new RulesUuid();
+        if (!$required->isValid($userId) || !$uuid->isValid($userId)) {
+            $response->json(["status" => "El id no es valido"])->setStatusCode(400);
+            return;
+        }
+
+        $chatRepository = new ChatRepository();
+        $result = $chatRepository->getRecentChats($userId);
+
+        // TODO: Index peligroso si no existe
+        $response->json($result);
+
     }
 }

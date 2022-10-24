@@ -190,9 +190,9 @@ class User implements Model
         return $this;
     }
 
-    public function getVisible() : ?bool
+    public function getVisible() : ?int
     {
-        return $this->visible;
+        return $this->visible ? 1 : 0;
     }
 
     public function setVisible(?bool $visible) : self

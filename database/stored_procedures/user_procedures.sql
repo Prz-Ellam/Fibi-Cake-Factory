@@ -105,12 +105,21 @@ DELIMITER ;
 
 
 
-CREATE PROCEDURE sp_delete_user();
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_user $$
+
+CREATE PROCEDURE sp_delete_user(
+
+)
+BEGIN
+
+
+END
+DELIMITER ;
 
 
 
 DELIMITER $$
-
 CREATE PROCEDURE sp_get_users(
     IN _search              VARCHAR(255)
 )

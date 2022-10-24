@@ -11,7 +11,16 @@ use Ramsey\Uuid\Nonstandard\Uuid;
 
 class WishlistObjectController extends Controller
 {
-    public function addObject(Request $request, Response $response)
+    /**
+     * Agrega un producto a una lista de deseos
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-10-21
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function addObject(Request $request, Response $response): void
     {
         $productId = $request->getBody("product-id");
         $wishlists = $request->getBody("wishlists");
@@ -39,7 +48,16 @@ class WishlistObjectController extends Controller
         $response->json($wishlists);
     }
 
-    public function deleteObject(Request $request, Response $response)
+    /**
+     * Elimina un producto de la lista de deseos
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-10-21
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function deleteObject(Request $request, Response $response): void
     {
         $wishlistObjectId = $request->getRouteParams("wishlistObjectId");
 
@@ -49,7 +67,16 @@ class WishlistObjectController extends Controller
         $response->text($result);
     }
 
-    public function getWishlistObjects(Request $request, Response $response)
+    /**
+     * Obtiene todos los productos de una lista
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-10-21
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function getWishlistObjects(Request $request, Response $response): void
     {
         $wishlistId = $request->getRouteParams('wishlistId');
         $wishlistObjectRepository = new WishlistObjectRepository();
@@ -57,5 +84,3 @@ class WishlistObjectController extends Controller
         $response->json($result);
     }
 }
-
-?>

@@ -41,7 +41,7 @@ class Wishlist implements Model
      *
      * @var boolean|null
      */
-    #[Required]
+    #[Required("La visibilidad no puede estar vacía")]
     private ?bool $visible = null;
 
     /**
@@ -86,9 +86,9 @@ class Wishlist implements Model
         return $this;
     }
 
-    public function isVisible() : ?bool
+    public function isVisible() : ?int
     {
-        return $this->visible;
+        return $this->visible ? 1 : 0;
     }
 
     public function setVisible(?bool $visible) : self

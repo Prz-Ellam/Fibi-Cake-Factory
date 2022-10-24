@@ -62,20 +62,21 @@ class ProductController extends Controller
         $validator = new Validator($product);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->json([
                 "response" => $status,
-                "data" => $feedback
+                "message" => $feedback
             ])->setStatusCode(400);
             return;
         }
 
         $productRepository = new ProductRepository();
         $result = $productRepository->create($product);
-
         if (!$result) {
-            $response->json(["response" => "No"])->setStatusCode(400);
+            $response->json([
+                "status" => false,
+                "message" => "No"
+            ])->setStatusCode(400);
             return;
         }
 

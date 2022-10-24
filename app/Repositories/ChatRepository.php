@@ -11,6 +11,7 @@ class ChatRepository
     private const CHECK_IF_EXISTS = "CALL sp_check_chat_exists(:userId1, :userId2)";
     private const FIND_OR_CREATE = "CALL sp_find_or_create_chat(:chatId, :userId1, :userId2)";
     private const FIND_ONE_BY_USERS = "CALL sp_chats_find_one_by_users(:userId1, :userId2)";
+    private const GET_RECENT_CHATS = "CALL sp_get_recent_chats(:userId)";
 
     public function create(Chat $chat) : bool
     {
@@ -58,6 +59,17 @@ class ChatRepository
             "userId2" => $userId2
         ])[0] ?? (object)[];
     }
-}
 
-?>
+    /**
+     * Devuelve todos los chats con actividad de un usuario
+     *
+     * @param string $userId
+     * @return array|object
+     */
+    public function getRecentChats(string $userId) : array|object
+    {
+        return DB::executeReader(self::GET_RECENT_CHATS, [
+            "userId" => $userId
+        ]) ?? (object)[];
+    }
+}

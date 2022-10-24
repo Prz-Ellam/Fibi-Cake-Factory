@@ -36,6 +36,11 @@ class Required implements RuleValidation
             return isset($value);
         }
 
+        if (is_bool($value))
+        {
+            return isset($value);
+        }
+
         return isset($value) && !empty(trim($value));
     }
 

@@ -66,11 +66,10 @@ class CategoryController extends Controller
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->create($category);
-
         if (!$result) {
             $response->setStatusCode(400)->json([
                 "status" => $result,
-                "data" => "No se pudo crear el objeto en la base de datos"
+                "data" => "No se pudo crear la categoría"
             ]);
             return;
         }
@@ -123,21 +122,27 @@ class CategoryController extends Controller
         $validator = new Validator($category);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->setStatusCode(400)->json([
                 "status" => $status,
-                "data" => $feedback
+                "message" => $feedback
             ]);
             return;
         }
 
         $categoryRepository = new CategoryRepository();
         $result = $categoryRepository->update($category);
+        if (!$result) {
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "message" => "No se pudo crear la categoría"
+            ]);
+            return;
+        }
 
         $response->json([
             "status" => $result,
-            "data" => [
+            "message" => [
                 "id" => $categoryId,
                 "name" => $name,
                 "description" => $description

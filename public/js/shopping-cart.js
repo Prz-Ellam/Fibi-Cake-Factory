@@ -119,6 +119,10 @@ $(document).ready(function()
 
     $(document).on('change', '.quantity', function() {
 
+        $.ajax({
+            url: '/api/v1/shopping-carts/'
+        })
+
         const count = $(this).val();
 
         const row = $(this).closest('tr');
@@ -131,8 +135,7 @@ $(document).ready(function()
         table.cell({
             row: $(row).index(), 
             column: 5
-        })
-        .data(`$${value} M.N`);
+        }).data(`$${value} M.N`);
 
     })
 });

@@ -36,7 +36,7 @@ CREATE PROCEDURE sp_update_wishlist(
     IN _wishlist_id             VARCHAR(36),
     IN _name                    VARCHAR(50),
     IN _description             VARCHAR(200),
-    IN _visible              INT
+    IN _visible                 INT
 )
 BEGIN
 
@@ -45,7 +45,7 @@ BEGIN
     SET
         name            = IFNULL(_name, name),
         description     = IFNULL(_description, description),
-        visible      = IFNULL(_visible, visible)
+        visible         = IFNULL(_visible, visible)
     WHERE
         BIN_TO_UUID(wishlist_id) = _wishlist_id
         --AND BIN_TO_UUID(user_id) = _user_id

@@ -154,7 +154,7 @@
                                 <select class="form-select shadow-none rounded-1" name="visible" id="edit-wishlist-visibility">
                                     <option value="">Seleccionar</option>
                                     <option value="1">Pública</option>
-                                    <option value="2">Privada</option>
+                                    <option value="0">Privada</option>
                                 </select>
                             </div>
                         </div>
@@ -200,6 +200,9 @@
     
     <!-- Sweet Alert -->
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Handlebars -->
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>

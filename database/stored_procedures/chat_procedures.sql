@@ -91,3 +91,50 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_recent_chats $$
+
+CREATE PROCEDURE sp_get_recent_chats(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        u.email,
+        u.username, 
+        BIN_TO_UUID(u.profile_picture) 'profile-picture', 
+        cs.chat_id 'chat-id', 
+        cs.last_message 'last-message'
+    FROM users AS u
+    INNER JOIN
+    (SELECT
+    GROUP_CONCAT(DISTINCT
+        IF(BIN_TO_UUID(cp.user_id) = _user_id, null, BIN_TO_UUID(cp.user_id)
+    )) user_id,
+    BIN_TO_UUID(cp.chat_id) chat_id,
+    MAX(cm.created_at) AS last_message
+    FROM chat_participants AS cp
+    LEFT JOIN chat_messages AS cm
+    ON BIN_TO_UUID(cp.chat_participant_id) = BIN_TO_UUID(cm.chat_participant_id)
+    WHERE BIN_TO_UUID(cp.chat_id) IN
+    (
+        SELECT BIN_TO_UUID(chat_id) chat_id
+        FROM chat_participants
+        WHERE BIN_TO_UUID(user_id) = _user_id
+    )
+    GROUP BY
+        chat_id
+    HAVING
+        COUNT(cm.chat_message_id) > 0) AS cs
+    ON 
+        BIN_TO_UUID(u.user_id) = cs.user_id
+    ORDER BY 
+        cs.last_message DESC;
+
+
+END
+DELIMITER ;

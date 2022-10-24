@@ -295,7 +295,7 @@ $(document).ready(function() {
             data: $(this).serialize(),
             success: function(response) {
                 console.log(response);
-                $('#categories').append(`<option value="${response.data.id}">${response.data.name}</option>`);
+                $('#categories').append(`<option value="${response.message.id}">${response.message.name}</option>`);
                 $('#categories').multipleSelect('refresh');
             },
             error: function(response, status, error) {
