@@ -29,7 +29,7 @@ class ProductController extends Controller
      * @param Response $response
      * @return void
      */
-    public function create(Request $request, Response $response)
+    public function create(Request $request, Response $response): void
     {
         $productId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
@@ -38,8 +38,8 @@ class ProductController extends Controller
         $price = $request->getBody("price");
         $stock = $request->getBody("stock");
 
-        $images = $request->getFileArray("images");
-        $videos = $request->getFileArray("videos");
+        $images = $request->getFiles("images");
+        $videos = $request->getFiles("videos");
 
         // TODO: Validar que esto existe realmente en la BD
         $categories = $request->getBody("categories") ?? [];
@@ -353,7 +353,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Obtiene varios productos
      *
      * @param Request $request
      * @param Response $response
@@ -361,8 +361,7 @@ class ProductController extends Controller
      */
     public function getProducts(Request $request, Response $response)
     {
-        $userId = (new PhpSession())->get('user_id');
-        $userId = "516a3887-06b1-4203-ad59-07dc13d1e0fe";
+        $userId = (new PhpSession())->get('userId');
         // TODO: Validar que coincida con la sesión
 
         $productRepository = new ProductRepository();

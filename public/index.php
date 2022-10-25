@@ -21,6 +21,8 @@ use CakeFactory\Models\Category;
 use CakeFactory\Models\ChatParticipant;
 use CakeFactory\Repositories\OrderRepository;
 use CakeFactory\Repositories\ProductRepository;
+use CakeFactory\Repositories\ShoppingCartItemRepository;
+use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
 use Dotenv\Dotenv;
 use Fibi\Core\Application;
@@ -215,9 +217,20 @@ $app->get('/checkout', function(Request $request, Response $response) {
     $session = new PhpSession();
 
     $login = $session->has('userId');
+    
+    if (!$login) {
+        $response->redirect('/');
+        return;
+    }
 
-    if ($login === false)
-    {
+    $userId = $session->get('userId');
+    $shoppingCartRepository = new ShoppingCartRepository();
+    $shoppingCartId = $shoppingCartRepository->getUserCart($userId);
+
+    $shoppingCartItemRepository = new ShoppingCartItemRepository();
+    $result = $shoppingCartItemRepository->getShoppingCartItems($shoppingCartId);
+
+    if (!$result) {
         $response->redirect('/');
         return;
     }
@@ -368,6 +381,16 @@ $app->get('/search', function(Request $request, Response $response) {
     $response->view('search', 'auth-layout');
 });
 
+
+
+
+
+
+
+
+
+
+
 // API
 $app->post('/api/v1/users', [ new UserController(), 'create' ]);
 $app->post('/api/v1/users/{userId}', [ new UserController(), 'update' ]);
@@ -391,7 +414,7 @@ $app->get('/api/v1/users/{userId}/products/approves', [ new ProductController(),
 
 // Wishlists
 $app->post('/api/v1/wishlists', [ new WishlistController(), 'create' ]);
-$app->post('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
+$app->put('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'update' ]);
 $app->delete('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'delete' ]);
 $app->get('/api/v1/wishlists/{wishlistId}', [ new WishlistController(), 'getWishlist' ]);
 $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUserWishlists' ]);
@@ -409,7 +432,15 @@ $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 //$app->get('/api/v1/categories', function() {});
 
 $app->post('/api/v1/products', [ new ProductController(), 'create' ]);
+
 $app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
+
+
+
+
+
+
+
 $app->get('/api/v1/products/{productId}', [ new ProductController(), 'getProduct' ]);
 $app->post('/api/v1/products/{productId}', [ new ProductController(), 'update']);
 $app->delete('/api/v1/products/{productId}', [ new ProductController(), 'delete' ]);
@@ -422,8 +453,7 @@ $app->post('/api/v1/shopping-cart-item', [ new ShoppingCartItemController(), 'ad
 $app->delete('/api/v1/shopping-cart-items/{shoppingCartItemId}', [ new ShoppingCartItemController(), 'removeItem' ]);
 $app->get('/api/v1/shopping-cart', [ new ShoppingCartItemController(), 'getShoppingCartItems' ]);
 
-$app->post('/api/v1/shopping-carts/{shopping-cart-item-id}', [ new ShoppingCartItemController(), 'update' ]);
-
+$app->post('/api/v1/shopping-carts/{shoppingCartItemId}', [ new ShoppingCartItemController(), 'update' ]);
 
 
 // Images
@@ -469,6 +499,11 @@ $app->get('/api/v1/reports/sales-report2', [ new ReportController(), 'getSalesRe
 $app->get('/api/v1/reports/sales-report', [ new ReportController(), 'getSalesReport' ]);
 
 $app->get('/api/v1/users/filter/search', [ new UserController(), 'getAllByFilter' ]);
+
+
+
+
+
 
 $app->get('/api/v1/products/order/price', [ new ProductController(), 'getAllByPrice' ]);
 $app->get('/api/v1/products/order/ships', [ new ProductController(), 'getAllByShips' ]);
@@ -531,25 +566,7 @@ $app->get('/prueba', function(Request $request, Response $response) {
 
 $app->post('/test', function(Request $req, Response $res) {
 
-    $out = [];
-	foreach ($_FILES as $key => $file) {
-		if (isset($file['name']) && is_array($file['name'])) {
-			$new = [];
-			foreach (['name', 'type', 'tmp_name', 'error', 'size'] as $k) {
-				array_walk_recursive($file[$k], function (&$data, $key, $k) {
-					$data = [$k => $data];
-				}, $k);
-				$new = array_replace_recursive($new, $file[$k]);
-			}
-			$out[$key] = $new;
-		} else {
-			$out[$key] = $file;
-		}
-	}
-    $_FILES = $out;
-
-    var_dump($out);
-    die;
+   var_dump($req->getFiles('der'));die;
     
 
 });

@@ -190,7 +190,7 @@ class User implements Model
         return $this;
     }
 
-    public function getVisible() : ?int
+    public function isVisible() : ?int
     {
         return $this->visible ? 1 : 0;
     }

@@ -17,5 +17,3 @@ enum HttpMethod : string
     case OPTIONS = 'OPTIONS';
     case TRACE = 'TRACE';
 }
-
-?>

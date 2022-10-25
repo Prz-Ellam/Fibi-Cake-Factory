@@ -152,6 +152,12 @@ class Request
         return $this->route->getParameters($this->uri)[$key] ?? null;
     }
 
+    /**
+     * TODO: Esto deberia ser aqui?
+     *
+     * @param array $files
+     * @return self
+     */
     public function setFiles(array $files) : self
     {
         $this->files = $files;
@@ -165,21 +171,23 @@ class Request
             return $this->files;
         }
 
-        $fileUploaded = new UploadedFile(
-            $this->files[$key]["name"] ?? null,
-            $this->files[$key]["path"] ?? null,
-            $this->files[$key]["tmp_name"] ?? null,
-            $this->files[$key]["size"] ?? null,
-            $this->files[$key]["type"] ?? null
-        );
+        return $this->files[$key] ?? null;
+    }
 
-        return $fileUploaded;
+    public function getFiles(?string $key = null): UploadedFile|array|null
+    {
+        if (is_null($key))
+        {
+            return $this->files;
+        }
 
-        //return $this->files[$key] ?? null;
+        return $this->files[$key];
     }
 
     public function getFileArray(string $key)
     {
+        var_dump($this->files);die;
+
         $rawImages = $this->files[$key] ?? null;
         if (!$rawImages)
         {
@@ -233,5 +241,3 @@ class Request
         return isset($this->files[$key]);
     }
 }
-
-?>

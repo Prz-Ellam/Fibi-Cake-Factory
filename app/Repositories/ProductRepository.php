@@ -8,7 +8,9 @@ use Fibi\Helpers\Parser;
 
 class ProductRepository
 {
-    private const CREATE = "CALL sp_create_product(:productId, :name, :description, :isQuotable, :price, :stock, :userId)";
+    private const CREATE = "CALL sp_products_create(:productId, :name, :description, :isQuotable, :price, :stock, :userId)";
+    
+    
     private const UPDATE = "CALL sp_update_product(:productId, :name, :description, :isQuotable, :price, :stock)";
     private const DELETE = "CALL sp_delete_product(:productId)";
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
@@ -32,10 +34,15 @@ class ProductRepository
 
     private const GET_ALL_BY_APPROVED_BY = "CALL sp_products_get_all_by_approved_by(:approved_by)";
 
+    /**
+     * Guarda un producto en la base de datos
+     *
+     * @param Product $product
+     * @return boolean
+     */
     public function create(Product $product) : bool
     {
-        $parameters = Parser::SP(self::CREATE);
-        $result = DB::executeNonQuery(self::CREATE, [
+        return DB::executeNonQuery(self::CREATE, [
             "productId"     => $product->getProductId(),
             "name"          => $product->getName(),
             "description"   => $product->getDescription(),
@@ -43,9 +50,7 @@ class ProductRepository
             "price"         => $product->getPrice(),
             "stock"         => $product->getStock(),
             "userId"        => $product->getUserId()
-        ]);
-
-        return $result > 0;
+        ]) > 0;
     }
 
     public function update(Product $product) : bool

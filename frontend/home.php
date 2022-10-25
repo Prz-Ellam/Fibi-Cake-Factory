@@ -17,16 +17,16 @@
     </div>
 </section>
 
-<!-- <section class="my-5">
+<section class="my-5">
     <div class="container-fluid bg-white carousel-card" style="width: 90%">
         <div class="pt-4">
-            <h2 class="text-center h2 font-weight-bold text-brown">Categorías</h2>
+            <h2 class="text-center h2 font-weight-bold text-brown">Los mejor calificados</h2>
         </div>
         <hr>
-        <div class="owl-carousel owl-theme sellers" id="categories-carousel">
+        <div class="owl-carousel owl-theme sellers" id="rates">
         </div>
     </div>
-</section> -->
+</section>
 
 <section class="my-5">
     <div class="container-fluid bg-white carousel-card" style="width: 90%" id="">

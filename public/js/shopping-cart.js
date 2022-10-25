@@ -21,7 +21,6 @@ $.ajax({
     url: `api/v1/shopping-cart`,
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
 
         var fmt = new Intl.NumberFormat('en-US', {
@@ -29,7 +28,11 @@ $.ajax({
             currency: 'USD',
         });
 
-        response.forEach(function(shoppingCartItem) 
+        if (response.length !== 0) {
+            $('#finish-order').removeAttr('disabled');
+        }
+
+        response.forEach(function(shoppingCartItem, i) 
         {
             $('#table-body').append(/*html*/`
             <tr class="mainRow" role="button" id="${shoppingCartItem.id}">
@@ -37,7 +40,7 @@ $.ajax({
                 <td><img src="api/v1/images/${shoppingCartItem.image}" class="me-3" height="100"></td>
                 <td scope="row">${shoppingCartItem.name}</td>
                 <td scope="row"><span>${fmt.format(shoppingCartItem.price)} M.N</span></td>
-                <td scope="row"><input type="number" value="${shoppingCartItem.quantity}" min="1" max="100" class="form-control shadow-none w-50 quantity rounded-1"></td>
+                <td scope="row"><input type="number" value="${shoppingCartItem.quantity}" min="1" max="100" id="quantity-${i + 1}" class="form-control shadow-none w-50 quantity rounded-1"></td>
                 <td scope="row">${fmt.format(shoppingCartItem.price * shoppingCartItem.quantity)} M.N</td>
                 <td scope="row"><button class="btn btn-red shadow-none rounded-1"><i class="fa fa-trash"></i></button></td>
             </tr>
@@ -117,16 +120,16 @@ $(document).ready(function()
         window.location.href = '/home';
     });
 
-    $(document).on('change', '.quantity', function() {
+    $(document).on('change', '.quantity', function(event) {
 
-        $.ajax({
-            url: '/api/v1/shopping-carts/'
-        })
+        table.rows().invalidate();
+        table.cells().invalidate();
 
         const count = $(this).val();
 
         const row = $(this).closest('tr');
         const price = table.cell({row: $(row).index(), column: 3}).data();
+        const quantity = table.$(`#quantity-${$(row).index() + 1}`).val();
 
         var regexp = new RegExp(/[+-]?[0-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}/);
         const numberPrice = price.match(regexp);
@@ -136,6 +139,19 @@ $(document).ready(function()
             row: $(row).index(), 
             column: 5
         }).data(`$${value} M.N`);
+
+
+        $.ajax({
+            url: `/api/v1/shopping-carts/${$(row).attr('id')}`,
+            method: 'POST',
+            "headers": {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            data: { "quantity": quantity },
+            success: function(response) {
+                console.log(response);
+            }
+        })
 
     })
 });

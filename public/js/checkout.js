@@ -4,8 +4,7 @@ const id = getSession();
 
 $.ajax({
     url: `api/v1/users/${id}`,
-    method: "GET",
-    async: false,
+    method: 'GET',
     timeout: 0,
     success: function(response) {
         const url = `api/v1/images/${response.profilePicture}`;
@@ -26,6 +25,7 @@ $.ajax({
     async: false,
     timeout: 0,
     success: function(response) {
+
         let total = 0;
         response.forEach(function(shoppingCartItem) 
         {
@@ -57,7 +57,8 @@ $(document).ready(function() {
                 required: true
             },
             'street-address': {
-                required: true
+                required: true,
+                maxlength: 100
             },
             'city': {
                 required: true
@@ -78,6 +79,9 @@ $(document).ready(function() {
                 required: true,
                 number: true,
                 phoneUS: true
+            },
+            'flexRadioDefault': {
+                required: true
             },
             'card-number': {
                 required: true
@@ -102,7 +106,8 @@ $(document).ready(function() {
                 required: 'El apellido no puede estar vacío.'
             },
             'street-address': {
-                required: 'La calle y el número no puede estar vacío'
+                required: 'La calle y el número no puede estar vacío',
+                maxlength: 'La calle y el número es demasiado largo'
             },
             'city': {
                 required: 'La ciudad no puede estar vacío'
@@ -151,11 +156,14 @@ $(document).ready(function() {
         },
     });
 
+    var current_fs, next_fs, previous_fs; //fieldsets
+    var opacity;
+
     $(".next").click(function() {
 
         let validations = $('#msform').valid();
 
-        if (validations === false) {
+        if (!validations) {
             return;
         }
             
@@ -221,18 +229,17 @@ $(document).ready(function() {
 
         event.preventDefault();
 
-        console.log([...new FormData(this)]);
-
-        console.log('Enviando el msform');
+        let validations = $('#msform').valid();
+        if (!validations) {
+            return;
+        }
 
         $.ajax({
             url: '/api/v1/checkout',
             method: 'POST',
-            timeout: 0,
             data: $(this).serialize(),
             success: function(response) {
-                console.log(response);
-
+                
                 Swal.fire({
                     title: '¡Gracias por su compra!',
                     text: '¡Que tenga un bonito día! ',
@@ -243,6 +250,8 @@ $(document).ready(function() {
                     //confirmButtonClassName: 'no-border',
                     confirmButtonColor: '#FF5E1F',
                     showCloseButton: true
+                }).then(function() {
+                    window.location.href = '/home';
                 });
 
             }

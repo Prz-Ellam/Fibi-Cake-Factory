@@ -41,6 +41,22 @@ class ShoppingCartItemController extends Controller
         $quantity = $request->getBody("quantity");
     }
 
+    public function update(Request $request, Response $response): void
+    {
+        $shoppingCartItemId = $request->getRouteParams("shoppingCartItemId");
+        $quantity = $request->getBody("quantity");
+
+        $shoppingCartItem = new ShoppingCartItem();
+        $shoppingCartItem
+            ->setShoppingCartItemId($shoppingCartItemId)
+            ->setQuantity($quantity);
+
+        $shoppingCartItemRepository = new ShoppingCartItemRepository();
+        $result = $shoppingCartItemRepository->update($shoppingCartItem);
+
+        $response->json([$result]);
+    }
+
     public function removeItem(Request $request, Response $response)
     {
         $shoppingCartItemId = $request->getRouteParams("shoppingCartItemId");

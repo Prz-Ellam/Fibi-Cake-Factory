@@ -76,6 +76,7 @@ class CategoryController extends Controller
 
         $response->json([
             "status" => $result,
+            "message" => "La categoría se creó exitosamente",
             "data" => [
                 "id" => $categoryId,
                 "name" => $name,

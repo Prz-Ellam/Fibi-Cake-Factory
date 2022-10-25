@@ -1,8 +1,8 @@
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_create_product $$
+DROP PROCEDURE IF EXISTS sp_products_create $$
 
-CREATE PROCEDURE sp_create_product(
+CREATE PROCEDURE sp_products_create(
     IN _product_id              VARCHAR(36),
     IN _name                    VARCHAR(50),
     IN _description             VARCHAR(200),
@@ -645,6 +645,9 @@ DELIMITER ;
 
 
 
+
+
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_get_all_by_ships $$
 
@@ -656,32 +659,52 @@ CREATE PROCEDURE sp_products_get_all_by_ships(
 )
 BEGIN
 
-    SELECT
-        BIN_TO_UUID(p.product_id) id,
-        p.name,
-        p.price,
-        IFNULL(SUM(s.quantity), 0) sells,
-        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images
-    FROM
-        products AS p
-    LEFT JOIN
-        shoppings AS s
-    ON
-        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
-    INNER JOIN
-        images AS i
-    ON
-        p.product_id = i.multimedia_entity_id
+    SELECT 
+    BIN_TO_UUID(p.product_id) id, 
+    p.name, 
+    p.price, 
+    IFNULL(SUM(s.quantity), 0) quantity,
+    (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images,
+    BIN_TO_UUID(p.user_id) userId
+    FROM products AS p
+    LEFT JOIN shoppings AS s
+    ON BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
     WHERE
         p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
-        AND p.active = TRUE
-        AND approved = TRUE
-    GROUP BY
-        p.product_id,
-        name
+        AND p.active = TRUE AND approved = TRUE
+    GROUP BY p.product_id, p.name, p.price
     ORDER BY
         CASE _order WHEN 'asc'  THEN COUNT(s.quantity) END ASC,
         CASE _order WHEN 'desc' THEN COUNT(s.quantity) END DESC;
+
+
+    --SELECT
+    --    BIN_TO_UUID(p.product_id) id,
+    --    p.name,
+    --    p.price,
+    --    IFNULL(SUM(s.quantity), 0) sells,
+    --    GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images
+    --FROM
+    --    products AS p
+    --LEFT JOIN
+    --    shoppings AS s
+    --ON
+    --    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
+    --INNER JOIN
+    --    images AS i
+    --ON
+    --    p.product_id = i.multimedia_entity_id
+    --WHERE
+    --    p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+    --    AND p.active = TRUE
+    --    AND approved = TRUE
+    --GROUP BY
+    --    p.product_id,
+    --    p.name,
+    --    p.price
+    --ORDER BY
+    --    CASE _order WHEN 'asc'  THEN COUNT(s.quantity) END ASC,
+    --    CASE _order WHEN 'desc' THEN COUNT(s.quantity) END DESC;
 
 END $$
 DELIMITER ;
@@ -828,3 +851,50 @@ DELIMITER ;
 
 
 -- Productos recomendados para el usuario
+SELECT c.name FROM shoppings AS s
+RIGHT JOIN products_categories AS pc
+ON BIN_TO_UUID(s.product_id) = BIN_TO_UUID(pc.product_id)
+INNER JOIN categories AS c
+ON BIN_TO_UUID(c.category_id) = BIN_TO_UUID(pc.category_id)
+
+
+SELECT BIN_TO_UUID(product_id) FROM shoppings;
+SELECT * FROM products_categories;
+
+
+SELECT 
+BIN_TO_UUID(p.product_id), p.name, p.price, SUM(s.quantity),
+
+(SELECT GROUP_CONCAT(BIN_TO_UUID(c.category_id)) 
+FROM categories AS c
+INNER JOIN products_categories AS pc
+ON BIN_TO_UUID(c.category_id) = BIN_TO_UUID(pc.category_id)
+WHERE BIN_TO_UUID(pc.product_id) = BIN_TO_UUID(p.product_id))
+
+FROM products AS p
+LEFT JOIN shoppings AS s
+ON BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
+INNER JOIN orders AS o
+ON BIN_TO_UUID(o.order_id) = BIN_TO_UUID(s.order_id)
+WHERE BIN_TO_UUID(o.user_id) = '76dd9897-f26a-44d5-852c-9f7c0f3f0c90'
+GROUP BY BIN_TO_UUID(p.product_id), p.name, p.price;
+
+
+
+
+SELECT 
+products.product_id, 
+products.name, 
+products.price,
+IFNULL(COUNT(shoppings.product_id) * shoppings.quantity, 0) AS Cantidad, 
+IFNULL(COUNT(shoppings.product_id) * shoppings.quantity, 0) / (SELECT COUNT(shoppings.product_id) FROM shoppings) AS Porcentaje,
+categories.name AS category FROM products
+INNER JOIN categories
+ON categories.category_id = products.category_id
+LEFT JOIN shoppings
+ON products.product_id = shoppings.product_id
+GROUP BY  products.name
+ORDER BY IFNULL(COUNT(shoppings.product_id) * shoppings.quantity, 0) DESC;
+
+
+

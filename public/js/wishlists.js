@@ -10,6 +10,7 @@ const wishlistCard = /*html*/`
     <div class="card mx-auto" style="width: 18rem;">
         <div class="carousel slide" data-bs-ride="carousel" role="button">
             <div class="carousel-inner">
+            {{#if images.length}}
                 {{#each images}}
                 <div class="carousel-item {{#if (eq @key 0)}}active{{/if}}" data-bs-interval="10000">
                     <div class="ratio ratio-4x3">
@@ -17,6 +18,13 @@ const wishlistCard = /*html*/`
                     </div>
                 </div>
                 {{/each}}
+            {{else}}
+                <div class="carousel-item active" data-bs-interval="10000">
+                    <div class="ratio ratio-4x3">
+                        <img src="assets/img/wishlist-default.jpg" class="card-img-top w-100 h-100">
+                    </div>
+                </div>
+            {{/if}}
             </div>
         </div>
         <div class="card-body">
@@ -49,7 +57,7 @@ class Wishlist
 
 $.ajax({
     url: `api/v1/users/${id}`,
-    method: "GET",
+    method: 'GET',
     async: false,
     timeout: 0,
     success: function(response) {
@@ -486,7 +494,7 @@ $(document).ready(function() {
         modalInstance.hide();
 
         $.ajax({
-            method: 'POST',
+            method: 'PUT',
             url: `/api/v1/wishlists/${wishlistId}`,
             data: new FormData(this),
             cache: false,

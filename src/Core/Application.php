@@ -45,7 +45,7 @@ class Application
     public DatabaseDriver $database;
 
     /**
-     * Undocumented variable
+     * Middlewares de la aplicación
      *
      * @var array
      */
@@ -56,14 +56,7 @@ class Application
      *
      * @var self
      */
-    private static self $instance; 
-
-    /**
-     * Variables de la aplicacion
-     *
-     * @var array
-     */
-    private array $storage;
+    private static self $instance;
 
     private function __construct()
     {
@@ -79,7 +72,7 @@ class Application
      *
      * @return self Instancia de la aplicación
      */
-    public static function app() : self
+    public static function app(): self
     {
         if (!isset(self::$instance))
         {
@@ -90,31 +83,33 @@ class Application
     }
 
     /**
-     * Prepare the requested router to be found
+     * Corre la aplicación y prepara la busqueda de la ruta
      *
      * @return void
      */
-    public function run() : void
+    public function run(): void
     {
         $action = $this->router->resolve($this->request);
+        $response = new Response();
+        $responseEmitter = new ResponseEmitter();
 
-        if ($action == null)
+        if (!$action)
         {
-            print("404 Not found");
-            die;
+            $response
+                ->text("404 Not Found")
+                ->setStatusCode(404);
+        }
+        else
+        {
+            call_user_func($action, $this->request, $response);
         }
 
-        $response = new Response();
-
-        call_user_func($action, $this->request, $response);
-
-        $responseEmitter = new ResponseEmitter();
         $responseEmitter->emitResponse($response);
         $this->database->close();
     }
 
     /**
-     * Undocumented function
+     * Registra una ruta de tipo GET
      *
      * @param string $uri
      * @param Closure|array $action
@@ -126,7 +121,7 @@ class Application
     }
 
     /**
-     * Undocumented function
+     * Registra una ruta de tipo POST
      *
      * @param string $uri
      * @param Closure|array $action
@@ -138,7 +133,7 @@ class Application
     }
 
     /**
-     * Undocumented function
+     * Registra una ruta de tipo PUT
      *
      * @param string $uri
      * @param Closure|array $action
@@ -149,11 +144,25 @@ class Application
         $this->router->put($uri, $action);
     }
 
+    /**
+     * Registra una ruta de tipo PATCH
+     *
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function patch(string $uri, Closure|array $action): void
     {
         $this->router->patch($uri, $action);
     }
 
+    /**
+     * Registra una ruta de tipo DELETE
+     *
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function delete(string $uri, Closure|array $action): void
     {
         $this->router->delete($uri, $action);
@@ -163,16 +172,4 @@ class Application
     {
         $this->middlewares[] = $action;
     }
-
-    public function setItem(string $name, mixed $value)
-    {
-        $this->storage[$name] = $value;
-    }
-
-    public function getItem(string $name)
-    {
-        return $this->storage[$name] ?? null;
-    }
 }
-
-?>

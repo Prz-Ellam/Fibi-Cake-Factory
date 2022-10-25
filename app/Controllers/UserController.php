@@ -52,7 +52,7 @@ class UserController extends Controller
         $gender = $request->getBody("gender");
         $password = $request->getBody("password");
         $confirmPassword = $request->getBody("confirmPassword");
-        $profilePicture = $request->getFile("profilePicture");
+        $profilePicture = $request->getFiles("profilePicture");
 
         $session = new PhpSession();
         $userRole = ($session->get("role") === "Super Administrador") ? 

@@ -259,19 +259,6 @@ $(document).ready(function() {
         }
     });
 
-        
-    function jsonEncode(formData, multiFields = null) {
-        let object = Object.fromEntries(formData.entries());
-
-        // If the data has multi-select values
-        if (multiFields && Array.isArray(multiFields)) {
-            multiFields.forEach((field) => {
-                object[field] = formData.getAll(field);
-            });
-        }
-
-        return object;
-    }
 
     optionsCount = 5;
     $('#create-category-form').submit(function(event) {
@@ -279,7 +266,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 
@@ -287,22 +274,19 @@ $(document).ready(function() {
         modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
-        const requestBody = new FormData(this);
-
         $.ajax({
             url: 'api/v1/categories',
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
                 console.log(response);
-                $('#categories').append(`<option value="${response.message.id}">${response.message.name}</option>`);
+                $('#categories').append(`<option value="${response.data.id}">${response.data.name}</option>`);
                 $('#categories').multipleSelect('refresh');
             },
             error: function(response, status, error) {
                 console.log(status);
             },
             complete: function() {
-                console.log('Complete');
             }
         });
 
@@ -320,12 +304,12 @@ $(document).ready(function() {
         }
     });
     
-    $('#create-product-form').submit(function(e) {
+    $('#create-product-form').submit(function(event) {
 
-        e.preventDefault();
+        event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 

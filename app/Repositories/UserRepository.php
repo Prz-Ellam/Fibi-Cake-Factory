@@ -31,7 +31,7 @@ class UserRepository
             "birthDate"         => $user->getBirthDate(),
             "password"          => $user->getPassword(),
             "gender"            => $user->getGender(),
-            "visible"           => $user->getVisible(),
+            "visible"           => $user->isVisible(),
             "userRole"          => $user->getUserRole(),
             "profilePicture"    => $user->getProfilePicture()
         ]);

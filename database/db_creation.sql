@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS products(
     approved                    BOOLEAN NOT NULL DEFAULT FALSE,
     approved_by                 BINARY(16),
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
+    modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT products_pk
         PRIMARY KEY (product_id)
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS orders(
     order_id                    BINARY(16) NOT NULL UNIQUE,    
     user_id                     BINARY(16) NOT NULL,
     phone                       VARCHAR(12) NOT NULL,
-    address                     VARCHAR(30) NOT NULL,
+    address                     VARCHAR(100) NOT NULL,
     city                        VARCHAR(30) NOT NULL,
     state                       VARCHAR(30) NOT NULL,
     postal_code                 VARCHAR(30) NOT NULL,

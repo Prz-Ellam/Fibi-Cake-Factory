@@ -2,19 +2,26 @@
 
 namespace Fibi\Http;
 
+use Fibi\Helpers\UploadedFile;
 use Fibi\Http\Request;
 
 abstract class RequestBuilder
 {
     public static function createFromPhpServer() : Request
     {
+        if ($_SERVER["REQUEST_METHOD"] !== "POST" && $_SERVER["REQUEST_METHOD"] !== "GET") {
+            self::decode();
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] === "POST") self::cleanFiles();
+
         return (new Request())
             ->setUri(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH))
             ->setMethod(HttpMethod::from($_SERVER["REQUEST_METHOD"]))
-            ->setBody(($_SERVER["REQUEST_METHOD"] === "POST") ? $_POST : self::decode())
+            ->setBody(($_SERVER["REQUEST_METHOD"] === "POST") ? $_POST : $_REQUEST)
             ->setQuery($_GET)
             ->setHeaders(getallheaders())
-            ->setFiles($_FILES);
+            ->setFiles(self::createUploadedFiles($_FILES));
     }
 
     private static function parsePut(  ) : array {
@@ -172,7 +179,8 @@ abstract class RequestBuilder
             }
         }
 
-        return ["inputs" => $data, "files" => $files];
+        $_REQUEST = $data;
+        $_FILES = $files;
     }
 
     private static function transformData($data, $name, $value)
@@ -185,6 +193,63 @@ abstract class RequestBuilder
             $data[$name] = $value;
         }
         return $data;
+    }
+
+    public static function cleanFiles()
+    {
+        $out = [];
+        foreach ($_FILES as $key => $file) {
+            if (isset($file['name']) && is_array($file['name'])) {
+                $new = [];
+                foreach (['name', 'type', 'tmp_name', 'error', 'size'] as $k) {
+                    array_walk_recursive($file[$k], function (&$data, $key, $k) {
+                        $data = [$k => $data];
+                    }, $k);
+                    $new = array_replace_recursive($new, $file[$k]);
+                }
+                $out[$key] = $new;
+            } else {
+                $out[$key] = $file;
+            }
+        }
+        $_FILES = $out;
+    }
+
+    public static function createUploadedFiles($files): array
+    {
+        $outputFiles = [];
+
+        foreach ($files as $key => $file)
+        {
+            if (count($file) !== count($file, COUNT_RECURSIVE))
+            {
+                // Multidimensional
+                foreach ($file as $element)
+                {
+                    $outputFiles[$key][] = new UploadedFile(
+                        $element["name"] ?? null,
+                        $element["path"] ?? null,
+                        $element["tmp_name"] ?? null,
+                        $element["size"] ?? null,
+                        $element["type"] ?? null
+                    );
+                }
+            }
+            else
+            {
+                // Not multidimensional
+                $outputFiles[$key] = new UploadedFile(
+                    $element["name"] ?? null,
+                    $element["path"] ?? null,
+                    $element["tmp_name"] ?? null,
+                    $element["size"] ?? null,
+                    $element["type"] ?? null
+                );
+            }
+
+        }
+
+        return $outputFiles;
     }
 
     public static function createFromMockup() : Request|null
@@ -222,5 +287,3 @@ abstract class RequestBuilder
         return $this;
     }
 }
-
-?>

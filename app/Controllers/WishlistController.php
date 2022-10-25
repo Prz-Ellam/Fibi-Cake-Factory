@@ -39,7 +39,7 @@ class WishlistController extends Controller
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visible = $request->getBody("visible");
-        $images = $request->getFileArray("images");
+        $images = $request->getFiles("images");
         $userId = $session->get('userId');
 
         $wishlist = new Wishlist();
@@ -144,7 +144,7 @@ class WishlistController extends Controller
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visibility = $request->getBody("visible");
-        $images = $request->getFileArray("images");
+        $images = $request->getFiles("images");
         $userId = $session->get('userId');
 
         $wishlist = new Wishlist();

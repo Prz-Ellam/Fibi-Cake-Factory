@@ -53,6 +53,27 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_shopping_cart_item $$
+
+CREATE PROCEDURE sp_update_shopping_cart_item(
+    IN _shopping_cart_item_id           VARCHAR(36),
+    IN _quantity                        INT
+)
+BEGIN
+
+    UPDATE
+        shopping_cart_items
+    SET
+        quantity = IFNULL(_quantity, quantity)
+    WHERE
+        BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
 
 CREATE PROCEDURE sp_delete_shopping_cart_item(
     IN _shopping_cart_item_id           VARCHAR(36)

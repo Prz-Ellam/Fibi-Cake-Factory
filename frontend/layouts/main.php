@@ -34,7 +34,7 @@
 </head>
 <body>
     <header class="fixed-top sticky-top">
-        <nav class="navbar navbar-expand-lg navbar-dark scrolling-navbar">
+        <nav class="navbar navbar-expand-lg navbar-dark scrolling-navbar px-3">
             <a class="navbar-brand ms-2" href="/"><img src="assets/img/Brand-Logo.svg" id="brand-logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-collapse">
                 <i class="fa fa-bars"></i>
@@ -48,23 +48,23 @@
                         </div>
                     </div>
                 </form>
-                <ul class="navbar-nav align-items-center" id="orange-navbar">
+                <ul class="navbar-nav" id="orange-navbar">
                     <li class="nav-item">
-                        <a href="/chat" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
+                        <a href="/chat" class="me-3 primary-nav-item nav-link text-white fw-bold">
                             <i class="fa fa-bell"></i>
-                            <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>
+                            <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>-->
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/wishlists" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
+                        <a href="/wishlists" class="me-3 primary-nav-item nav-link text-white fw-bold">
                             <i class="fa fa-heart"></i>
-                            <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>
+                            <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>-->
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/shopping-cart" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
+                        <a href="/shopping-cart" class="me-3 primary-nav-item nav-link text-white fw-bold">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+                            <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">3</span>-->
                         </a>
                     </li>
                     <li class="nav-item dropdown">

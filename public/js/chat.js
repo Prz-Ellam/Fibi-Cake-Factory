@@ -21,6 +21,8 @@ function loadChat(_chatId) {
         success: function(response)
         {
             $('#comment-box').empty();
+            $('#chat-name').val('');
+            $('#chat-picture').attr('src', '');
 
             response.forEach(function(message)
             {

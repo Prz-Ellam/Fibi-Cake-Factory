@@ -111,8 +111,8 @@
                 
                     <div class="d-flex justify-content-between mt-3">
                         <a class="d-block text-decoration-none text-brown" href="/sandbox">
-                            <img class="img-fluid rounded-circle" width="40" height="40"  src="assets/img/elp.jpg">
-                            <span class="ms-2 text-black"><b class="">Eliam Rodríguez Pérez</b></span>
+                            <img class="img-fluid rounded-circle" width="40" height="40" id="chat-picture" src="assets/img/elp.jpg">
+                            <span class="ms-2 text-black"><b id="chat-name">Eliam Rodríguez Pérez</b></span>
                         </a>
                     </div>
     

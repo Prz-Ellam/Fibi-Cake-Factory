@@ -51,7 +51,6 @@ class OrderController extends Controller
         $validator = new Validator($order);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status)
         {
             $response->setStatusCode(400)->json([
@@ -63,10 +62,12 @@ class OrderController extends Controller
 
         $orderRepository = new OrderRepository();
         $result = $orderRepository->create($order);
-
         if (!$result)
         {
-            $response->text("Error en crear orden");
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => "No se pudo realizar la compra"
+            ]);
             return;
         }
 
@@ -91,18 +92,35 @@ class OrderController extends Controller
                 ->setQuantity($quantity)
                 ->setAmount($amount);
 
+            $validator = new Validator($order);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+            if (!$status) {
+                $response->setStatusCode(400)->json([
+                    "status" => $status,
+                    "data" => $feedback
+                ]);
+                return;
+            }
+
             $result = $shoppingRepository->create($shopping);
             if (!$result)
             {
-                $response->text("Error en crear una compra");
+                $response->setStatusCode(400)->json([
+                    "status" => $status,
+                    "data" => "No se pudo realizar la compra"
+                ]);
                 return;
             }
         }
 
         $result = $shoppingCartRepository->delete($shoppingCartId);
-        if ($result === false)
+        if (!$result)
         {
-            $response->text("Error al eliminar el carrito");
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => "Error al vaciar su carrito"
+            ]);
             return;
         }
 
@@ -112,10 +130,24 @@ class OrderController extends Controller
             ->setShoppingCartId($newShoppingCartId)
             ->setUserId($userId);
 
+        $validator = new Validator($order);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+        if (!$status) {
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => $feedback
+            ]);
+            return;
+        }
+
         $result = $shoppingCartRepository->create($shoppingCart);
-        if ($result === false)
+        if (!$result)
         {
-            $response->text("Error al crear el nuevo carrito");
+            $response->setStatusCode(400)->json([
+                "status" => $status,
+                "data" => "Error al crearle un nuevo carrito"
+            ]);
             return;
         }
 

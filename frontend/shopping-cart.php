@@ -54,7 +54,7 @@
         </div>
         <div class="d-flex mt-4 justify-content-between">
             <button class="btn btn-secondary shadow-none p-3 me-2 bg-orange h5 rounded-1" id="back"><i class="fa fa-angle-left"></i> Seguir comprando</button>
-            <button class="btn btn-secondary shadow-none p-3 ms-2 bg-orange h5 rounded-1" id="finish-order">Finalizar pedido</button>
+            <button disabled class="btn btn-secondary shadow-none p-3 ms-2 bg-orange h5 rounded-1" id="finish-order">Finalizar pedido</button>
         </div>
     </div>
 
