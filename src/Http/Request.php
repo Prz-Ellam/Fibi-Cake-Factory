@@ -178,10 +178,10 @@ class Request
     {
         if (is_null($key))
         {
-            return $this->files;
+            return $this->files ?? [];
         }
 
-        return $this->files[$key];
+        return $this->files[$key] ?? [];
     }
 
     public function getFileArray(string $key)

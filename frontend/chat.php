@@ -123,8 +123,6 @@
                     <hr class="text-light">
 
                     <div class="input-group mb-3">
-                        <!--label for="chat-file" class="btn btn-primary">Abrir archivo</label-->
-                        <input type="file" accept="image/*" class="form-control shadow-none" id="chat-file">
                         <input id="message" type="text" class="form-control shadow-none" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
                         <button class="btn btn-orange shadow-none" id="send-message">Enviar</button>
                     </div>

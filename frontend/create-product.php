@@ -168,6 +168,6 @@
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
 
     <!-- JavaScript -->
-    <script src="./js/create-product.js"></script>
+    <script type="module" src="./js/create-product.js"></script>
 </body>
 </html>

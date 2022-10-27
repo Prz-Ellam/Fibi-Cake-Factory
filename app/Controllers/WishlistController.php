@@ -10,7 +10,7 @@ use CakeFactory\Models\Wishlist;
 use CakeFactory\Repositories\WishlistRepository;
 use CakeFactory\Models\Image;
 use CakeFactory\Repositories\ImageRepository;
-
+use Fibi\Database\DB;
 use Fibi\Session\PhpSession;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
@@ -30,7 +30,7 @@ class WishlistController extends Controller
      * @param Response $response
      * @return void
      */
-    public function create(Request $request, Response $response)
+    public function create(Request $request, Response $response): void
     {
         // TODO: Validar que exista una sección activa
         $session = new PhpSession();
@@ -40,7 +40,7 @@ class WishlistController extends Controller
         $description = $request->getBody("description");
         $visible = $request->getBody("visible");
         $images = $request->getFiles("images");
-        $userId = $session->get('userId');
+        $userId = $session->get("userId");
 
         $wishlist = new Wishlist();
         $wishlist
@@ -64,16 +64,15 @@ class WishlistController extends Controller
 
         $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->create($wishlist);
-
         if (!$result) {
             $response->json([
-                "status" => $result
+                "status" => $result,
+                "message" => "No se pudo crear la lista de deseos"
             ])->setStatusCode(400);
             return;
         }
 
         // TODO: Las imagenes de listas borradas no deben poder ser accedidas
-        $imagesId = [];
         foreach ($images as $image) {
             $imageId = Uuid::uuid4()->toString();
             $imageName = $image->getName();
@@ -82,7 +81,8 @@ class WishlistController extends Controller
             $imageContent = $image->getContent();
 
             $image = new Image();
-            $image->setImageId($imageId)
+            $image
+                ->setImageId($imageId)
                 ->setName($imageName)
                 ->setType($imageType)
                 ->setSize($imageSize)
@@ -90,39 +90,20 @@ class WishlistController extends Controller
                 ->setMultimediaEntityId($wishlistId)
                 ->setMultimediaEntityType('wishlists');
 
-            $validator = new Validator($image);
-            $feedback = $validator->validate();
-            $status = $validator->getStatus();
-
-            if (!$status) {
+            $imageRepository = new ImageRepository();
+            $result = $imageRepository->create($image);
+            if (!$result) {
                 $response->json([
-                    "status" => $status,
-                    "message" => $feedback
+                    "status" => false,
+                    "message" => "No se pudo guardar una imagen"
                 ])->setStatusCode(400);
                 return;
             }
-
-            $imageRepository = new ImageRepository();
-            $result = $imageRepository->create($image);
-
-            if (!$result) {
-                $response->json(["response" => "No"])->setStatusCode(400);
-                return;
-            }
-
-            $imagesId[] = $imageId;
         }
 
         $response->json([
             "status" => $result,
-            "message" => "La lista de deseos ha sido creada con éxito",
-            "data" => [
-                "id" => $wishlistId,
-                "name" => $name,
-                "images" => $imagesId,
-                "visible" => $visible,
-                "description" => $description
-            ]
+            "message" => "La lista de deseos ha sido creada con éxito"
         ]);
     }
 
@@ -143,7 +124,7 @@ class WishlistController extends Controller
         $wishlistId = $request->getRouteParams("wishlistId");
         $name = $request->getBody("name");
         $description = $request->getBody("description");
-        $visibility = $request->getBody("visible");
+        $visible = $request->getBody("visible");
         $images = $request->getFiles("images");
         $userId = $session->get('userId');
 
@@ -152,7 +133,7 @@ class WishlistController extends Controller
             ->setWishlistId($wishlistId)
             ->setName($name)
             ->setDescription($description)
-            ->setVisible($visibility)
+            ->setVisible($visible)
             ->setUserId($userId);
 
         $validator = new Validator($wishlist);
@@ -221,7 +202,7 @@ class WishlistController extends Controller
                 "id" => $wishlistId,
                 "name" => $name,
                 "images" => $imagesId,
-                "visibility" => $visibility,
+                "visible" => intval($visible),
                 "description" => $description
             ]
         ]);

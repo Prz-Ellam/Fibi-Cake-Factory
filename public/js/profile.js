@@ -365,10 +365,7 @@ $(document).ready(function () {
         }
     });
 
-
-
     $('#new-password').password();
-
 
     $('#profile-form').submit(function (e) {
 

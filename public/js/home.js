@@ -113,9 +113,6 @@ $.ajax({
     }
 });
 
-
-
-
 $(document).ready(function()
 {
     const Toast = Swal.mixin({
@@ -176,17 +173,16 @@ $(document).ready(function()
         $.ajax({
             url: `api/v1/wishlist-objects`,
             method: 'POST',
-            timeout: 0,
             data: $(this).serialize(),
             success: function(response) {
                 console.log(response);
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Tu producto ha sido añadido a las listas de deseos'
+                })
             }
         });
-        
-        Toast.fire({
-            icon: 'success',
-            title: 'Tu producto ha sido añadido a las listas de deseos'
-        })
+    
     });
     
     $('.sellers').owlCarousel({

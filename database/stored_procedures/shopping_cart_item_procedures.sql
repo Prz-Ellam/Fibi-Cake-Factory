@@ -25,7 +25,7 @@ BEGIN
         UPDATE
             shopping_cart_items
         SET
-            quantity = quantity + 1
+            quantity = IF(quantity < 100, quantity + 1, quantity)
         WHERE
             BIN_TO_UUID(product_id) = _product_id
             AND BIN_TO_UUID(shopping_cart_id) = _shopping_cart_id;
@@ -47,6 +47,13 @@ BEGIN
 
     END IF;
 
+    UPDATE
+        products
+    SET
+        stock = stock - 1
+    WHERE
+        BIN_TO_UUID(product_id) = _product_id;
+
 END $$
 DELIMITER ;
 
@@ -61,6 +68,9 @@ CREATE PROCEDURE sp_update_shopping_cart_item(
 )
 BEGIN
 
+    SET @quantity := (SELECT quantity FROM shopping_cart_items WHERE BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id);
+    SET @product_id := (SELECT BIN_TO_UUID(product_id) FROM shopping_cart_items WHERE BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id);
+
     UPDATE
         shopping_cart_items
     SET
@@ -68,10 +78,17 @@ BEGIN
     WHERE
         BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id;
 
+    UPDATE
+        products
+    SET
+        stock = stock + @quantity - _quantity
+    WHERE
+        BIN_TO_UUID(product_id) = @product_id;
+
 END $$
 DELIMITER ;
 
-
+SELECT * FROM products;
 
 DELIMITER $$
 

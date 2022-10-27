@@ -239,11 +239,11 @@ abstract class RequestBuilder
             {
                 // Not multidimensional
                 $outputFiles[$key] = new UploadedFile(
-                    $element["name"] ?? null,
-                    $element["path"] ?? null,
-                    $element["tmp_name"] ?? null,
-                    $element["size"] ?? null,
-                    $element["type"] ?? null
+                    $file["name"] ?? null,
+                    $file["path"] ?? null,
+                    $file["tmp_name"] ?? null,
+                    $file["size"] ?? null,
+                    $file["type"] ?? null
                 );
             }
 

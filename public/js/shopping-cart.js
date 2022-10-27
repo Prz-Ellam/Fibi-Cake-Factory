@@ -1,19 +1,14 @@
+
+import { getSession } from './utils/session.js';
+const id = getSession();
+
 $.ajax({
-    url: 'api/v1/session',
-    method: 'GET',
+    url: `api/v1/users/${id}`,
+    method: "GET",
     async: false,
-    timeout: 0,
     success: function(response) {
-        $.ajax({
-            url: `api/v1/users/${response.id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
-        });
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
     }
 });
 
@@ -95,13 +90,10 @@ $(document).ready(function()
         $.ajax({
             url: `/api/v1/shopping-cart-items/${id}`,
             method: 'DELETE',
-            timeout: 0,
             success: function(response) {
 
                 console.log(response);
-
                 row.remove();
-
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu producto ha sido eliminado de la lista de deseos'
@@ -144,7 +136,7 @@ $(document).ready(function()
         $.ajax({
             url: `/api/v1/shopping-carts/${$(row).attr('id')}`,
             method: 'POST',
-            "headers": {
+            headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             data: { "quantity": quantity },

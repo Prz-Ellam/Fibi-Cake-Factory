@@ -75,7 +75,7 @@ class ProductController extends Controller
         if (!$result) {
             $response->json([
                 "status" => false,
-                "message" => "No"
+                "message" => "No se pudo crear el producto"
             ])->setStatusCode(400);
             return;
         }
@@ -97,7 +97,6 @@ class ProductController extends Controller
             $imageSize = $image->getSize();
             $imageContent = $image->getContent();
 
-            // 3 - Multimedia type de listas de deseos
             $image = new Image();
             $image->setImageId($imageId)
                 ->setName($imageName)
@@ -110,11 +109,10 @@ class ProductController extends Controller
             $validator = new Validator($image);
             $feedback = $validator->validate();
             $status = $validator->getStatus();
-
             if (!$status) {
                 $response->json([
                     "response" => $status,
-                    "data" => $feedback
+                    "message" => $feedback
                 ])->setStatusCode(400);
                 return;
             }
@@ -122,7 +120,10 @@ class ProductController extends Controller
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
             if (!$result) {
-                $response->json(["response" => "No"])->setStatusCode(400);
+                $response->json([
+                    "response" => false,
+                    "message" => "No se pudo crear una imagen"
+                ])->setStatusCode(400);
                 return;
             }
 
@@ -158,20 +159,21 @@ class ProductController extends Controller
             $validator = new Validator($video);
             $feedback = $validator->validate();
             $status = $validator->getStatus();
-
             if (!$status) {
                 $response->json([
                     "response" => $status,
-                    "data" => $feedback
+                    "message" => $feedback
                 ])->setStatusCode(400);
                 return;
             }
 
             $videoRepository = new VideoRepository();
             $result = $videoRepository->create($video);
-
             if (!$result) {
-                $response->json(["response" => "No"])->setStatusCode(400);
+                $response->json([
+                    "status" => false,
+                    "message" => "No se pudo crear un video"
+                ])->setStatusCode(400);
                 return;
             }
 
@@ -201,7 +203,6 @@ class ProductController extends Controller
             $validator = new Validator($productCategory);
             $feedback = $validator->validate();
             $status = $validator->getStatus();
-
             if (!$status) {
                 $response->json([
                     "response" => $status,
@@ -212,7 +213,6 @@ class ProductController extends Controller
 
             $productCategoryRepository = new ProductCategoryRepository();
             $result = $productCategoryRepository->create($productCategory);
-
             if (!$result) {
                 $response->json(["response" => "No"])->setStatusCode(400);
                 return;

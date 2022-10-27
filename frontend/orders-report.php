@@ -47,6 +47,10 @@
                 <label for="to">Hasta:</label>
                 <input type="date" class="form-control shadow-none rounded-1" name="to" id="to">
             </div>
+            <div class="col-auto ">
+                <label style="visibility: hidden">Categorías:</label>
+                <input type="button" value="Buscar" class="btn btn-orange rounded-1 shadow-none d-block">
+            </div>
         </div>
 
         <br>

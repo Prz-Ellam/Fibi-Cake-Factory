@@ -17,19 +17,19 @@
                 <li class="nav-item">
                     <a href="/chat" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fa fa-bell"></i>
-                        <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>
+                        <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>-->
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/wishlists" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fa fa-heart"></i>
-                        <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>
+                        <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>-->
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/shopping-cart" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+                        <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">3</span>-->
                     </a>
                 </li>
                 <li class="nav-item dropdown">

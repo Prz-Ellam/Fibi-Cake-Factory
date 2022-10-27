@@ -351,6 +351,6 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" src="./js/users.js"></script>
+    <script type="module" src="./js/users.js"></script>
 </body>
 </html>

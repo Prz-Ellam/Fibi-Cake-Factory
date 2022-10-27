@@ -23,22 +23,10 @@ function CommentComponent(comment) {
     `;
 }
 
-getSession = () => {
-    var value = null;
-    $.ajax({
-        url: 'api/v1/session',
-        method: 'GET',
-        async: false,
-        timeout: 0,
-        success: function (response) {
-            value = response.id;
-        }
-    });
-    return value;
-};
+import { getSession } from './utils/session.js';
+const id = getSession();
 
 const productId = new URLSearchParams(window.location.search).get("search");
-const id = getSession();
 
 $.ajax({
     url: `api/v1/users/${id}`,
@@ -51,12 +39,9 @@ $.ajax({
     }
 });
 
-
-
 $.ajax({
     url: `/api/v1/products/${productId || '0'}`,
     method: 'GET',
-    timeout: 0,
     success: function (response) {
         console.log(response);
         const product = response;
@@ -133,8 +118,8 @@ $(document).ready(function () {
 
         const stars = $(this).parent().children();
 
-        //let position = $(this).position();
         let starIndex = parseInt($(this).attr('value'));
+        document.getElementById('rate').value = starIndex;
 
         for (let i = 0; i < 5; i++) {
             stars[i].className = 'rating-star far fa-star';
@@ -203,53 +188,29 @@ $(document).ready(function () {
         })
     });
 
-    $('#send-message').click(function () {
+    $('#create-review-form').submit(function (event) {
+
+        event.preventDefault();
+
         const text = $('#message-box').val();
 
         $.ajax({
-            url: `/api/v1/${productId}/comments`,
+            url: `/api/v1/products/${productId}/reviews`,
             method: 'POST',
-            data: `message=${text}`,
-            timeout: 0,
+            data: $(this).serialize(),
             success: function (response) {
-                console.log(response);
+                $('#comment-section').empty();
+
+                fetch(`/api/v1/products/${productId}/comments`)
+                .then(response => response.json())
+                .then(response => {
+                    response.forEach((comment) => {
+                        $('#comment-section').append(CommentComponent(comment));
+                    });
+                })
+
             }
         });
-
-
-        $('#message-box').val('');
-
-        if (text === '') {
-            return;
-        }
-
-        const html = /*html*/`
-        <div class="d-flex">
-            <img src="assets/img/fragile.webp" alt="John Doe" class="me-3 rounded-circle" style="width: 48px; height: 48px;">
-            <div class="col-9">
-                <a href="/sandbox" class="mt-0 me-1">...</a>
-                <span class="rating">
-                    <i class="rating-star far fa-star" value="1"></i>
-                    <i class="rating-star far fa-star" value="2"></i>
-                    <i class="rating-star far fa-star" value="3"></i>
-                    <i class="rating-star far fa-star" value="4"></i>
-                    <i class="rating-star far fa-star" value="5"></i>
-                </span>
-                <p class="mb-0">${text}</p>
-                <small>${new Date().toLocaleString('en-US',
-            {
-                timeZone: 'CST',
-                dateStyle: 'full',
-                timeStyle: 'full',
-            })}</small><br>
-                <span class="badge bg-primary" role="button">Editar</span>
-                <span class="badge bg-danger" role="button">Eliminar</span>
-            </div>
-        </div>
-        <hr>`;
-
-        $('#comment-section').prepend(html);
-
 
     });
 

@@ -1,12 +1,15 @@
 import { getSession } from './utils/session.js';
-
 const id = getSession();
+
+var fmt = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 $.ajax({
     url: `api/v1/users/${id}`,
     method: "GET",
     async: false,
-    timeout: 0,
     success: function(response) {
         const url = `api/v1/images/${response.profilePicture}`;
         $('.nav-link img').attr('src', url);
@@ -17,9 +20,7 @@ $.ajax({
     url: 'api/v1/categories',
     method: 'GET',
     async: false,
-    timeout: 0,
-    success: function(response)
-    {
+    success: function(response) {
         response.forEach((category) =>
         {
             $('#categories').append(`<option value="${category.id}">${category.name}</option>`)
@@ -30,19 +31,16 @@ $.ajax({
 $.ajax({
     url: '/api/v1/reports/sales-report',
     method: 'GET',
-    timeout: 0,
     async: false,
-    success: function(response)
-    {
-        response.forEach((element) => 
-        {
+    success: function(response) {
+        response.forEach((element) => {
             $('#table-body').append(/*html*/`
                 <tr>
                     <td>${element.date}</td>
                     <td>${element.categories}</td>
                     <td>${element.productName}</td>
                     <td>${element.rate}</td>
-                    <td>${element.price}</td>
+                    <td>${fmt.format(element.price)}</td>
                     <td>${element.stock}</td>
                 </tr>
             `);
@@ -53,7 +51,6 @@ $.ajax({
 $.ajax({
     url: '/api/v1/reports/sales-report2',
     method: 'GET',
-    timeout: 0,
     async: false,
     success: function(response)
     {

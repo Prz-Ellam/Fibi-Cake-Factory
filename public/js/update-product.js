@@ -14,7 +14,6 @@ $.ajax({
 $.ajax({
     url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
     method: 'GET',
-    timeout: 0,
     async: false,
     success: function(response)
     {

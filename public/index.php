@@ -30,6 +30,8 @@ use Fibi\Http\Request;
 use Fibi\Http\RequestBuilder;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
+use Fibi\Validation\Rules\MaxLength;
+use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
@@ -458,6 +460,13 @@ $app->post('/api/v1/shopping-carts/{shoppingCartItemId}', [ new ShoppingCartItem
 
 // Images
 $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
+$app->delete('/api/v1/images/{id}', [ new ImageController(), 'delete' ]);
+
+
+
+
+
+
 $app->get('/api/v1/files/{fileId}', []);
 
 $app->get('/api/v1/videos/{videoId}', [ new VideoController(), 'getVideo' ]);
@@ -480,7 +489,20 @@ $app->post('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'cr
 $app->get('/api/v1/chats/{chatId}/messages', [ new ChatMessageController(), 'getAllByChat' ]);
 
 
-$app->post('/api/v1/{productId}/comments', [ new ReviewController(), 'create' ]);
+
+
+
+$app->post('/api/v1/products/{productId}/reviews', [ new ReviewController(), 'create' ]);
+$app->put('/api/v1/products/{productId}/reviews/{reviewId}', [ new ReviewController(), 'update' ]);
+$app->delete('/api/v1/products/{productId}/reviews/{reviewId}', [ new ReviewController(), 'delete' ]);
+
+
+
+
+
+
+
+
 $app->get('/api/v1/products/{productId}/comments', [ new ReviewController(), 'getProductComments' ]);
 
 $app->get('/api/v1/products/find/pending', [ new ProductController(), 'getPendingProducts' ]);
@@ -566,9 +588,53 @@ $app->get('/prueba', function(Request $request, Response $response) {
 
 $app->post('/test', function(Request $req, Response $res) {
 
-   var_dump($req->getFiles('der'));die;
-    
+    $inputs = [
+        "rules" => [
+            "name" => [
+                new Required(),
+                new MaxLength(5, "Hola")
+            ],
+            "description" => 
+                new Required()
+        ],
+        "values" => [
+            "name" => "",
+            'description' => ""
+        ]
+    ];
 
+    foreach ($inputs["rules"] as $property => $rules)
+        {
+            $status = false;
+            if (is_array($rules))
+            {
+                foreach ($rules as $rule)
+                {
+                    $status = $rule->isValid($inputs["values"][$property]);
+                    $class = new ReflectionClass($rule);
+                    $attributeName = $class->getShortName();
+                    if (!$status)
+                    {
+                        $results[$property][$attributeName] = $rule->message();
+                    }
+                }
+            }
+            else
+            {
+                $status = $rules->isValid($inputs["values"][$property]);
+                $class = new ReflectionClass($rules);
+                $attributeName = $class->getShortName();
+                if (!$status)
+                {
+                    $results[$property][$attributeName] = $rules->message();
+                }
+            }
+
+        }
+
+    var_dump($results);
+    
+die;
 });
 
 $app->run();

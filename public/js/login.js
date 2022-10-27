@@ -121,29 +121,6 @@ $(document).ready(function () {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
-        return;
-        $.ajax({
-            method: 'POST',
-            url: 'api/v1/email',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            dataType: 'json',
-            data: JSON.stringify(requestBody),
-            success: function (response) {
-                // Debe devolver el token
-                console.log(response);
-            },
-            error: function (response, status, error) {
-                // Puede fallar en caso de que no exista un usuario con ese correo
-                console.log(status);
-            },
-            complete: function () {
-
-            }
-        });
-
     });
 
 })

@@ -89,7 +89,7 @@
     </section>
 
     <section class="container bg-white my-5">
-        <div class="p-3" id="section1">
+        <form class="p-3" id="create-review-form">
 
             <div class="pt-4">
                 <h2 class="text-center h2 text-brown">Comentarios</h2>
@@ -97,11 +97,21 @@
 
             <hr>
 
-            <textarea class="form-control rounded-1 shadow-none mb-3" id="message-box" placeholder="Escribe un comentario"></textarea>
-            <button class="btn btn-orange rounded-1 shadow-none mb-4" id="send-message">Enviar</button>
+            <label class="mb-2">Calificación: </label>
+            <div class="rating d-inline">
+                <i class="rating-star far fa-star" value="1"></i>
+                <i class="rating-star far fa-star" value="2"></i>
+                <i class="rating-star far fa-star" value="3"></i>
+                <i class="rating-star far fa-star" value="4"></i>
+                <i class="rating-star far fa-star" value="5"></i>
+            </div>
+            <input type="hidden" name="rate" id="rate">
+
+            <textarea class="form-control rounded-1 shadow-none mb-3" name="message" id="message-box" placeholder="Escribe un comentario"></textarea>
+            <button type="submit" class="btn btn-orange rounded-1 shadow-none mb-4" id="send-message">Enviar</button>
 
             <div id="comment-section"></div>
-        </div>
+        </form>
     </section>
 
     <section class="my-5">
@@ -243,6 +253,6 @@
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     
     <!-- JavaScript -->
-    <script type="text/javascript" src="./js/product.js"></script>
+    <script type="module" src="./js/product.js"></script>
 </body>
 </html>

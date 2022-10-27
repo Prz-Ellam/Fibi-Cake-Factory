@@ -38,9 +38,13 @@ class WishlistObjectController extends Controller
             $wishlistObjectRepository = new WishlistObjectRepository();
             $result = $wishlistObjectRepository->create($wishlistObject);
 
-            if ($result === false)
+            if (!$result)
             {
-                $response->text("no");return;
+                $response->json([
+                    "status" => false,
+                    "message" => "No se pudo guardar un producto en la lista de deseos"
+                ]);
+                return;
             }
         }
 
@@ -80,7 +84,12 @@ class WishlistObjectController extends Controller
     {
         $wishlistId = $request->getRouteParams('wishlistId');
         $wishlistObjectRepository = new WishlistObjectRepository();
-        $result = $wishlistObjectRepository->getWishlistObjects($wishlistId);
-        $response->json($result);
+        $results = $wishlistObjectRepository->getWishlistObjects($wishlistId);
+
+        foreach ($results as &$element) {
+            $element["images"] = explode(',', $element["images"]);
+        }
+
+        $response->json($results);
     }
 }

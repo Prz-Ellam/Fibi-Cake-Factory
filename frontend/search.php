@@ -98,6 +98,7 @@
     <div class="modal fade" id="select-wishlist" tabindex="-1" aria-labelledby="select-wishlist-label" aria-hidden="true">
         <div class="modal-dialog">
             <form class="modal-content" id="add-wishlists">
+                <input type="hidden" name="product-id" id="wishlist-product-id" value="">
                 <div class="modal-header border-0">
                     <h5 class="modal-title" id="select-wishlist-label">¿A qué listas de deseos quieres añadir?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

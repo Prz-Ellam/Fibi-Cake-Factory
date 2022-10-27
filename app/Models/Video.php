@@ -3,6 +3,7 @@
 namespace CakeFactory\Models;
 
 use Fibi\Model\Model;
+use Fibi\Validation\Rules\Regex;
 use Fibi\Validation\Rules\Required;
 
 class Video implements Model
@@ -20,6 +21,7 @@ class Video implements Model
     private mixed $content = null;
 
     #[Required]
+    #[Regex("/^(video\/.*)/i", "La extensión del archivo no es válido")]
     private ?string $type = null;
 
     #[Required]

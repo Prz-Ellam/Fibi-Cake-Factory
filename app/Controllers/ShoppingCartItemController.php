@@ -46,6 +46,11 @@ class ShoppingCartItemController extends Controller
         $shoppingCartItemId = $request->getRouteParams("shoppingCartItemId");
         $quantity = $request->getBody("quantity");
 
+        if ($quantity > 100 || $quantity < 1) {
+            $response->json(["error"])->setStatusCode(400);
+            return;
+        }
+
         $shoppingCartItem = new ShoppingCartItem();
         $shoppingCartItem
             ->setShoppingCartItemId($shoppingCartItemId)

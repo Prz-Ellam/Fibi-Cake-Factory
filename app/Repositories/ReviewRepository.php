@@ -9,8 +9,8 @@ use Fibi\Database\DB;
 class ReviewRepository
 {
     private const CREATE = "CALL sp_create_review(:reviewId, :message, :rate, :productId, :userId)";
-    private const UPDATE = "";
-    private const DELETE = "";
+    private const UPDATE = "CALL sp_reviews_update(:reviewId, :message, :rate, :productId)";
+    private const DELETE = "CALL sp_reviews_delete(:reviewId)";
     private const GET_ALL_BY_PRODUCT = "CALL sp_reviews_get_all_by_product(:productId)";
 
     public function create(Review $comment) : bool

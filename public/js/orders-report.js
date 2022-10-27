@@ -1,6 +1,10 @@
 import { getSession } from './utils/session.js';
-
 const id = getSession();
+
+var fmt = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 $.ajax({
     url: `api/v1/users/${id}`,
@@ -41,7 +45,7 @@ $.ajax({
                     <td>${element.categories}</td>
                     <td>${element.productName}</td>
                     <td>${element.rate}</td>
-                    <td>${element.price}</td>
+                    <td>${fmt.format(element.price)}</td>
                 </tr>
             `);
         });
@@ -73,6 +77,5 @@ $(document).ready(function() {
     $('.form-control').addClass('shadow-none');
     $('.form-select').addClass('shadow-none');
     $('.page-link').addClass('shadow-none');
-
 
 });

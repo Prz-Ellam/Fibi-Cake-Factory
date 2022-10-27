@@ -2,6 +2,8 @@
 
 namespace Fibi\Validation;
 
+use Fibi\Validation\Rules\MaxLength;
+use Fibi\Validation\Rules\Required;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -10,11 +12,11 @@ use ReflectionProperty;
  */
 class Validator
 {
-    private object $instance;
+    private object|array $instance;
     private array $feedback;
     private ?bool $status;
 
-    public function __construct(object $instance)
+    public function __construct(object|array $instance)
     {
         $this->instance = $instance;
         $this->status = null;
@@ -26,6 +28,22 @@ class Validator
      * @return array Lista de las reglas no cumplidas
      */
     public function validate() : array
+    {
+        if (is_object($this->instance))
+        {
+            return $this->validateObject();
+        }
+        elseif (is_array($this->instance))
+        {
+            return $this->validateArray();
+        }
+        else
+        {
+            return [];
+        }
+    }
+
+    private function validateObject(): array
     {
         // Obtiene las propiedades de una clase
         $properties = $this->instance::getProperties();
@@ -64,6 +82,42 @@ class Validator
         return $results;
     }
 
+    private function validateArray(): array
+    {
+        $results = [];
+
+        foreach ($this->instance["rules"] as $property => $rules)
+        {
+            $status = false;
+            if (is_array($rules))
+            {
+                foreach ($rules as $rule)
+                {
+                    $status = $rule->isValid($this->instance["values"][$property]);
+                    $class = new ReflectionClass($rule);
+                    $attributeName = $class->getShortName();
+                    if (!$status)
+                    {
+                        $results[$property][$attributeName] = $rule->message();
+                    }
+                }
+            }
+            else
+            {
+                $status = $rules->isValid($this->instance["values"][$property]);
+                $class = new ReflectionClass($rules);
+                $attributeName = $class->getShortName();
+                if (!$status)
+                {
+                    $results[$property][$attributeName] = $rules->message();
+                }
+            }
+
+        }
+
+        return $results;
+    }
+
     /**
      * Devuelve null si aun no se ha hecho la validacion
      * En caso de haberse hecho regresa true si todo esta correcto y false si hubo errores
@@ -75,5 +129,3 @@ class Validator
         return $this->status;
     }
 }
-
-?>

@@ -82,6 +82,6 @@
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     
     <!-- JavaScript -->
-    <script type="text/javascript" src="./js/shopping-cart.js"></script>
+    <script type="module" src="./js/shopping-cart.js"></script>
 </body>
 </html>

@@ -1,5 +1,4 @@
 import { getSession } from './utils/session.js';
-
 const id = getSession();
 
 const search = new URLSearchParams(window.location.search).get("search");
@@ -30,7 +29,6 @@ $.ajax({
     url: `api/v1/users/${id}`,
     method: "GET",
     async: false,
-    timeout: 0,
     success: function(response) {
         const url = `api/v1/images/${response.profilePicture}`;
         $('.nav-link img').attr('src', url);
@@ -64,37 +62,17 @@ Handlebars.registerHelper('currency', function(number) {
 
 const productCard = /*html*/`
 {{#each this}}
-<div class="bg-white col-lg-4 col-md-6 col-sm-12  text-center p-5">
+<div class="bg-white col-lg-4 col-md-6 col-sm-12 text-center p-5">
     <a href="/product?search={{id}}"><img src="api/v1/images/{{images.[0]}}" class="img-fluid p-3"></a>
     <h5 class="fw-bold mb-0">{{currency price}}</h5>
     <p>{{name}}</p>
     <div class="d-flex justify-content-center">
-        <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
-        <button class="btn btn-danger shadow-none rounded-1 add-wishlists" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
+        <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart" value="{{id}}">Agregar al carrito</button>
+        <button class="btn btn-danger shadow-none rounded-1 add-wishlists" data-bs-toggle="modal" data-bs-target="#select-wishlist" value="{{id}}"><i class="fa fa-heart"></i></button>
     </div>
 </div>
 {{/each}}
 `;
-
-function ProductSearchCard(product)
-{
-    var fmt = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
-
-    return /*html*/`
-    <div class="bg-white col-lg-4 col-md-6 col-sm-12  text-center p-5">
-        <a href="/product"><img src="assets/img/E001S011649.jpg" class="img-fluid p-3"></a>
-        <h5 class="fw-bold mb-0">${fmt.format(product.price)}</h5>
-        <p>${product.name}</p>
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
-            <button class="btn btn-danger shadow-none rounded-1 add-wishlists" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
-        </div>
-    </div>
-    `;
-}
 
 
 $.ajax({
@@ -109,8 +87,6 @@ $.ajax({
 });
 
 
-// $('#product-search-container').append(productSearchCard);
-
 function WishlistItem(wishlist)
 {
     return /*html*/`
@@ -119,7 +95,7 @@ function WishlistItem(wishlist)
             <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
             ${wishlist.name}
             </span>
-        <input class="custom-control-input form-check-input shadow-none me-1" type="checkbox" value="" aria-label="...">
+        <input class="custom-control-input form-check-input shadow-none me-1" name="wishlists[]" type="checkbox" value="${wishlist.id}" aria-label="...">
     </li>
     `;
 }
@@ -169,23 +145,51 @@ $(document).ready(function() {
         }
     });
 
-    $('.add-cart').click(function() {
-        Toast.fire({
-            icon: 'success',
-            title: 'Tu producto ha sido añadido al carrito'
+    $(document).on('click', '.add-cart', function(event) {
+        
+        event.preventDefault();
+
+        $.ajax({
+            url: 'api/v1/shopping-cart-item',
+            method: 'POST',
+            data: `product-id=${this.value}&quantity=1`,
+            success: function(response) {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Tu producto ha sido añadido al carrito'
+                });      
+            }
         });
+
+    });
+
+    $(document).on('click', '.add-wishlists', function() {
+        console.log(this.value);
+        $('#wishlist-product-id').val(this.value);
     });
 
     $('#add-wishlists').submit(function(event) {
+
         event.preventDefault();
 
-        modal = document.getElementById('select-wishlist');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('select-wishlist');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
+        console.log($(this).serialize());
+
+        $.ajax({
+            url: `api/v1/wishlist-objects`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log(response);
+            }
+        });
+        
         Toast.fire({
             icon: 'success',
-            title: 'El producto ha sido añadido a las listas de deseos'
+            title: 'Tu producto ha sido añadido a las listas de deseos'
         })
     });
 

@@ -97,32 +97,6 @@ CREATE TABLE IF NOT EXISTS reviews(
 );
 
 
--- DROP TABLE IF EXISTS comments;
--- CREATE TABLE IF NOT EXISTS comments(
---    comment_id                  BINARY(16) NOT NULL UNIQUE,
---    message                     VARCHAR(255) NOT NULL,
---    product_id                  BINARY(16) NOT NULL,
---    user_id                     BINARY(16) NOT NULL,
---    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
---    modified_at                 TIMESTAMP DEFAULT NOW(),
---    active                      BOOLEAN NOT NULL DEFAULT TRUE,
---    CONSTRAINT comments_pk
---        PRIMARY KEY (comment_id)
--- );
-
--- Rates
--- DROP TABLE IF EXISTS rates;
--- CREATE TABLE IF NOT EXISTS rates(
---    rate_id                     BINARY(16) NOT NULL UNIQUE,
---    rate                        SMALLINT NOT NULL,
---    product_id                  BINARY(16) NOT NULL,
---    user_id                     BINARY(16) NOT NULL,
---    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
---    modified_at                 TIMESTAMP,
---    active                      BOOLEAN NOT NULL DEFAULT TRUE,
---    CONSTRAINT rates_pk
---        PRIMARY KEY (rate_id)
--- );
 
 -- Wishlists
 DROP TABLE IF EXISTS wishlists;
@@ -311,19 +285,6 @@ CREATE TABLE IF NOT EXISTS chat_messages(
         PRIMARY KEY (chat_message_id)
 );
 
--- Chat files
--- imagenes, videos, documentos, audios
-DROP TABLE IF EXISTS chat_files;
-CREATE TABLE IF NOT EXISTS chat_files(
-    chat_file_id                BINARY(16) NOT NULL UNIQUE,
-    chat_participant_id         BINARY(16) NOT NULL,
-    file_content                MEDIUMBLOB NOT NULL,
-    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at                 TIMESTAMP,
-    active                      BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT chat_files_pk
-        PRIMARY KEY (chat_file_id)
-);
 
 
 
@@ -453,10 +414,6 @@ ALTER TABLE chat_messages
         FOREIGN KEY (chat_participant_id)
         REFERENCES chat_participants(chat_participant_id);
 
-ALTER TABLE chat_files
-    ADD CONSTRAINT chat_files_chat_participants_fk
-        FOREIGN KEY (chat_participant_id)
-        REFERENCES chat_participants(chat_participant_id);
 
 
 -- https://mysql.tutorials24x7.com/blog/guide-to-design-database-for-shopping-cart-in-mysql

@@ -10,7 +10,7 @@ use Fibi\Validation\Rules\Uuid;
 class Wishlist implements Model
 {
     /**
-     * Undocumented variable
+     * Identificador de la lista de deseos en la base de datos
      *
      * @var string|null
      */
@@ -19,25 +19,25 @@ class Wishlist implements Model
     private ?string $wishlistId = null;
 
     /**
-     * Undocumented variable
+     * Nombre de la lista de deseos
      *
      * @var string|null
      */
-    #[Required]
-    #[MaxLength(50)]
+    #[Required("El nombre de la lista de deseos es requerido")]
+    #[MaxLength(50, "El nombre de la lista de deseos es muy largo")]
     private ?string $name = null;
 
     /**
-     * Undocumented variable
+     * Descripción de la lista de deseos
      *
      * @var string|null
      */
-    #[Required]
-    #[MaxLength(200)]
+    #[Required("La descripción de la lista de deseos es requerido")]
+    #[MaxLength(200, "La descripción de la lista de deseos es muy larga")]
     private ?string $description = null;
 
     /**
-     * Undocumented variable
+     * Visibilidad de la lista de deseos
      *
      * @var boolean|null
      */
@@ -45,7 +45,7 @@ class Wishlist implements Model
     private ?bool $visible = null;
 
     /**
-     * Undocumented variable
+     * ID del usuario al que le pertenece la lista de deseos
      *
      * @var string|null
      */

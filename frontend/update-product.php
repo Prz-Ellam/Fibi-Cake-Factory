@@ -162,6 +162,6 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
     
-    <script src="./js/update-product.js"></script>
+    <script type="module" src="./js/update-product.js"></script>
 </body>
 </html>

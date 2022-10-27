@@ -17,9 +17,13 @@ class WishlistRepository
 
     public function create(Wishlist $wishlist)
     {
-        $parameters = Parser::SP(self::CREATE);
-        $result = DB::executeNonQuery(self::CREATE, $wishlist->toObject($parameters));
-        return $result > 0;
+        return DB::executeNonQuery(self::CREATE, [
+            "wishlistId"        => $wishlist->getWishlistId(),
+            "name"              => $wishlist->getName(),
+            "description"       => $wishlist->getDescription(),
+            "visible"           => $wishlist->isVisible(),
+            "userId"            => $wishlist->getUserId()
+        ]) > 0;
     }
 
     public function update(Wishlist $wishlist)
