@@ -279,7 +279,7 @@ class WishlistController extends Controller
         $result = ($userId === $userIdSession) ? 
             $wishlistRepository->getUserWishlists($userId, $count, $offset) :
             $wishlistRepository->getAllByUserPublic($userId, $count, $offset);
-
+/*
         if (!$result) {
             $response->setStatusCode(404)->json([
                 "status" => false,
@@ -287,7 +287,7 @@ class WishlistController extends Controller
             ]);
             return;
         }
-
+*/
         foreach ($result as &$element) {
             $element["images"] = json_decode($element["images"]);
         }

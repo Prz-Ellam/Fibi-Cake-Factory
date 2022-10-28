@@ -423,3 +423,51 @@ WHERE BIN_TO_UUID(user_id) = '95ee300d-6466-4f43-86fd-35c2737da7f8';
 
 
 
+
+CREATE DATABASE tests;
+USE tests;
+
+CREATE TABLE users(
+    id          INT PRIMARY KEY
+);
+
+CREATE TABLE images(
+    id          INT PRIMARY KEY,
+    user_id     INT
+);
+
+CREATE TABLE videos(
+    id          INT PRIMARY KEY,
+    user_id     INT
+);
+
+DROP TABLE users;
+
+INSERT INTO users(id) VALUES(1) 
+
+INSERT INTO images(id, user_id) VALUES(1, 1);
+INSERT INTO images(id, user_id) VALUES(2, 1);
+INSERT INTO images(id, user_id) VALUES(3, 1);
+
+INSERT INTO videos(id, user_id) VALUES(1, 1);
+INSERT INTO videos(id, user_id) VALUES(2, 1);
+
+
+SELECT
+    u.id 'user',
+    GROUP_CONCAT(DISTINCT i.id)  'image',
+    GROUP_CONCAT(DISTINCT v.id) 'video'
+FROM
+    users AS u
+INNER JOIN
+    images AS i
+ON
+    u.id = i.user_id
+INNER JOIN
+    videos AS v
+ON
+    u.id = v.user_id
+GROUP BY
+    u.id;
+
+

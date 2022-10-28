@@ -76,10 +76,9 @@ const productCard = /*html*/`
 
 
 $.ajax({
-    url: `api/v1/products/order/ships`,
+    url: `api/v1/products?search=${search}`,
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         const template = Handlebars.compile(productCard);
         $('#product-search-container').append(template(response));
@@ -191,6 +190,18 @@ $(document).ready(function() {
             icon: 'success',
             title: 'Tu producto ha sido añadido a las listas de deseos'
         })
+    });
+
+    $('#sortings').change(function() {
+        const querys = this.value.split(' ');
+
+        fetch(`api/v1/products?filter=${querys[0]}&order=${querys[1]}&search=${search}`)
+        .then(response => response.json())
+        .then(response => {
+            $('#product-search-container').empty();
+            const template = Handlebars.compile(productCard);
+            $('#product-search-container').append(template(response));
+        });
     });
 
 });

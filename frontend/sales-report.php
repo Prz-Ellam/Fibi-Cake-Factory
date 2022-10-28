@@ -47,6 +47,10 @@
                 <label for="to">Hasta:</label>
                 <input type="date" class="form-control shadow-none rounded-1" name="to" id="to">
             </div>
+            <div class="col-auto ">
+                <label style="visibility: hidden">Categorías:</label>
+                <input type="button" value="Buscar" class="btn btn-orange rounded-1 shadow-none d-block">
+            </div>
         </div>
         
 
@@ -92,7 +96,6 @@
         <button class="btn btn-orange shadow-none rounded-1"><i class="fa fa-file-csv"></i> CSV</button>
         <button class="btn btn-orange shadow-none rounded-1"><i class="fa fa-file-pdf"></i> PDF</button>
 
-        <canvas id="myChart"></canvas>
 
     </div>
 
@@ -115,9 +118,6 @@
    
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
-
-    <!-- Chart.js -->
-    <script src="vendor/node_modules/chart.js/dist/chart.min.js"></script>
 
     <!-- JavaScript -->
     <script type="module" src="./js/sales-report.js"></script>

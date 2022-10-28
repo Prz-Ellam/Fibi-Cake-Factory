@@ -11,8 +11,8 @@ class ProductRepository
     private const CREATE = "CALL sp_products_create(:productId, :name, :description, :isQuotable, :price, :stock, :userId)";
     
     
-    private const UPDATE = "CALL sp_update_product(:productId, :name, :description, :isQuotable, :price, :stock)";
-    private const DELETE = "CALL sp_delete_product(:productId)";
+    private const UPDATE = "CALL sp_products_update(:productId, :name, :description, :isQuotable, :price, :stock)";
+    private const DELETE = "CALL sp_products_delete(:productId)";
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
     private const GET_ONE = "CALL sp_get_product(:productId)";
     private const GET_RECENT_PRODUCTS = "CALL sp_get_recent_products()";
@@ -118,8 +118,7 @@ class ProductRepository
 
     public function getRecentProducts()
     {
-        $result = DB::executeReader(self::GET_RECENT_PRODUCTS, []);
-        return $result;
+        return DB::executeReader(self::GET_RECENT_PRODUCTS, []) ?? [];
     }
 
     public function findAllByPending() : array
@@ -143,41 +142,41 @@ class ProductRepository
         ]) > 0;
     }
 
-    public function getAllByAlpha() : array
+    public function getAllByAlpha(string $order = "asc", ?string $filter = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_ALPHA, [
-            "order" => "asc",
-            "filter" => null,
+            "order" => $order,
+            "filter" => $filter,
             "limit" => null,
             "offset" => null
         ]);
     }
 
-    public function getAllByRate() : array
+    public function getAllByRate(string $order = "asc", ?string $filter = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_RATE, [
-            "order" => "asc",
-            "filter" => null,
+            "order" => $order,
+            "filter" => $filter,
             "limit" => null,
             "offset" => null
         ]);
     }
 
-    public function getAllByPrice() : array
+    public function getAllByPrice(string $order = "asc", ?string $filter = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_PRICE, [
-            "order" => "asc",
-            "filter" => null,
+            "order" => $order,
+            "filter" => $filter,
             "limit" => null,
             "offset" => null
         ]);
     }
 
-    public function getAllByShips() : array
+    public function getAllByShips(string $order = "asc", ?string $filter = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_SHIPS, [
-            "order" => "asc",
-            "filter" => null,
+            "order" => $order,
+            "filter" => $filter,
             "limit" => null,
             "offset" => null
         ]);

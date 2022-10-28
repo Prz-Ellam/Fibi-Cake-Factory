@@ -1,4 +1,4 @@
-export function userValidator(id) {
+export function loginValidator(id) {
     // '#login-form'
     $(id).validate({
         rules: {

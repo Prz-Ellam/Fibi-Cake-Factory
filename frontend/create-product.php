@@ -52,11 +52,11 @@
                 <div class="mb-4">
                     <label class="form-label" role="button">Tipo de venta</label>
                     <div class="form-check">
-                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="sell" value="1" checked>
+                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="sell" value="0" checked>
                         <label class="form-check-label" for="sell" role="button">Es para vender</label>
                     </div>
                     <div class="form-check">
-                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="cotizar" value="2">
+                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="cotizar" value="1">
                         <label class="form-check-label" for="cotizar" role="button">Es para cotizar</label>
                     </div>
                 </div>

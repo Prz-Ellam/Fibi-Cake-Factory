@@ -17,7 +17,7 @@ function CarouselCard(product)
             <p>${product.name}</p>
             ${ (product.userId === id) ?
             `<div class="d-flex justify-content-center">
-                <a href="/update-product" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
+                <a href="/update-product?search=${product.id}" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
                 <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
             </div>`
             :

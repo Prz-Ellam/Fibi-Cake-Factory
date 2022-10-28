@@ -45,7 +45,7 @@ function ProductCard(product)
     return /*html*/`
     <div class="col-lg-4 col-md-6 col-sm-12 text-center p-5" id="${product.id}">
         <a href="/product?search=${product.id}"><img src="api/v1/images/${product.images[2]}" class="img-fluid p-3"></a>
-        <h5 class="fw-bold text-brown mb-0">${fmt.format(product.price)}</h5>
+        <h5 class="fw-bold text-brown mb-0">${(product.is_quotable === 0) ? fmt.format(product.price) : 'Cotizable'}</h5>
         <p class="text-brown">${product.name}</p>
         <div class="d-flex justify-content-center">
             <a href="/update-product?search=${product.id}" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>

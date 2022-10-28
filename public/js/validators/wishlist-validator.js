@@ -1,5 +1,9 @@
 export function wishlistValidator(id) {
 
+    $.validator.addMethod('maxfiles', function(value, element, parameter) {
+        return (element.files.length <= Number(parameter));
+    }, 'Too many files');
+
     $.validator.addMethod('filesize', function(value, element, parameter) {
 
         let result;
@@ -16,6 +20,9 @@ export function wishlistValidator(id) {
 
     $(id).validate({
         rules: {
+            'images[]': {
+                maxfiles: 3
+            },
             'name': {
                 required: true,
                 maxlength: 50
@@ -29,6 +36,9 @@ export function wishlistValidator(id) {
             }
         },
         messages: {
+            'images[]': {
+                maxfiles: 'Solo se pueden añadir 3 imagenes por lista'
+            },
             'name': {
                 required: 'El nombre de la lista de deseos no puede estar vacío.',
                 maxlength: 'El nombre de la lista es demasiado largo'

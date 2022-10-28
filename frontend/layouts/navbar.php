@@ -13,7 +13,7 @@
                     </div>
                 </div>
             </form>
-            <ul class="navbar-nav align-items-center" id="orange-navbar">
+            <ul class="navbar-nav align-items-md-center" id="orange-navbar">
                 <li class="nav-item">
                     <a href="/chat" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fa fa-bell"></i>

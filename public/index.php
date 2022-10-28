@@ -423,7 +423,7 @@ $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUs
 
 
 
-
+// TODO: No poder ver a los usuarios con visibilidad privada
 
 // Categories
 $app->post('/api/v1/categories', [ new CategoryController(), 'create' ]);
@@ -431,9 +431,10 @@ $app->post('/api/v1/categories/{categoryId}', [ new CategoryController(), 'updat
 $app->delete('/api/v1/categories/{categoryId}', [ new CategoryController(), 'delete' ]);
 $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 
-//$app->get('/api/v1/categories', function() {});
-
 $app->post('/api/v1/products', [ new ProductController(), 'create' ]);
+
+
+
 
 $app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
 
@@ -461,7 +462,6 @@ $app->post('/api/v1/shopping-carts/{shoppingCartItemId}', [ new ShoppingCartItem
 // Images
 $app->get('/api/v1/images/{imageId}', [ new ImageController(), 'get' ]);
 $app->delete('/api/v1/images/{id}', [ new ImageController(), 'delete' ]);
-
 
 
 
@@ -497,13 +497,10 @@ $app->put('/api/v1/products/{productId}/reviews/{reviewId}', [ new ReviewControl
 $app->delete('/api/v1/products/{productId}/reviews/{reviewId}', [ new ReviewController(), 'delete' ]);
 
 
-
-
-
-
-
-
 $app->get('/api/v1/products/{productId}/comments', [ new ReviewController(), 'getProductComments' ]);
+
+
+
 
 $app->get('/api/v1/products/find/pending', [ new ProductController(), 'getPendingProducts' ]);
 $app->post('/api/v1/products/{productId}/approve', [ new ProductController(), 'approve'  ]);
@@ -542,10 +539,6 @@ $app->get('/testing', function (Request $request, Response $response) {
 
     $response->json($results);
 */
-
-    $productRepository = new ProductRepository();
-    $results = $productRepository->getAllByShips();
-    $response->json($results);
 });
 
 $app->get('/prueba', function(Request $request, Response $response) {

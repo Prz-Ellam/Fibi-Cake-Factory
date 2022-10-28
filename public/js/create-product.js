@@ -1,19 +1,15 @@
+import { createProductValidator } from './validators/create-product-validator.js';
+import { getSession } from './utils/session.js';
+const id = getSession();
+
 $.ajax({
-    url: "api/v1/session",
-    method: 'GET',
+    url: `api/v1/users/${response.id}`,
+    method: "GET",
     async: false,
     timeout: 0,
     success: function(response) {
-        $.ajax({
-            url: `api/v1/users/${response.id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
-        });
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
     }
 });
 
@@ -30,6 +26,8 @@ $.ajax({
 });
 
 $(document).ready(function() {
+
+    createProductValidator('#create-product-form');
 
     $('#sell').click(function() {
         $('#price').removeAttr('disabled');
@@ -183,10 +181,10 @@ $(document).ready(function() {
         rules: {
             'name': {
                 required: true,
-                maxlength: 20
+                maxlength: 50
             },
             'description': {
-                maxlength: 50
+                maxlength: 200
             }
         },
         messages: {
@@ -205,9 +203,6 @@ $(document).ready(function() {
     });
 
     
-
-
-    optionsCount = 5;
     $('#create-category-form').submit(function(event) {
 
         event.preventDefault();
@@ -260,12 +255,10 @@ $(document).ready(function() {
             return;
         }
 
-        const requestBody = new FormData(this);
         $.ajax({
             method: 'POST',
             url: 'api/v1/products',
-            data: requestBody,
-            //dataType: 'json',
+            data: new FormData(this),
             cache: false,
             contentType: false,
             processData: false,
@@ -283,7 +276,5 @@ $(document).ready(function() {
                 console.log(status);
             }
         });
-
     });
-
 });

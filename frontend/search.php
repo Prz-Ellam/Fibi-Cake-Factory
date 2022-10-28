@@ -55,20 +55,17 @@
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="input-group mb-3">
-                                <select class="form-select shadow-none">
+                                <select class="form-select shadow-none" id="sortings">
                                     <option>Filtros</option>
-                                    <option value="">Los más vendidos</option>
-                                    <option value="">Los menos vendidos</option>
-                                    <option value="">Precio: de más bajo a más alto</option>
-                                    <option value="">Precio: de más alto a más bajo</option>
-                                    <option value="">Los mejor calificados</option>
-                                    <option value="">Alfabeticamente de la A a la Z</option>
-                                    <option value="">Alfabeticamente de la Z a la A</option>
+                                    <option value="sells asc">Los más vendidos</option>
+                                    <option value="sells desc">Los menos vendidos</option>
+                                    <option value="price asc">Precio: de más bajo a más alto</option>
+                                    <option value="price desc">Precio: de más alto a más bajo</option>
+                                    <option value="rates asc">Los mejor calificados</option>
+                                    <option value="alpha asc">Alfabeticamente de la A a la Z</option>
+                                    <option value="alpha desc">Alfabeticamente de la Z a la A</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <p class="text-start"><strong>16</strong> productos encontrados</p>
                         </div>
                     </div>
                     

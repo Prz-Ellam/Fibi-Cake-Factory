@@ -67,12 +67,12 @@ BEGIN
     UPDATE
         users
     SET
-        email = IFNULL(_email, email),
-        username = IFNULL(_username, username),
-        first_name = IFNULL(_first_name, first_name),
-        last_name = IFNULL(_last_name, last_name),
-        birth_date = IFNULL(_birth_date, birth_date),
-        gender = IFNULL(_gender, gender),
+        email           = IFNULL(_email, email),
+        username        = IFNULL(_username, username),
+        first_name      = IFNULL(_first_name, first_name),
+        last_name       = IFNULL(_last_name, last_name),
+        birth_date      = IFNULL(_birth_date, birth_date),
+        gender          = IFNULL(_gender, gender),
         profile_picture = IFNULL(UUID_TO_BIN(_profile_picture), profile_picture)
     WHERE
         BIN_TO_UUID(user_id) = _user_id
@@ -109,10 +109,16 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_delete_user $$
 
 CREATE PROCEDURE sp_delete_user(
-
+    IN _user_id                 VARCHAR(36)
 )
 BEGIN
 
+    UPDATE
+        users
+    SET
+        active = FALSE
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id;
 
 END
 DELIMITER ;

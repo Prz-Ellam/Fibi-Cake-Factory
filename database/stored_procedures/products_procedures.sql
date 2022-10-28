@@ -45,8 +45,9 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_update $$
 
-CREATE PROCEDURE sp_update_product(
+CREATE PROCEDURE sp_products_update(
     IN _product_id          VARCHAR(36),
     IN _name                VARCHAR(50),
     IN _description         VARCHAR(200),
@@ -75,8 +76,9 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_delete $$
 
-CREATE PROCEDURE sp_delete_product(
+CREATE PROCEDURE sp_products_delete(
     IN _product_id              VARCHAR(36)
 )
 BEGIN
@@ -165,6 +167,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_products $$
 
 CREATE PROCEDURE sp_get_user_products(
     IN _user_id                 VARCHAR(36)
@@ -233,6 +236,7 @@ BEGIN
         p.price,
         p.stock,
         p.approved,
+        (SELECT IFNULL(ROUND(AVG(rate), 2), 'No reviews') FROM reviews WHERE BIN_TO_UUID(product_id) = _product_id AND active = TRUE) 'rate',
         JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
@@ -262,7 +266,8 @@ BEGIN
         p.name, 
         p.description, 
         p.is_quotable, 
-        p.price, 
+        p.price,
+        'rate',
         p.stock, 
         p.approved;
 
@@ -318,17 +323,6 @@ DELIMITER ;
 
 
 
-
-CREATE PROCEDURE sp_update_product();
-
-CREATE PROCEDURE sp_delete_product();
-
-CREATE PROCEDURE sp_get_products(
-
-);
-
-
-CREATE PROCEDURE sp_filter_user_products();
 
 
 
@@ -645,6 +639,73 @@ DELIMITER ;
 
 
 
+SELECT BIN_TO_UUID(product_id), SUM(quantity) FROM shoppings GROUP BY BIN_TO_UUID(product_id);
+
+
+
+SELECT
+    BIN_TO_UUID(p.product_id) 'product_id',
+    p.name,
+    p.description,
+    p.is_quotable,
+    p.price,
+    p.stock,
+    BIN_TO_UUID(p.user_id) 'user_id',
+    (SELECT IFNULL(AVG(r.rate), 'No reviews') 'rate' FROM reviews AS r WHERE BIN_TO_UUID(r.product_id) = BIN_TO_UUID(p.product_id)) 'rates',
+    (SELECT IFNULL(SUM(s.quantity), 0) 'shops' FROM shoppings AS s WHERE BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)) 'shops'
+FROM
+    products AS p
+INNER JOIN
+    products_categories AS pc
+ON
+    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+WHERE
+    BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(pc.category_id)
+GROUP BY
+    BIN_TO_UUID(p.product_id)
+ORDER BY
+    CASE
+        WHEN _order LIKE '%sell+%' THEN shops,
+        WHEN _order LIKE '%sell-%' THEN shops
+    END DESC;
+
+    CASE _order WHEN 'sell+' THEN shops END ASC,
+    CASE _order WHEN 'sell-' THEN shops END DESC;
+
+
+SELECT * FROM products;
+
+SELECT BIN_TO_UUID(product_id), BIN_TO_UUID(category_id) FROM products_categories;
+
+
+SELECT
+    BIN_TO_UUID(p.product_id) 'product_id',
+    p.name,
+    p.description,
+    p.is_quotable,
+    p.price,
+    p.stock,
+    BIN_TO_UUID(p.user_id) 'user_id',
+    IFNULL(AVG(r.rate), 'No reviews') 'rate',
+    IFNULL(SUM(s.quantity), 0) 'shops'
+FROM
+    products AS p
+LEFT JOIN
+    reviews AS r
+ON
+    BIN_TO_UUID(r.product_id) = BIN_TO_UUID(p.product_id)
+LEFT JOIN
+    shoppings AS s
+ON
+    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)
+GROUP BY
+    BIN_TO_UUID(p.product_id)
+
+
+
+
+
+
 
 
 
@@ -660,19 +721,25 @@ CREATE PROCEDURE sp_products_get_all_by_ships(
 BEGIN
 
     SELECT 
-    BIN_TO_UUID(p.product_id) id, 
-    p.name, 
-    p.price, 
-    IFNULL(SUM(s.quantity), 0) quantity,
-    (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images,
-    BIN_TO_UUID(p.user_id) userId
-    FROM products AS p
-    LEFT JOIN shoppings AS s
-    ON BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
+        BIN_TO_UUID(p.product_id) id, 
+        p.name, 
+        p.price, 
+        IFNULL(SUM(s.quantity), 0) quantity,
+        (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images,
+        BIN_TO_UUID(p.user_id) userId
+    FROM 
+        products AS p
+    LEFT JOIN 
+        shoppings AS s
+    ON 
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
     WHERE
-        p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+        p.name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND p.active = TRUE AND approved = TRUE
-    GROUP BY p.product_id, p.name, p.price
+    GROUP BY 
+        p.product_id, 
+        p.name, 
+        p.price
     ORDER BY
         CASE _order WHEN 'asc'  THEN COUNT(s.quantity) END ASC,
         CASE _order WHEN 'desc' THEN COUNT(s.quantity) END DESC;
@@ -726,11 +793,12 @@ BEGIN
     SELECT
         BIN_TO_UUID(p.product_id) id,
         name,
-        price
+        price,
+        (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
     WHERE
-        name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+        name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND active = TRUE
         AND approved = TRUE
     ORDER BY
@@ -757,11 +825,12 @@ BEGIN
     SELECT
         BIN_TO_UUID(p.product_id) id,
         name,
-        price
+        price,
+        (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
     WHERE
-        name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
+        name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND active = TRUE
         AND approved = TRUE
     ORDER BY
@@ -788,7 +857,8 @@ BEGIN
     SELECT
         BIN_TO_UUID(p.product_id) id,
         p.name,
-        IFNULL(AVG(r.rate), 'No reviews') rate
+        IFNULL(AVG(r.rate), 'No reviews') rate,
+        (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
     LEFT JOIN
@@ -810,11 +880,6 @@ DELIMITER ;
 
 
 
--- Filtrar por categoria
-SELECT BIN_TO_UUID(category_id), name FROM categories;
-
--- 06c69dc0-af3a-4663-b504-01b5a449c5f2 (Frutas)
--- 3d7ad7f2-674d-47c2-a1ca-6c8e0170941d (A)
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_get_all_by_category $$

@@ -22,7 +22,7 @@ class ReviewController
      * @param Response $response
      * @return void
      */
-    public function create(Request $request, Response $response) : void
+    public function create(Request $request, Response $response): void
     {
         $session = new PhpSession();
 
@@ -135,7 +135,7 @@ class ReviewController
     public function delete(Request $request, Response $response): void
     {
         $reviewId = $request->getRouteParams("reviewId");
-        
+
         $validations = [
             "rules" => [
                 "reviewId" => [
@@ -175,20 +175,51 @@ class ReviewController
         ]);
     }
 
-    public function getProductComments(Request $request, Response $response) : void
+    /**
+     * Obtiene todos los comentarios de un producto
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function getProductComments(Request $request, Response $response): void
     {
+        // TODO: Validar que exista el ID
         $productId = $request->getRouteParams("productId");
+        $validations = [
+            "rules" => [
+                "productId" => [
+                    new Required("A"),
+                    new RulesUuid("A")
+                ]
+            ],
+            "values" => [
+                "productId" => &$productId
+            ]
+        ];
 
-        $required = new Required();
-        $uuid = new Rules\Uuid();
-        if (!$required->isValid($productId) || !$uuid->isValid($productId))
-        {
-            $response->text("404 Not Found")->setStatusCode(404);
+        $validator = new Validator($validations);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+        if (!$status) {
+            $response->json([
+                "status" => false,
+                "message" => $feedback
+            ])->setStatusCode(400);
             return;
         }
 
         $commentRepository = new ReviewRepository();
         $comments = $commentRepository->getAllByProduct($productId);
+        /*
+        if (!$comments) {
+            $response->json([
+                "status" => $status,
+                "message" => "No se encontró nada"
+            ])->setStatusCode(404);
+            return;
+        }
+        */
 
         $response->json($comments);
     }

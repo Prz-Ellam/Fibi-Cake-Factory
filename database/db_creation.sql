@@ -287,6 +287,23 @@ CREATE TABLE IF NOT EXISTS chat_messages(
 
 
 
+DROP TABLE IF EXISTS quotes
+
+CREATE TABLE IF NOT EXISTS quotes(
+    quote_id                    BINARY(16) NOT NULL UNIQUE,
+    seller_id                   BINARY(16) NOT NULL,
+    shopper_id                  BINARY(16) NOT NULL,
+    product_id                  BINARY(16) NOT NULL,
+    price                       DECIMAL (15, 2) NOT NULL,
+    created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified_at                 TIMESTAMP DEFAULT NOW(),
+    active                      BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT quotes_pk
+        PRIMARY KEY (quote_id)
+);
+
+
+
 
 -- Foreign keys
 ALTER TABLE users

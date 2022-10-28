@@ -115,6 +115,15 @@ class Validator
 
         }
 
+        if (count($results) === 0)
+        {
+            $this->status = true;
+        }
+        else
+        {
+            $this->status = false;
+        }
+
         return $results;
     }
 

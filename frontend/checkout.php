@@ -161,7 +161,7 @@
                                 </span>
 
                                 <div id="paypal-section">
-                                    <button class="btn btn-warning w-100 rounded-1 shadow-none d-none">Paypal</button>
+                                    <!--<button class="btn btn-warning w-100 rounded-1 shadow-none d-none">Paypal</button>-->
                                 </div>
 
                             </div> 
@@ -232,6 +232,8 @@
 
     <!-- Sweet Alert -->
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AYRWL7VDLGBBSSSutwgu3nPO8ZDZKNGCiON9pO_X-dGx3lgkWMLL2xlQjDycSG5qA3bh4IRsjMMgHunl"></script>
 
     <!-- JavaScript -->
     <script type="module" src="./js/checkout.js"></script>

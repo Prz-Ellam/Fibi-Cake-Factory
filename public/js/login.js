@@ -3,36 +3,11 @@ import '../vendor/node_modules/jquery-validation/dist/jquery.validate.min.js';
 import '../vendor/node_modules/bootstrap/dist/js/bootstrap.min.js';
 import 'https://kit.fontawesome.com/48ce36e499.js';
 
+import { loginValidator } from './validators/login-validator.js';
+
 $(document).ready(function () {
 
-    // Reglas del formulario de login
-    $('#login-form').validate({
-        rules: {
-            'loginOrEmail': {
-                required: true,
-                email: false
-            },
-            'password': {
-                required: true
-            }
-        },
-        messages: {
-            'loginOrEmail': {
-                required: 'El usuario o correo electrónico no puede estar vacío.'
-            },
-            'password': {
-                required: 'La contraseña no puede estar vacía.'
-            }
-        },
-        errorElement: 'small',
-        errorPlacement: function (error, element) {
-            error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
-        }
-    });
-
-    $.validator.addMethod('email5322', function (value, element) {
-        return this.optional(element) || /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(value);
-    }, 'Please enter a valid email');
+    loginValidator('#login-form');
 
     $('#send-mail').validate({
         rules: {
@@ -113,9 +88,6 @@ $(document).ready(function () {
         if (!validations) {
             return;
         }
-
-        const requestBody = new FormData(this);
-        console.log([...requestBody]);
 
         const modal = document.getElementById('restore-password');
         const modalInstance = bootstrap.Modal.getInstance(modal);

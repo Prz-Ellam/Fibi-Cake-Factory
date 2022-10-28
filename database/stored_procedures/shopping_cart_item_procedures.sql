@@ -25,7 +25,7 @@ BEGIN
         UPDATE
             shopping_cart_items
         SET
-            quantity = IF(quantity < 100, quantity + 1, quantity)
+            quantity = IF(quantity < 100, quantity + _quantity, quantity)
         WHERE
             BIN_TO_UUID(product_id) = _product_id
             AND BIN_TO_UUID(shopping_cart_id) = _shopping_cart_id;
@@ -50,7 +50,7 @@ BEGIN
     UPDATE
         products
     SET
-        stock = stock - 1
+        stock = stock - _quantity
     WHERE
         BIN_TO_UUID(product_id) = _product_id;
 

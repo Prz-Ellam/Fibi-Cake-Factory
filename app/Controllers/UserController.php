@@ -207,7 +207,7 @@ class UserController extends Controller
 
     /**
      * Actualiza la informacion de un usuario
-     * Endpoint: /api/v1/users/:userId
+     * Endpoint: PUT /api/v1/users/:userId
      * Creado por: Eliam Rodríguez Pérez
      * Creado: 2022-09-29
      *
@@ -305,7 +305,9 @@ class UserController extends Controller
 
     /**
      * Actualiza la contraseña del usuario
-     * Endpoint: /api/v1/users/:userId/password
+     * Endpoint: PUT /api/v1/users/:id/password
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-09-29
      *
      * @param Request $request
      * @param Response $response
@@ -353,6 +355,9 @@ class UserController extends Controller
 
     /**
      * Elimina un usuario de la base de datos
+     * Endpoint: DELETE /api/v1/users/:id
+     * Creado por: Eliam Rodríguez Pérez
+     * Creado: 2022-09-29
      *
      * @param Request $request
      * @param Response $response
@@ -436,9 +441,16 @@ class UserController extends Controller
             ->json($users);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function getAllByFilter(Request $request, Response $response): void
     {
-        $search = $request->getQuery('search');
+        $search = $request->getQuery("search");
 
         $userRepository = new UserRepository();
         $users = $userRepository->getAllByFilter($search);

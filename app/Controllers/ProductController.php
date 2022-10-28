@@ -37,21 +37,19 @@ class ProductController extends Controller
         $typeOfSell = $request->getBody("type-of-sell");
         $price = $request->getBody("price");
         $stock = $request->getBody("stock");
-
         $images = $request->getFiles("images");
         $videos = $request->getFiles("videos");
 
         // TODO: Validar que esto existe realmente en la BD
         $categories = $request->getBody("categories") ?? [];
 
-        $userId = $request->getBody("user-id");
-        if (is_null($userId))
-            $userId = (new PhpSession())->get('userId');
+        $userId = (new PhpSession())->get('userId');
 
         DB::beginTransaction();
 
         $product = new Product();
-        $product->setProductId($productId)
+        $product
+            ->setProductId($productId)
             ->setName($name)
             ->setDescription($description)
             ->setTypeOfSell($typeOfSell)
@@ -98,7 +96,8 @@ class ProductController extends Controller
             $imageContent = $image->getContent();
 
             $image = new Image();
-            $image->setImageId($imageId)
+            $image
+                ->setImageId($imageId)
                 ->setName($imageName)
                 ->setType($imageType)
                 ->setSize($imageSize)
@@ -361,20 +360,42 @@ class ProductController extends Controller
      */
     public function getProducts(Request $request, Response $response)
     {
+        $search = $request->getQuery("search") ?? "";
+        $filter = $request->getQuery("filter") ?? "";
+        $order = $request->getQuery("order") ?? "asc";
+
+        //var_dump($filter);die;
+
         $userId = (new PhpSession())->get('userId');
         // TODO: Validar que coincida con la sesión
 
         $productRepository = new ProductRepository();
-        $products = $productRepository->getUserProducts($userId);
+        $products = [];
+        switch ($filter) {
+            case "sells":
+                $products = $productRepository->getAllByShips($order, $search);
+                break;
+            case "price":
+                $products = $productRepository->getAllByPrice($order, $search);
+                break;
+            case "rates":
+                $products = $productRepository->getAllByRate($order, $search);
+                break;
+            case "alpha":
+                $products = $productRepository->getAllByAlpha($order, $search);
+                break;
+            default:
+                $products = $productRepository->getAllByShips($order, $search);
+        }
 
         foreach ($products as &$element) {
-            $element["categories"] = json_decode($element["categories"], true);
-            foreach ($element["categories"] as &$category) {
-                $category = json_decode($category, true);
-            }
+            //$element["categories"] = json_decode($element["categories"], true);
+            //foreach ($element["categories"] as &$category) {
+            //    $category = json_decode($category, true);
+            //}
 
             $element["images"] = explode(',', $element["images"]);
-            $element["videos"] = explode(',', $element["videos"]);
+            //$element["videos"] = explode(',', $element["videos"]);
         }
 
         $response->json($products);
@@ -562,14 +583,14 @@ class ProductController extends Controller
     public function getAllByPrice(Request $request, Response $response)
     {
         $productRepository = new ProductRepository();
-        $results = $productRepository->getAllByPrice();
+        $results = $productRepository->getAllByPrice("asc");
         $response->json($results);
     }
 
     public function getAllByShips(Request $request, Response $response)
     {
         $productRepository = new ProductRepository();
-        $results = $productRepository->getAllByShips();
+        $results = $productRepository->getAllByShips("asc");
 
         foreach ($results as &$element) {
             $element["images"] = explode(",", $element["images"]);
@@ -581,7 +602,7 @@ class ProductController extends Controller
     public function getAllByAlpha(Request $request, Response $response)
     {
         $productRepository = new ProductRepository();
-        $results = $productRepository->getAllByAlpha();
+        $results = $productRepository->getAllByAlpha("asc");
         $response->json($results);
     }
 

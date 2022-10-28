@@ -65,7 +65,7 @@ $(document).ready(function () {
         document.getElementById('wishlist-form').setAttribute('operation', 'create');
         document.getElementById('wishlist-modal-label').innerHTML = 'Agregar lista de deseos';
         document.getElementById('image-list').innerHTML = '';
-        document.getElementById('images').files = null;
+        document.getElementById('images').value = '';
         document.getElementById('wishlist-name').value = '';
         document.getElementById('wishlist-description').value = '';
         document.getElementById('wishlist-visible').value = '';
@@ -75,7 +75,7 @@ $(document).ready(function () {
     $(document).on('click', '.update-wishlist', function () {
 
         dataTransfer.clearData();
-        document.getElementById('images').files = null;
+        document.getElementById('images').value = '';
 
         const card = this.closest('.wishlist-card');
         const id = card.id;
@@ -95,14 +95,14 @@ $(document).ready(function () {
 
                 wishlistId = id;
 
-                let images = card.querySelectorAll('.carousel-item div img');
+                //let images = card.querySelectorAll('.carousel-item div img');
 
                 $('#image-list').html('');
 
-                images.forEach(async function (image) {
+                result.images.forEach(async function (image) {
 
                     $.ajax({
-                        url: image.src,
+                        url: `/api/v1/images/${image}`,
                         method: 'GET',
                         timeout: 0,
                         xhrFields: {
@@ -121,7 +121,7 @@ $(document).ready(function () {
                             $('#image-list').append(/*html*/`
                             <span class="position-relative" style="display: inline-block" id="${id}">
                                 <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute">&times;</button>
-                                <img class="product-mul" src="${image.src}">
+                                <img class="product-mul" src="/api/v1/images/${image}">
                             </span>
                             `);
 
