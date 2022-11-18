@@ -58,7 +58,6 @@ END $$
 DELIMITER ;
 
 
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_update_shopping_cart_item $$
 
@@ -88,14 +87,25 @@ BEGIN
 END $$
 DELIMITER ;
 
-SELECT * FROM products;
+
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_shopping_cart_item $$
 
 CREATE PROCEDURE sp_delete_shopping_cart_item(
     IN _shopping_cart_item_id           VARCHAR(36)
 )
 BEGIN
+
+    SET @quantity := (SELECT quantity FROM shopping_cart_items WHERE BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id);
+    SET @product_id := (SELECT BIN_TO_UUID(product_id) FROM shopping_cart_items WHERE BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id);
+
+    UPDATE
+        products
+    SET
+        stock = stock + @quantity
+    WHERE
+        BIN_TO_UUID(product_id) = @product_id;
 
     UPDATE
         shopping_cart_items
