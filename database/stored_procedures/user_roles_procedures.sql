@@ -45,5 +45,3 @@ DELIMITER ;
 
 
 
-
-SELECT * FROM users;

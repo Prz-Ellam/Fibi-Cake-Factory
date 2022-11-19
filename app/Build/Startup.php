@@ -97,14 +97,14 @@ class Startup
         }
 
         
-        $email = "localhost@admin.com";
+        $email = "admin@localhost.com";
         $username = "admin";
         $birthDate = "2001-10-26";
         $firstName = "Eliam";
         $lastName = "Pérez";
         $visible = 1;
         $gender = 1;
-        $password = password_hash("root", PASSWORD_DEFAULT);
+        $password = password_hash("123Abc!!", PASSWORD_DEFAULT);
 
         $superAdmin = new User();
         $superAdmin->setUserId($userId)

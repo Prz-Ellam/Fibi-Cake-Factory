@@ -1,6 +1,3 @@
-SELECT image_id FROM images;
-
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_users_create $$
 

@@ -218,6 +218,9 @@ DELIMITER ;
 
 
 
+
+CALL sp_get_product('f36d0036-eaa6-4112-8ce2-d471dc63c9bc');
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_product $$
 
@@ -235,9 +238,9 @@ BEGIN
         p.stock,
         p.approved,
         (SELECT IFNULL(ROUND(AVG(rate), 2), 'No reviews') FROM reviews WHERE BIN_TO_UUID(product_id) = _product_id AND active = TRUE) 'rate',
-        JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(c.category_id)) categories,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
-        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos
+        BIN_TO_UUID(v.video_id) `video`
     FROM
         products AS p
     INNER JOIN
@@ -328,38 +331,6 @@ DELIMITER ;
 
 
 
-
-SELECT
-        BIN_TO_UUID(p.product_id) id,
-        p.name,
-        p.description,
-        p.is_quotable,
-        p.price,
-        p.stock,
-        p.approved,
-        JSON_ARRAY(GROUP_CONCAT(BIN_TO_UUID(i.image_id))) images,
-        JSON_ARRAY(GROUP_CONCAT(BIN_TO_UUID(v.video_id))) videos
-    FROM
-        products AS p
-    LEFT JOIN
-        images AS i
-    ON
-        BIN_TO_UUID(i.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
-    LEFT JOIN
-        videos AS v
-    ON
-        BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
-    WHERE
-        BIN_TO_UUID(p.user_id) = '516a3887-06b1-4203-ad59-07dc13d1e0fe'
-        AND p.active = TRUE
-    GROUP BY
-        p.product_id, 
-        p.name, 
-        p.description, 
-        p.is_quotable, 
-        p.price, 
-        p.stock, 
-        p.approved;
 
 
 
@@ -638,73 +609,6 @@ DELIMITER ;
 
 
 
-SELECT BIN_TO_UUID(product_id), SUM(quantity) FROM shoppings GROUP BY BIN_TO_UUID(product_id);
-
-
-
-SELECT
-    BIN_TO_UUID(p.product_id) 'product_id',
-    p.name,
-    p.description,
-    p.is_quotable,
-    p.price,
-    p.stock,
-    BIN_TO_UUID(p.user_id) 'user_id',
-    (SELECT IFNULL(AVG(r.rate), 'No reviews') 'rate' FROM reviews AS r WHERE BIN_TO_UUID(r.product_id) = BIN_TO_UUID(p.product_id)) 'rates',
-    (SELECT IFNULL(SUM(s.quantity), 0) 'shops' FROM shoppings AS s WHERE BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)) 'shops'
-FROM
-    products AS p
-INNER JOIN
-    products_categories AS pc
-ON
-    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
-WHERE
-    BIN_TO_UUID(pc.category_id) = BIN_TO_UUID(pc.category_id)
-GROUP BY
-    BIN_TO_UUID(p.product_id)
-ORDER BY
-    CASE
-        WHEN _order LIKE '%sell+%' THEN shops,
-        WHEN _order LIKE '%sell-%' THEN shops
-    END DESC;
-
-    CASE _order WHEN 'sell+' THEN shops END ASC,
-    CASE _order WHEN 'sell-' THEN shops END DESC;
-
-
-SELECT * FROM products;
-
-SELECT BIN_TO_UUID(product_id), BIN_TO_UUID(category_id) FROM products_categories;
-
-
-SELECT
-    BIN_TO_UUID(p.product_id) 'product_id',
-    p.name,
-    p.description,
-    p.is_quotable,
-    p.price,
-    p.stock,
-    BIN_TO_UUID(p.user_id) 'user_id',
-    IFNULL(AVG(r.rate), 'No reviews') 'rate',
-    IFNULL(SUM(s.quantity), 0) 'shops'
-FROM
-    products AS p
-LEFT JOIN
-    reviews AS r
-ON
-    BIN_TO_UUID(r.product_id) = BIN_TO_UUID(p.product_id)
-LEFT JOIN
-    shoppings AS s
-ON
-    BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)
-GROUP BY
-    BIN_TO_UUID(p.product_id)
-
-
-
-
-
-
 
 
 
@@ -903,7 +807,7 @@ BEGIN
     WHERE
         p.active = TRUE
         AND p.approved = TRUE
-        AND BIN_TO_UUID(pc.category_id) = '3d7ad7f2-674d-47c2-a1ca-6c8e0170941d'
+        AND BIN_TO_UUID(pc.category_id) = '3d7ad7f2-674d-47c2-a1ca-6c8e0170941d';
 
 END $$
 DELIMITER ;
@@ -927,59 +831,4 @@ BEGIN
 
 END $$
 DELIMITER ;
-
-
-
-
--- Categorias favoritas del usuario
-
-
-
--- Productos recomendados para el usuario
-SELECT c.name FROM shoppings AS s
-RIGHT JOIN products_categories AS pc
-ON BIN_TO_UUID(s.product_id) = BIN_TO_UUID(pc.product_id)
-INNER JOIN categories AS c
-ON BIN_TO_UUID(c.category_id) = BIN_TO_UUID(pc.category_id)
-
-
-SELECT BIN_TO_UUID(product_id) FROM shoppings;
-SELECT * FROM products_categories;
-
-
-SELECT 
-BIN_TO_UUID(p.product_id), p.name, p.price, SUM(s.quantity),
-
-(SELECT GROUP_CONCAT(BIN_TO_UUID(c.category_id)) 
-FROM categories AS c
-INNER JOIN products_categories AS pc
-ON BIN_TO_UUID(c.category_id) = BIN_TO_UUID(pc.category_id)
-WHERE BIN_TO_UUID(pc.product_id) = BIN_TO_UUID(p.product_id))
-
-FROM products AS p
-LEFT JOIN shoppings AS s
-ON BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
-INNER JOIN orders AS o
-ON BIN_TO_UUID(o.order_id) = BIN_TO_UUID(s.order_id)
-WHERE BIN_TO_UUID(o.user_id) = '76dd9897-f26a-44d5-852c-9f7c0f3f0c90'
-GROUP BY BIN_TO_UUID(p.product_id), p.name, p.price;
-
-
-
-
-SELECT 
-products.product_id, 
-products.name, 
-products.price,
-IFNULL(COUNT(shoppings.product_id) * shoppings.quantity, 0) AS Cantidad, 
-IFNULL(COUNT(shoppings.product_id) * shoppings.quantity, 0) / (SELECT COUNT(shoppings.product_id) FROM shoppings) AS Porcentaje,
-categories.name AS category FROM products
-INNER JOIN categories
-ON categories.category_id = products.category_id
-LEFT JOIN shoppings
-ON products.product_id = shoppings.product_id
-GROUP BY  products.name
-ORDER BY IFNULL(COUNT(shoppings.product_id) * shoppings.quantity, 0) DESC;
-
-
 

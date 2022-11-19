@@ -1,5 +1,6 @@
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_shopping_cart $$
 
 CREATE PROCEDURE sp_create_shopping_cart(
     IN _shopping_cart_id            VARCHAR(36),
@@ -22,6 +23,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_shopping_cart $$
 
 CREATE PROCEDURE sp_delete_shopping_cart(
     IN _shopping_cart_id            VARCHAR(36)
@@ -45,6 +47,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_user_shopping_cart $$
 
 CREATE PROCEDURE sp_get_user_shopping_cart(
     IN _user_id                 VARCHAR(36)

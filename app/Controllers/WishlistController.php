@@ -246,6 +246,9 @@ class WishlistController extends Controller
             return;
         }
 
+        $imageRepository = new ImageRepository();
+        $imageRepository->deleteMultimediaEntityImages($wishlistId, 'wishlists');
+
         $result = $wishlistRepository->delete($wishlistId);
         if (!$result) {
             $response->setStatusCode(400)->json([

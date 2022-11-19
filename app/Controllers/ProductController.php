@@ -275,7 +275,47 @@ class ProductController extends Controller
         $productRepository = new ProductRepository();
         $result = $productRepository->update($product);
 
+        $imageRepository = new ImageRepository();
+        $imageRepository->deleteMultimediaEntityImages($productId, 'products');
+        $imagesId = [];
+        foreach ($images as $image) {
+            $imageId = Uuid::uuid4()->toString();
+            $imageName = $image->getName();
+            $imageType = $image->getType();
+            $imageSize = $image->getSize();
+            $imageContent = $image->getContent();
 
+            $image = new Image();
+            $image->setImageId($imageId)
+                ->setName($imageName)
+                ->setType($imageType)
+                ->setSize($imageSize)
+                ->setContent($imageContent)
+                ->setMultimediaEntityId($productId)
+                ->setMultimediaEntityType('products');
+
+            $validator = new Validator($image);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+
+            if (!$status) {
+                $response->json([
+                    "status" => $status,
+                    "message" => $feedback
+                ])->setStatusCode(400);
+                return;
+            }
+
+            $imageRepository = new ImageRepository();
+            $result = $imageRepository->create($image);
+            if (!$result) {
+                $response->json(["response" => "No"]);
+                return;
+            }
+
+            $imagesId[] = $imageId;
+        }
+/*
         $videoRepository = new VideoRepository();
         $videoRepository->deleteMultimediaEntityVideos($productId, 'products');
 
@@ -315,7 +355,7 @@ class ProductController extends Controller
             ])->setStatusCode(400);
             return;
         }
-
+*/
 
         $response->json([
             "status" => $result,
@@ -431,14 +471,9 @@ class ProductController extends Controller
         }
         $product = $product[0];
 
-        $product["categories"] = json_decode($product["categories"], true);
-
-        foreach ($product["categories"] as &$category) {
-            $category = json_decode($category, true);
-        }
-
+        $product["categories"] = explode(',', $product["categories"]);
         $product["images"] = explode(',', $product["images"]);
-        $product["videos"] = explode(',', $product["videos"]);
+        //$product["videos"] = explode(',', $product["videos"]);
 
         $response->json($product);
     }

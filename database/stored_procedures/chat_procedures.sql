@@ -1,6 +1,8 @@
 -- Crear un chat
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS sp_create_chat $$
+
 CREATE PROCEDURE sp_create_chat(
     IN _chat_id                 VARCHAR(36)
 )
@@ -16,11 +18,6 @@ BEGIN
 END $$
 
 DELIMITER ;
-
-
-
-
-CREATE PROCEDURE sp_get_user_chats()
 
 
 
@@ -87,7 +84,7 @@ BEGIN
         UUID_TO_BIN(UUID()),
         UUID_TO_BIN(_chat_id),
         UUID_TO_BIN(_user_id_2)
-    )
+    );
 
 END $$
 DELIMITER ;
@@ -134,7 +131,6 @@ BEGIN
         BIN_TO_UUID(u.user_id) = cs.user_id
     ORDER BY 
         cs.last_message DESC;
-
 
 END
 DELIMITER ;

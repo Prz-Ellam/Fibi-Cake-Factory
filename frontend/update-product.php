@@ -77,7 +77,7 @@
                     <label for="images-transfer" label="form-label" role="button">Imágenes (mínimo 3)</label>
                     <div class="input-group">
                         <label for="images-transfer" role="button" class="btn btn-primary rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir imágenes</label>
-                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="images" id="images" multiple accept="image/*">
+                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="images[]" id="images" multiple accept="image/*">
                         <input type="file" id="images-transfer" class="d-none" multiple accept="image/*">
                     </div>
                     <div class="my-4" style="overflow-x: scroll; width: 100%; white-space: nowrap;" id="image-list">
@@ -87,8 +87,8 @@
                 <div class="mb-4">
                     <label for="videos" class="form-label" role="button">Video</label>
                     <div class="input-group">
-                        <label for="videos" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir video</label>
-                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="video" id="videos" multiple accept="video/*">
+                        <label for="video" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir video</label>
+                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="video" id="video" multiple accept="video/*">
                     </div>
                     <div id="video-place" class="mt-3"></div>
                 </div>

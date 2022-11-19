@@ -1,4 +1,5 @@
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_image $$
 
 CREATE PROCEDURE sp_create_image(
     IN _image_id                VARCHAR(36),
@@ -36,6 +37,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_image $$
 
 CREATE PROCEDURE sp_get_image(
     IN _image_id                VARCHAR(36)
@@ -61,6 +63,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_multimedia_entity_images $$
 
 CREATE PROCEDURE sp_delete_multimedia_entity_images(
     IN _multimedia_entity_id            VARCHAR(36),

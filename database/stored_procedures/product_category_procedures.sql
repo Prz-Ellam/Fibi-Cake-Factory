@@ -1,4 +1,5 @@
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_product_category $$
 
 CREATE PROCEDURE sp_create_product_category(
     IN _product_category_id             VARCHAR(36),

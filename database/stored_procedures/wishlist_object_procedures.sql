@@ -40,6 +40,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_wishlist_object $$
 
 CREATE PROCEDURE sp_delete_wishlist_object(
     IN _wishlist_object_id          VARCHAR(36)
@@ -101,8 +102,6 @@ END $$
 DELIMITER ;
 
 
-
-CALL sp_wishlist_objects_get_user_id('bd381b52-1b79-4210-8717-c50b8a32859d');
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_wishlist_objects_get_user_id $$

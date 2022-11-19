@@ -1,4 +1,5 @@
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_create_order $$
 
 CREATE PROCEDURE sp_create_order(
     IN _order_id                VARCHAR(36),
@@ -71,7 +72,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_get_sales_report('95ee300d-6466-4f43-86fd-35c2737da7f8', null, '2022-10-11', null)
+
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_sales_report $$

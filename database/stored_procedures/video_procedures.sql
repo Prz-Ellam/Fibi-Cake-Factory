@@ -1,6 +1,6 @@
 
 DELIMITER $$
-
+DROP PROCEDURE IF EXISTS sp_create_video $$
 -- TODO: El tema de los is_quotable
 CREATE PROCEDURE sp_create_video(
     IN _video_id                VARCHAR(36),
@@ -39,6 +39,7 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_get_video $$
 
 CREATE PROCEDURE sp_get_video(
     IN _video_id                VARCHAR(36)

@@ -49,5 +49,4 @@ AS
 
 
 
-SELECT * FROM vw_orders_report
 

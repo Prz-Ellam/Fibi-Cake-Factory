@@ -22,6 +22,8 @@ $.ajax({
     }
 });
 
+const imageDataTransfer = new DataTransfer();
+
 $.ajax({
     url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
     method: 'GET',
@@ -53,7 +55,7 @@ $.ajax({
                     const id = headers.getResponseHeader('x-image-id');
 
                     $('#image-list').append(/*html*/`
-                    <span class="position-relative" style="display: inline-block" id="${id}">
+                    <span class="position-relative" style="display: inline-block" id="image-${id}">
                         <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute">&times;</button>
                         <img class="product-mul" src="/api/v1/images/${image}">
                     </span>
@@ -63,18 +65,18 @@ $.ajax({
                         type: mime,
                         lastModified: new Date(lastModified)
                     });
-                    dataTransfer.items.add(file);
+                    imageDataTransfer.items.add(file);
 
-                    document.getElementById('images').files = dataTransfer.files;
+                    document.getElementById('images').files = imageDataTransfer.files;
                     console.log(document.getElementById('images').files);
                 }
             });
         });
 
-        response.videos.forEach(async function (video) {
+        let video = response.video;
 
             $.ajax({
-                url: `/api/v1/videos/${video}`,
+                url: `/api/v1/videos/${response.video}`,
                 method: 'GET',
                 xhrFields: {
                     responseType: 'blob'
@@ -90,7 +92,7 @@ $.ajax({
                     const id = headers.getResponseHeader('x-image-id');
 
                     $('#video-place').html(`
-                    <span class="position-relative" id="video-${id}">
+                    <span class="position-relative">
                         <video class="product-mul" controls>
                             <source src="/api/v1/videos/${video}">
                         </video>
@@ -102,19 +104,18 @@ $.ajax({
                         type: mime,
                         lastModified: new Date(lastModified)
                     });
+                    let dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
 
-                    document.getElementById('videos').files = dataTransfer.files;
+                    document.getElementById('video').files = dataTransfer.files;
                 }
             });
-        });
 
         response.categories.forEach(element => {
-            $(`[value="${element.id}"`).attr('selected', '');
+            $(`[value="${element}"`).attr('selected', '');
         });
     }
 });
-const dataTransfer = new DataTransfer();
 
 $(document).ready(function() {
 
@@ -224,60 +225,44 @@ $(document).ready(function() {
     var imageCounter = 0;
     $('#images-transfer').on('change', function(e) {
 
-        const files = $(this)[0].files;
-        $.each(files, function(i, file) {
+        const files = this.files;
+        const filesArray = Array.from(files);
+
+        filesArray.forEach(file => {
 
             let fileReader = new FileReader();
             fileReader.onload = function(e) {
                 $('#image-list').append(/*html*/`
-                    <span class="position-relative" id="image-${imageCounter}">
+                    <span class="position-relative d-inline-block" id="image-${imageCounter}">
                         <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute">&times;</button>
                         <img class="product-mul" src="${e.target.result}">
                     </span>
                 `);
-                images.push({
-                    'id': imageCounter,
-                    'file': file
-                });
-                imageCounter++;
+            }
 
-                const dataTransfer = new DataTransfer();
-                images.forEach((element) => {
-                    dataTransfer.items.add(element.file);
-                });
-                document.getElementById('images').files = dataTransfer.files;
-            };
             fileReader.readAsDataURL(file);
+            imageDataTransfer.items.add(file);
 
         });
-
-        $(this).val('');
-
+        
+        document.getElementById('images').files = imageDataTransfer.files;
+        this.value = '';
+        console.log(document.getElementById('images').files);
     });
 
     $(document).on('click', '.image-close', function(event) {
 
-        const imageHTML = $(this).parent();
-        const id = Number(imageHTML.attr('id').split('-')[1]);
+        event.preventDefault();
 
-        const deletedImage = images.filter((image) => {
-            return image.id === id;
-        })[0];
+        const imageList = document.getElementById('image-list');
+        // Devuelve el indice de un elemento con respecto a su nodo padre
+        const index = Array.from(imageList.children).indexOf(this.parentNode);
 
-        images.forEach((element, i) => {
-            if (element.id === deletedImage.id)
-            {
-                images.splice(i, 1);
-            }
-        });
+        imageDataTransfer.items.remove(index);
+        this.parentNode.remove();
 
-        imageHTML.remove();
-
-        const dataTransfer = new DataTransfer();
-        images.forEach((element) => {
-            dataTransfer.items.add(element.file);
-        });
-        document.getElementById('images').files = dataTransfer.files;
+        document.getElementById('images').files = imageDataTransfer.files;
+        console.log(document.getElementById('images').files);
 
     });
 
