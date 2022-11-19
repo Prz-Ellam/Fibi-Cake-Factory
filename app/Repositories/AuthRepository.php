@@ -17,5 +17,3 @@ class AuthRepository
         return $result[0] ?? [];
     }
 }
-
-?>

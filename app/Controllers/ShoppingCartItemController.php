@@ -105,5 +105,3 @@ class ShoppingCartItemController extends Controller
         $response->json($result);
     }
 }
-
-?>

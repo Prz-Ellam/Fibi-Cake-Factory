@@ -60,3 +60,23 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_multimedia_entity_videos $$
+
+CREATE PROCEDURE sp_delete_multimedia_entity_videos(
+    IN _multimedia_entity_id            VARCHAR(36),
+    IN _multimedia_entity_type          VARCHAR(50)
+)
+BEGIN
+
+    DELETE FROM
+        videos
+    WHERE
+        BIN_TO_UUID(multimedia_entity_id) = _multimedia_entity_id
+        AND multimedia_entity_type = _multimedia_entity_type;
+
+END $$
+DELIMITER ;

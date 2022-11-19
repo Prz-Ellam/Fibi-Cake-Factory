@@ -59,9 +59,6 @@ DELIMITER ;
 
 
 
-CALL sp_get_wishlist_objects('6f5b7cca-4555-44ec-94f0-a54e366d4ee5');
-
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_wishlist_objects $$
 
@@ -101,4 +98,32 @@ BEGIN
         p.stock;
 
 END $$
+DELIMITER ;
+
+
+
+CALL sp_wishlist_objects_get_user_id('bd381b52-1b79-4210-8717-c50b8a32859d');
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_wishlist_objects_get_user_id $$
+
+CREATE PROCEDURE sp_wishlist_objects_get_user_id(
+    IN _wishlist_object_id              VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(w.user_id) `user_id`
+    FROM
+        wishlist_objects AS wo
+    INNER JOIN
+        wishlists AS w
+    ON
+        BIN_TO_UUID(wo.wishlist_id) = BIN_TO_UUID(w.wishlist_id)
+    WHERE
+        BIN_TO_UUID(wo.wishlist_object_id) = _wishlist_object_id
+        AND wo.active = TRUE;
+
+END $$
+
 DELIMITER ;

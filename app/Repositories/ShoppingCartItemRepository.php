@@ -51,5 +51,3 @@ class ShoppingCartItemRepository
         return $result;
     }
 }
-
-?>

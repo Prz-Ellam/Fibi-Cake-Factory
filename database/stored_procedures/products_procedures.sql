@@ -44,6 +44,12 @@ DELIMITER ;
 
 
 
+CALL sp_products_create('ee72c798-9475-46b8-a2f8-745cb49dc2db', 
+    'Mi producto', 
+    'Es un producto', 0, 250, 140, '76dd9897-f26a-44d5-852c-9f7c0f3f0c90')
+
+
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_update $$
 
@@ -909,6 +915,27 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_user_id $$
+
+CREATE PROCEDURE sp_products_get_user_id(
+    _product_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(user_id) `user_id`
+    FROM
+        products
+    WHERE
+        BIN_TO_UUID(product_id) = _product_id
+        AND active = TRUE;
+
+END $$
+DELIMITER ;
+
 
 
 

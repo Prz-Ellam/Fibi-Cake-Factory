@@ -11,6 +11,7 @@ class WishlistObjectRepository
     private const CREATE = "CALL sp_wishlist_objects_create(:wishlistObjectId, :wishlistId, :productId)";
     private const DELETE = "CALL sp_delete_wishlist_object(:wishlistObjectId)";
     private const GET_ALL_BY_WISHLIST = "CALL sp_get_wishlist_objects(:wishlistId)";
+    private const GET_USER_ID = "CALL sp_wishlist_objects_get_user_id(:wishlistObjectId)";
 
     public function create(WishlistObject $wishlistObject)
     {
@@ -36,6 +37,13 @@ class WishlistObjectRepository
 
         return $result;
     }
-}
 
-?>
+    public function getWishlistObjectUserId(string $wishlistObjectId)
+    {
+        $result = DB::executeReader(self::GET_USER_ID, [
+            "wishlistObjectId" => $wishlistObjectId
+        ]);
+
+        return $result[0]["user_id"] ?? "";
+    }
+}

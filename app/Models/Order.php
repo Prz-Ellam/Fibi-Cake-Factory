@@ -118,5 +118,3 @@ class Order implements Model
 
 
 }
-
-?>

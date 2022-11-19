@@ -10,7 +10,6 @@ use CakeFactory\Models\Wishlist;
 use CakeFactory\Repositories\WishlistRepository;
 use CakeFactory\Models\Image;
 use CakeFactory\Repositories\ImageRepository;
-use Fibi\Database\DB;
 use Fibi\Session\PhpSession;
 use Fibi\Validation\Validator;
 use Ramsey\Uuid\Nonstandard\Uuid;
@@ -120,13 +119,31 @@ class WishlistController extends Controller
     public function update(Request $request, Response $response): void
     {
         $session = new PhpSession();
+        $userId = $session->get("userId");
 
         $wishlistId = $request->getRouteParams("wishlistId");
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visible = $request->getBody("visible");
         $images = $request->getFiles("images");
-        $userId = $session->get('userId');
+
+        if (!Uuid::isValid($wishlistId)) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "El identificador no es válido"
+            ]);
+            return;
+        }
+
+        $wishlistRepository = new WishlistRepository();
+        $wishlistUserId = $wishlistRepository->getWishlistUserId($wishlistId);
+        if ($userId !== $wishlistUserId) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
 
         $wishlist = new Wishlist();
         $wishlist
@@ -139,19 +156,15 @@ class WishlistController extends Controller
         $validator = new Validator($wishlist);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-    
         if (!$status) {
-            $response->json([
+            $response->setStatusCode(400)->json([
                 "status" => $status,
                 "message" => $feedback
-            ])->setStatusCode(400);
+            ]);
             return;
         }
     
-        $wishlistRepository = new WishlistRepository();
         $result = $wishlistRepository->update($wishlist);
-
-        // $result - Edit
 
         // TODO: El tema de las imagenes
         $imageRepository = new ImageRepository();
@@ -187,7 +200,6 @@ class WishlistController extends Controller
 
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
-
             if (!$result) {
                 $response->json(["response" => "No"]);
                 return;
@@ -220,13 +232,29 @@ class WishlistController extends Controller
      */
     public function delete(Request $request, Response $response): void
     {
-        // TODO: Que no se pueda borrar los que no te pertenecen
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
         $wishlistId = $request->getRouteParams("wishlistId");
-
         $wishlistRepository = new WishlistRepository();
-        $result = $wishlistRepository->delete($wishlistId);
+        $wishlistUserId = $wishlistRepository->getWishlistUserId($wishlistId);
 
-        // TODO: Si result es falso es BAD Request
+        if ($userId !== $wishlistUserId) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
+
+        $result = $wishlistRepository->delete($wishlistId);
+        if (!$result) {
+            $response->setStatusCode(400)->json([
+                "status" => false,
+                "message" => "No se pudo eliminar la lista de deseos"
+            ]);
+            return;
+        }
 
         $response->json(["status" => $result]);
     }
@@ -285,7 +313,7 @@ class WishlistController extends Controller
         $session = new PhpSession();
 
         // TODO: que aqui salgan tanto las publicas como las normales
-        $count = $request->getQuery("count") ?? 12;
+        $count = $request->getQuery("count") ?? 19;
         $page = $request->getQuery("page") ?? 1;
         $offset = floor($count * ($page - 1));
 
@@ -307,35 +335,11 @@ class WishlistController extends Controller
         }
 */
         foreach ($result as &$element) {
+            $element["visible"] = (bool)$element["visible"];
             $element["images"] = json_decode($element["images"]);
         }
 
         $response->json($result);
     }
 
-    public function getUserPublicWishlists(Request $request, Response $response): void
-    {
-        $count = $request->getQuery("count") ?? 12;
-        $page = $request->getQuery("page") ?? 1;
-
-        $offset = floor($count * ($page - 1));
-
-        $userId = $request->getRouteParams("userId");
-
-        // TODO: Validar que coincida con la sesión
-
-        $wishlistRepository = new WishlistRepository();
-        $result = $wishlistRepository->getAllByUserPublic($userId, $count, $offset);
-
-        if (is_null($result)) {
-            $response->setStatusCode(404)->json(["status" => "Not found"]);
-            return;
-        }
-
-        foreach ($result as &$element) {
-            $element["images"] = json_decode($element["images"]);
-        }
-
-        $response->json($result);
-    }
 }

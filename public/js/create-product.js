@@ -140,53 +140,6 @@ $(document).ready(function() {
 
     });
 
-/*
-    const videoDataTransfer = new DataTransfer();
-    const videos = [];
-    var videoCounter = 0;
-    $('#video').on('change', function(e) {
-
-        const files = $(this)[0].files;
-
-        $.each(files, (i, file) => {
-            if (file.size > 2 * 1024 * 1024) {
-                alert('NO');
-                return;
-            }
-        });
-
-        $.each(files, function(i, file) {
-
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                $('#video-list').append(`
-                <span class="position-relative" id="video-${videoCounter}">
-                    <video class="product-mul" controls>
-                        <source src="${e.target.result}">
-                    </video>
-                </span>
-                <button type="button" class="btn bg-dark btn-outline-info video-close border-0 rounded-0 shadow-sm text-light">&times;</button>
-                `);
-                videos.push({
-                    'id': videoCounter,
-                    'file': file
-                });
-                videoCounter++;
-
-                const dataTransfer = new DataTransfer();
-                videos.forEach(element => {
-                    dataTransfer.items.add(element.file);
-                });
-                document.getElementById('videos').files = dataTransfer.files;
-            };
-            reader.readAsDataURL(file);
-
-        });
-
-        $(this).val('');
-
-    });
-*/
     $('#create-category-form').submit(function(event) {
 
         event.preventDefault();

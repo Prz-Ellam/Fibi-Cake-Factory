@@ -41,5 +41,3 @@ class ChatMessagesRepository
         return $result;
     }
 }
-
-?>

@@ -31,6 +31,9 @@ class ProductController extends Controller
      */
     public function create(Request $request, Response $response): void
     {
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
         $productId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
@@ -38,14 +41,14 @@ class ProductController extends Controller
         $price = $request->getBody("price");
         $stock = $request->getBody("stock");
         $images = $request->getFiles("images");
-        $videos = $request->getFiles("videos");
+        $video = $request->getFiles("video");
 
         // TODO: Validar que esto existe realmente en la BD
         $categories = $request->getBody("categories") ?? [];
+        
 
-        $userId = (new PhpSession())->get('userId');
 
-        DB::beginTransaction();
+        //DB::beginTransaction();
 
         $product = new Product();
         $product
@@ -70,16 +73,17 @@ class ProductController extends Controller
 
         $productRepository = new ProductRepository();
         $result = $productRepository->create($product);
+        /*
         if (!$result) {
-            $response->json([
+            $response->setStatusCode(400)->json([
                 "status" => false,
                 "message" => "No se pudo crear el producto"
-            ])->setStatusCode(400);
+            ]);
             return;
         }
+        */
 
         $imagesId = [];
-
         if (count($images) < 1) {
             $response->json([
                 "status" => false,
@@ -119,64 +123,53 @@ class ProductController extends Controller
             $imageRepository = new ImageRepository();
             $result = $imageRepository->create($image);
             if (!$result) {
-                $response->json([
+                $response->setStatusCode(400)->json([
                     "response" => false,
                     "message" => "No se pudo crear una imagen"
-                ])->setStatusCode(400);
+                ]);
                 return;
             }
 
             $imagesId[] = $imageId;
         }
+        
 
-        if (count($videos) < 1) {
-            $response->json([
-                "status" => false,
-                "message" => "No hay videos"
+
+        $videoId = Uuid::uuid4()->toString();
+        $videoName = $video->getName();
+        $videoType = $video->getType();
+        $videoSize = $video->getSize();
+        $videoContent = $video->getContent();
+
+        $video = new Video();
+        $video
+            ->setVideoId($videoId)
+            ->setName($videoName)
+            ->setType($videoType)
+            ->setSize($videoSize)
+            ->setContent($videoContent)
+            ->setMultimediaEntityId($productId)
+            ->setMultimediaEntityType('products');
+
+        $validator = new Validator($video);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+        if (!$status) {
+            $response->setStatusCode(400)->json([
+                "response" => $status,
+                "message" => $feedback
             ]);
             return;
         }
 
-        $videosId = [];
-        foreach ($videos as $video) {
-            $videoId = Uuid::uuid4()->toString();
-            $videoName = $video->getName();
-            $videoType = $video->getType();
-            $videoSize = $video->getSize();
-            $videoContent = $video->getContent();
-
-            $video = new Video();
-            $video
-                ->setVideoId($videoId)
-                ->setName($videoName)
-                ->setType($videoType)
-                ->setSize($videoSize)
-                ->setContent($videoContent)
-                ->setMultimediaEntityId($productId)
-                ->setMultimediaEntityType('products');
-
-            $validator = new Validator($video);
-            $feedback = $validator->validate();
-            $status = $validator->getStatus();
-            if (!$status) {
-                $response->json([
-                    "response" => $status,
-                    "message" => $feedback
-                ])->setStatusCode(400);
-                return;
-            }
-
-            $videoRepository = new VideoRepository();
-            $result = $videoRepository->create($video);
-            if (!$result) {
-                $response->json([
-                    "status" => false,
-                    "message" => "No se pudo crear un video"
-                ])->setStatusCode(400);
-                return;
-            }
-
-            $videosId[] = $videoId;
+        $videoRepository = new VideoRepository();
+        $result = $videoRepository->create($video);
+        if (!$result) {
+            $response->json([
+                "status" => false,
+                "message" => "No se pudo crear un video"
+            ])->setStatusCode(400);
+            return;
         }
 
         if (count($categories) < 1) {
@@ -218,9 +211,12 @@ class ProductController extends Controller
             }
         }
 
-        DB::endTransaction();
+        //DB::endTransaction();
 
-        $response->json([$result]);
+        $response->json([
+            "status" => $result,
+            "message" => "El producto ha sido creada con éxito"
+        ]);
     }
 
     /**
@@ -232,17 +228,40 @@ class ProductController extends Controller
      */
     public function update(Request $request, Response $response)
     {
-        $productId = $request->getRouteParams('productId');
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
+        $productId = $request->getRouteParams("productId");
+
+        if (!Uuid::isValid($productId)) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "El identificador no es válido"
+            ]);
+            return;
+        }
+
+        $productRepository = new ProductRepository();
+        $productUserId = $productRepository->getProductUserId($productId);
+
+        if ($userId !== $productUserId) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
+
         $name = $request->getBody('name');
         $description = $request->getBody("description");
         $typeOfSell = $request->getBody("type-of-sell");
         $price = $request->getBody("price");
         $stock = $request->getBody("stock");
         $images = $request->getFiles("images");
-        $videos = $request->getFiles("videos");
+        $video = $request->getFiles("video");
 
         // Validar que esto existe realmente en la BD
-        $categories = $request->getBody("categories");
+        $categories = $request->getBody("categories") ?? [];
 
         $product = new Product();
         $product
@@ -255,6 +274,48 @@ class ProductController extends Controller
 
         $productRepository = new ProductRepository();
         $result = $productRepository->update($product);
+
+
+        $videoRepository = new VideoRepository();
+        $videoRepository->deleteMultimediaEntityImages($productId, 'products');
+
+        $videoId = Uuid::uuid4()->toString();
+        $videoName = $video->getName();
+        $videoType = $video->getType();
+        $videoSize = $video->getSize();
+        $videoContent = $video->getContent();
+
+        $video = new Video();
+        $video
+            ->setVideoId($videoId)
+            ->setName($videoName)
+            ->setType($videoType)
+            ->setSize($videoSize)
+            ->setContent($videoContent)
+            ->setMultimediaEntityId($productId)
+            ->setMultimediaEntityType('products');
+
+        $validator = new Validator($video);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+        if (!$status) {
+            $response->setStatusCode(400)->json([
+                "response" => $status,
+                "message" => $feedback
+            ]);
+            return;
+        }
+
+        $videoRepository = new VideoRepository();
+        $result = $videoRepository->create($video);
+        if (!$result) {
+            $response->json([
+                "status" => false,
+                "message" => "No se pudo crear un video"
+            ])->setStatusCode(400);
+            return;
+        }
+
 
         $response->json([
             "status" => $result,
@@ -278,18 +339,44 @@ class ProductController extends Controller
      */
     public function delete(Request $request, Response $response)
     {
-        $productId = $request->getRouteParams('productId');
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
+        $productId = $request->getRouteParams("productId");
+
+        if (!Uuid::isValid($productId)) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "El identificador no es válido"
+            ]);
+            return;
+        }
 
         $productRepository = new ProductRepository();
-        $result = $productRepository->delete($productId);
+        $productUserId = $productRepository->getProductUserId($productId);
 
-        // TODO: Si result es falso es BAD Request
+        if ($userId !== $productUserId) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
+
+        $result = $productRepository->delete($productId);
+        if (!$result) {
+            $response->setStatusCode(400)->json([
+                "status" => false,
+                "message" => "No se pudo eliminar la lista de deseos"
+            ]);
+            return;
+        }
 
         $response->json(["status" => $result]);
     }
 
     /**
-     * Undocumented function
+     * Obtiene todos los productos de un usuario
      *
      * @param Request $request
      * @param Response $response

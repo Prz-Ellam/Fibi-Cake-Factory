@@ -33,5 +33,3 @@ class VideoController extends Controller
         $response->setBody($result[0]["content"]);
     }
 }
-
-?>

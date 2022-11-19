@@ -474,7 +474,7 @@ $app->get('/api/v1/videos/{videoId}', [ new VideoController(), 'getVideo' ]);
 
 $app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'addObject' ]);
 $app->get('/api/v1/wishlist-objects/{wishlistId}', [ new WishlistObjectController(), 'getWishlistObjects' ]);
-$app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObjectController(), 'deleteObject' ]);
+$app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObjectController(), 'delete' ]);
 
 $app->post('/api/v1/checkout', [ new OrderController(), 'checkout' ]);
 

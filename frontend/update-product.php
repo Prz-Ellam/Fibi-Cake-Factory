@@ -88,7 +88,7 @@
                     <label for="videos" class="form-label" role="button">Video</label>
                     <div class="input-group">
                         <label for="videos" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir video</label>
-                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="videos" id="videos" multiple accept="video/*">
+                        <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="video" id="videos" multiple accept="video/*">
                     </div>
                     <div id="video-place" class="mt-3"></div>
                 </div>

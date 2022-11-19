@@ -9,6 +9,7 @@ class VideoRepository
 {
     private const CREATE_VIDEO = "CALL sp_create_video(:videoId, :name, :size, :content, :type, :multimediaEntityId, :multimediaEntityType)";
     private const GET_ONE = "CALL sp_get_video(:videoId)";
+    private const DELETE_MULTIMEDIA_ENTITY_VIDEOS = "CALL sp_delete_multimedia_entity_videos(:multimedia_entity_id, :multimedia_entity_type)";
 
     public function create(Video $video) : bool
     {
@@ -42,6 +43,14 @@ class VideoRepository
         
         return $result;
     }
-}
 
-?>
+    public function deleteMultimediaEntityImages(string $multimediaEntityId, string $multimediaEntityType)
+    {
+        $result = DB::executeNonQuery(self::DELETE_MULTIMEDIA_ENTITY_VIDEOS, [
+            "multimedia_entity_id"      => $multimediaEntityId,
+            "multimedia_entity_type"    => $multimediaEntityType
+        ]);
+
+        return $result > 0;
+    }
+}

@@ -75,5 +75,3 @@ class WishlistObject implements Model
         return array_keys(get_class_vars(self::class));
     }
 }
-
-?>

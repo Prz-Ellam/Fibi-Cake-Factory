@@ -4,9 +4,11 @@ namespace CakeFactory\Controllers;
 
 use CakeFactory\Models\WishlistObject;
 use CakeFactory\Repositories\WishlistObjectRepository;
+use CakeFactory\Repositories\WishlistRepository;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
+use Fibi\Session\PhpSession;
 use Ramsey\Uuid\Nonstandard\Uuid;
 
 class WishlistObjectController extends Controller
@@ -22,6 +24,7 @@ class WishlistObjectController extends Controller
      */
     public function addObject(Request $request, Response $response): void
     {
+        // TODO: Vulnerable
         $productId = $request->getBody("product-id");
         $wishlists = $request->getBody("wishlists");
 
@@ -61,14 +64,34 @@ class WishlistObjectController extends Controller
      * @param Response $response
      * @return void
      */
-    public function deleteObject(Request $request, Response $response): void
+    public function delete(Request $request, Response $response): void
     {
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
         $wishlistObjectId = $request->getRouteParams("wishlistObjectId");
+        if (!Uuid::isValid($wishlistObjectId)) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "El identificador no es válido"
+            ]);
+            return;
+        }
 
         $wishlistObjectRepository = new WishlistObjectRepository();
+        $wishlistObjectUserId = $wishlistObjectRepository->getWishlistObjectUserId($wishlistObjectId);
+
+        if ($userId !== $wishlistObjectUserId) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
+
         $result = $wishlistObjectRepository->delete($wishlistObjectId);
         
-        $response->text($result);
+        $response->json($result);
     }
 
     /**
@@ -82,14 +105,30 @@ class WishlistObjectController extends Controller
      */
     public function getWishlistObjects(Request $request, Response $response): void
     {
-        $wishlistId = $request->getRouteParams('wishlistId');
-        $wishlistObjectRepository = new WishlistObjectRepository();
-        $results = $wishlistObjectRepository->getWishlistObjects($wishlistId);
+        $session = new PhpSession();
+        $userId = $session->get("userId");
 
-        foreach ($results as &$element) {
-            $element["images"] = explode(',', $element["images"]);
+        $wishlistId = $request->getRouteParams('wishlistId');
+
+        $wishlistRepository = new WishlistRepository();
+        $wishlistUserId = $wishlistRepository->getWishlistUserId($wishlistId);
+        $wishlist = $wishlistRepository->getWishlist($wishlistId);
+
+        if ($userId !== $wishlistUserId && $wishlist["visible"] === 0) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
         }
 
-        $response->json($results);
+        $wishlistObjectRepository = new WishlistObjectRepository();
+        $wishlistObjects = $wishlistObjectRepository->getWishlistObjects($wishlistId);
+
+        foreach ($wishlistObjects as &$wishlistObject) {
+            $wishlistObject["images"] = explode(',', $wishlistObject["images"]);
+        }
+
+        $response->json($wishlistObjects);
     }
 }

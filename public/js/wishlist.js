@@ -24,14 +24,14 @@ $.ajax({
     async: false,
     success: function(response)
     {
+        $('#wishlist-name').text(response.name);
+        $('#wishlist-description').text(response.description);
         response.images.forEach((image, i) => {
             $('#wishlist-images').append(/*html*/`
                 <div class="carousel-item${ (i == 0) ? " active" : "" }">
                     <img src="api/v1/images/${image}" class="d-block w-100" style="max-width: 256px;" alt="...">
                 </div>
             `);
-            $('#wishlist-name').text(response.name);
-            $('#wishlist-description').text(response.description);
         });
     }
 });

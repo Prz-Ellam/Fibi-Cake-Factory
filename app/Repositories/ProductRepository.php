@@ -10,6 +10,7 @@ class ProductRepository
 {
     private const CREATE = "CALL sp_products_create(:productId, :name, :description, :isQuotable, :price, :stock, :userId)";
     
+    private const GET_USER_ID = "CALL sp_products_get_user_id(:productId)";
     
     private const UPDATE = "CALL sp_products_update(:productId, :name, :description, :isQuotable, :price, :stock)";
     private const DELETE = "CALL sp_products_delete(:productId)";
@@ -187,5 +188,14 @@ class ProductRepository
         return DB::executeReader(self::GET_ALL_BY_APPROVED_BY, [
             "approved_by" => $approvedBy
         ]);
+    }
+
+    public function getProductUserId(string $productId) : ?string
+    {
+        $result = DB::executeReader(self::GET_USER_ID, [
+            "productId" => $productId
+        ]);
+
+        return $result[0]["user_id"] ?? "";
     }
 }
