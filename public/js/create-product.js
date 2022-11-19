@@ -44,7 +44,6 @@ $(document).ready(function() {
         filter: true
     });
 
-    const imageDataTransfer = new DataTransfer();
     const images = [];
     var imageCounter = 0;
     $('#images-transfer').on('change', function(e) {
@@ -129,7 +128,7 @@ $(document).ready(function() {
 
         fileReader.onloadend = function(e) {
             $('#video-place').html(`
-                <span class="position-relative" id="video-${1}">
+                <span class="position-relative">
                     <video class="product-mul" controls>
                         <source src="${e.target.result}">
                     </video>
@@ -149,23 +148,29 @@ $(document).ready(function() {
             return;
         }
 
-        modal = document.getElementById('create-category');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('create-category');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
         $.ajax({
-            url: 'api/v1/categories',
+            url: '/api/v1/categories',
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                console.log(response);
-                $('#categories').append(`<option value="${response.data.id}">${response.data.name}</option>`);
-                $('#categories').multipleSelect('refresh');
+                
+                fetch('/api/v1/categories')
+                .then(response => response.json())
+                .then(response => {
+                    $('#categories').html('');
+                    response.forEach(category => {
+                        $('#categories').append(`<option value="${category.id}">${category.name}</option>`);
+                    });
+                    $('#categories').multipleSelect('refresh');
+                });
+
             },
             error: function(response, status, error) {
                 console.log(status);
-            },
-            complete: function() {
             }
         });
 
@@ -194,7 +199,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: 'api/v1/products',
+            url: '/api/v1/products',
             data: new FormData(this),
             cache: false,
             contentType: false,

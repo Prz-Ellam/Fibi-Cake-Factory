@@ -47,13 +47,7 @@ $dotenv->load();
 //die;
 
 
-
-
-
-
-
 $app = Application::app();
-
 
 $uri = $_SERVER["REQUEST_URI"];
 if ($uri[strlen($uri) - 1] === "/")
@@ -385,23 +379,19 @@ $app->get('/search', function(Request $request, Response $response) {
 
 
 
-
-
-
-
-
-
-
-
 // API
+
+// Users
 $app->post('/api/v1/users', [ new UserController(), 'create' ]);
-$app->post('/api/v1/users/{userId}', [ new UserController(), 'update' ]);
-$app->post('/api/v1/users/{userId}/password', [ new UserController(), 'updatePassword' ]);
-$app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
+$app->put('/api/v1/users/{userId}', [ new UserController(), 'update' ]);
+$app->put('/api/v1/users/{userId}/password', [ new UserController(), 'updatePassword' ]);
+$app->delete('/api/v1/users/{userId}', [ new UserController(), 'delete' ]);
 $app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
 $app->get('/api/v1/users/{userId}', [ new UserController(), 'getUser' ]);
-$app->delete('/api/v1/users/{userId}', function() {});
 
+
+
+// Auth
 $app->post('/api/v1/login', [ new SessionController(), 'login' ]);
 $app->post('/api/v1/session', [ new SessionController(), 'login' ]);
 $app->get('/api/v1/session', [ new SessionController(), 'session' ]);
@@ -423,30 +413,21 @@ $app->get('/api/v1/users/{userId}/wishlists', [ new WishlistController(), 'getUs
 
 
 
-// TODO: No poder ver a los usuarios con visibilidad privada
-
 // Categories
 $app->post('/api/v1/categories', [ new CategoryController(), 'create' ]);
-$app->post('/api/v1/categories/{categoryId}', [ new CategoryController(), 'update' ]);
+$app->put('/api/v1/categories/{categoryId}', [ new CategoryController(), 'update' ]);
 $app->delete('/api/v1/categories/{categoryId}', [ new CategoryController(), 'delete' ]);
 $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
 
+
+
+// Products
 $app->post('/api/v1/products', [ new ProductController(), 'create' ]);
-
-
-
-
-$app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
-
-
-
-
-
-
-
-$app->get('/api/v1/products/{productId}', [ new ProductController(), 'getProduct' ]);
-$app->post('/api/v1/products/{productId}', [ new ProductController(), 'update']);
+$app->put('/api/v1/products/{productId}', [ new ProductController(), 'update']);
 $app->delete('/api/v1/products/{productId}', [ new ProductController(), 'delete' ]);
+$app->get('/api/v1/products', [ new ProductController(), 'getProducts' ]);
+$app->get('/api/v1/products/{productId}', [ new ProductController(), 'getProduct' ]);
+
 $app->get('/api/v1/users/{userId}/products', [ new ProductController(), 'getUserProducts' ]);
 $app->get('/api/v1/products/action/recents', [ new ProductController(), 'getRecentProducts' ]);
 
@@ -471,8 +452,7 @@ $app->get('/api/v1/files/{fileId}', []);
 
 $app->get('/api/v1/videos/{videoId}', [ new VideoController(), 'getVideo' ]);
 
-
-$app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'addObject' ]);
+$app->post('/api/v1/wishlist-objects', [ new WishlistObjectController(), 'create' ]);
 $app->get('/api/v1/wishlist-objects/{wishlistId}', [ new WishlistObjectController(), 'getWishlistObjects' ]);
 $app->delete('/api/v1/wishlist-objects/{wishlistObjectId}', [ new WishlistObjectController(), 'delete' ]);
 
@@ -631,6 +611,3 @@ die;
 });
 
 $app->run();
-
-?>
-

@@ -21,15 +21,14 @@ $.ajax({
 $.ajax({
     url: `/api/v1/users/${id}`,
     method: 'GET',
-    timeout: 0,
     success: function (response) {
         $('#picture-box').attr('src', `/api/v1/images/${response.profilePicture}`);
-        $('#email').val(response.email);
-        $('#username').val(response.username);
-        $('#birth-date').val(response.birthDate);
-        $('#first-name').val(response.firstName);
-        $('#last-name').val(response.lastName);
-
+        //$('#email').val(response.email);
+        //$('#username').val(response.username);
+        //$('#birth-date').val(response.birthDate);
+        //$('#first-name').val(response.firstName);
+        //$('#last-name').val(response.lastName);
+        /*
         switch (response.gender) {
             case 0:
                 $('#other').attr('checked', '');
@@ -43,7 +42,7 @@ $.ajax({
             default:
                 break;
         }
-
+        */
         $.ajax({
             url: `/api/v1/images/${response.profilePicture}`,
             method: 'GET',
@@ -279,33 +278,28 @@ $(document).ready(function () {
                 return;
             }
 
-            var lowercase = new RegExp(/[a-z]/g);
-            var uppercase = new RegExp(/[A-Z]/g);
-            var number = new RegExp(/[0-9]/g);
-            var specialchars = new RegExp(/[¡”"#$%&;/=’¿?!:;,.\-_+*{}\[\]]/g);
-
-            if (lowercase.test(value)) {
+            if (/[a-z]/g.test(value)) {
                 $('.pwd-lowercase').addClass('text-success').removeClass('text-danger');
             }
             else {
                 $('.pwd-lowercase').addClass('text-danger').removeClass('text-success')
             }
 
-            if (uppercase.test(value)) {
+            if (/[A-Z]/g.test(value)) {
                 $('.pwd-uppercase').addClass('text-success').removeClass('text-danger');
             }
             else {
                 $('.pwd-uppercase').addClass('text-danger').removeClass('text-success')
             }
 
-            if (number.test(value)) {
+            if (/[0-9]/g.test(value)) {
                 $('.pwd-number').addClass('text-success').removeClass('text-danger');
             }
             else {
                 $('.pwd-number').addClass('text-danger').removeClass('text-success')
             }
 
-            if (specialchars.test(value)) {
+            if (/[¡”"#$%&;/=’¿?!:;,.\-_+*{}\[\]]/g.test(value)) {
                 $('.pwd-specialchars').addClass('text-success').removeClass('text-danger');
             }
             else {
@@ -374,7 +368,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: `/api/v1/users/${id}`,
-            method: 'POST',
+            method: 'PUT',
             data: new FormData(this),
             cache: false,
             contentType: false,
@@ -419,7 +413,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: `/api/v1/users/${id}/password`,
-            method: 'POST',
+            method: 'PUT',
             data: $(this).serialize(),
             success: function (response) {
                 console.log(response);

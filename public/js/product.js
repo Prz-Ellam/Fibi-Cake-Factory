@@ -32,7 +32,6 @@ $.ajax({
     url: `api/v1/users/${id}`,
     method: "GET",
     async: false,
-    timeout: 0,
     success: function (response) {
         const url = `api/v1/images/${response.profilePicture}`;
         $('.nav-link img').attr('src', url);
@@ -66,7 +65,13 @@ $.ajax({
         });
 
         $('#name').text(product.name);
-        $('#category').text(' A');
+
+        let data = ' ';
+        product.categories.forEach(category => {
+            data += category.name;
+        });
+        $('#category').text(data);
+
         $('#price').text(fmt.format(product.price));
         $('#rate-number').text(product.rate);
         $('#description').text(product.description);
@@ -103,7 +108,6 @@ $.ajax({
 $.ajax({
     url: `/api/v1/products/${productId}/comments`,
     method: 'GET',
-    timeout: 0,
     success: function (response) {
         response.forEach((comment) => {
             $('#comment-section').append(CommentComponent(comment));
@@ -177,7 +181,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".rating-star").click(function () {
+    $('.rate-star').click(function () {
 
         const stars = $(this).parent().children();
 
@@ -193,26 +197,6 @@ $(document).ready(function () {
         }
 
     });
-
-    
-
-    /*
-    $(".zoom").ezPlus({
-        zoomType: 'inner',
-        cursor: 'crosshair',
-        zoomWindowFadeIn: 500,
-        zoomWindowFadeOut: 500,
-        lensFadeIn: 500,
-        lensFadeOut: 500
-    }{
-        zoomType: "inner",
-        zoomLevel: 2,
-        cursor: "crosshair",
-        zoomWindowFadeIn: 500,
-        zoomWindowFadeOut: 500,
-        lensFadeIn: 500,
-            lensFadeOut: 500
-    });*/
 
     const Toast = Swal.mixin({
         toast: true,
@@ -270,8 +254,6 @@ $(document).ready(function () {
 
         });
 
-        
-
     });
 
     $(document).on('click', '.add-wishlists', function() {
@@ -320,7 +302,9 @@ $(document).ready(function () {
                 fetch(`/api/v1/products/${productId}/comments`)
                 .then(response => response.json())
                 .then(response => {
-                    response.forEach((comment) => {
+                    $('#message-box').val('');
+                    $('.rating-star').removeClass('fas').addClass('far');
+                    response.forEach(comment => {
                         $('#comment-section').append(CommentComponent(comment));
                     });
                 })

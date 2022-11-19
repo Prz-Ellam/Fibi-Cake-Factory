@@ -129,5 +129,3 @@ class Startup
         return false;
     }
 }
-
-?>

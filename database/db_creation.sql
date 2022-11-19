@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS chat_messages(
 
 
 
-DROP TABLE IF EXISTS quotes
+DROP TABLE IF EXISTS quotes;
 
 CREATE TABLE IF NOT EXISTS quotes(
     quote_id                    BINARY(16) NOT NULL UNIQUE,

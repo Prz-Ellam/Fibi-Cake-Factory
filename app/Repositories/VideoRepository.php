@@ -44,7 +44,7 @@ class VideoRepository
         return $result;
     }
 
-    public function deleteMultimediaEntityImages(string $multimediaEntityId, string $multimediaEntityType)
+    public function deleteMultimediaEntityVideos(string $multimediaEntityId, string $multimediaEntityType)
     {
         $result = DB::executeNonQuery(self::DELETE_MULTIMEDIA_ENTITY_VIDEOS, [
             "multimedia_entity_id"      => $multimediaEntityId,

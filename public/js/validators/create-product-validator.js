@@ -4,6 +4,19 @@ export function createProductValidator(id) {
         return (element.files.length >= Number(parameter));
     }, 'Please complete the input file');
 
+    $.validator.addMethod('filesize', function (value, element, parameter) {
+
+        let result;
+        if (element.files[0] === undefined) {
+            return this.optional(element) || result;
+        }
+
+        const size = parseFloat((element.files[0].size / 1024.0 / 1024.0).toFixed(2));
+        result = (size > parameter) ? false : true;
+
+        return this.optional(element) || result;
+    }, 'Please enter a valid file');
+
     $(id).validate({
         rules: {
             'name': {
@@ -21,13 +34,14 @@ export function createProductValidator(id) {
                 number: true,
                 min: 1
             },
-            'images': {
+            'images[]': {
                 fileCount: 3
             },
-            'videos': {
-                fileCount: 1
+            'video': {
+                required: true,
+                filesize: 8
             },
-            'categories': {
+            'categories[]': {
                 required: true
             }
         },
@@ -47,13 +61,14 @@ export function createProductValidator(id) {
                 number: 'La cantidad debe ser un número',
                 min: 'Debe haber al menos un producto en existencia'
             },
-            'images': {
+            'images[]': {
                 fileCount: 'La cantidad de imágenes debe ser mínimo 3'
             },
-            'videos': {
-                fileCount: 'La cantidad de videos debe ser mínimo 1'
+            'video': {
+                required: 'El video no puede estar vacío.',
+                filesize: 'El archivo es demasiado pesado (máximo de 8MB)'
             },
-            'categories': {
+            'categories[]': {
                 required: 'Las categorías no pueden estar vacías'
             }
         },

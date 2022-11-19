@@ -33,13 +33,13 @@ class WishlistController extends Controller
     {
         // TODO: Validar que exista una sección activa
         $session = new PhpSession();
+        $userId = $session->get("userId");
 
         $wishlistId = Uuid::uuid4()->toString();
         $name = $request->getBody("name");
         $description = $request->getBody("description");
         $visible = $request->getBody("visible");
         $images = $request->getFiles("images");
-        $userId = $session->get("userId");
 
         $wishlist = new Wishlist();
         $wishlist
@@ -52,12 +52,11 @@ class WishlistController extends Controller
         $validator = new Validator($wishlist);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
-            $response->json([
+            $response->setStatusCode(400)->json([
                 "status" => $status,
                 "message" => $feedback
-            ])->setStatusCode(400);
+            ]);
             return;
         }
 
@@ -292,7 +291,6 @@ class WishlistController extends Controller
         // Format JSON for Front-End correctly
         if ($wishlist != []) {
             $wishlist["images"] = json_decode($wishlist["images"]);
-            $wishlist["visible"] = (bool)$wishlist["visible"];
         }
 
         $response->json($wishlist);

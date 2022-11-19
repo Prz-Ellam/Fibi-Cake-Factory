@@ -69,20 +69,62 @@ BEGIN
 
     SET @quantity := (SELECT quantity FROM shopping_cart_items WHERE BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id);
     SET @product_id := (SELECT BIN_TO_UUID(product_id) FROM shopping_cart_items WHERE BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id);
+    SET @stock := (SELECT stock FROM products WHERE BIN_TO_UUID(product_id) = @product_id);
+
+    -- TODO: Supera el stock y se va a negativos
 
     UPDATE
         shopping_cart_items
     SET
-        quantity = IFNULL(_quantity, quantity)
+        quantity = IF(quantity < 100, quantity + _quantity, quantity)
     WHERE
         BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id;
 
     UPDATE
         products
     SET
-        stock = stock + @quantity - _quantity
+        stock = stock  - _quantity
     WHERE
         BIN_TO_UUID(product_id) = @product_id;
+
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_shopping_cart_items_get_quantity $$
+
+CREATE PROCEDURE sp_shopping_cart_items_get_quantity(
+    IN _shopping_cart_item_id           VARCHAR(36)
+)
+BEGIN
+
+    SELECT 
+        quantity 
+    FROM 
+        shopping_cart_items 
+    WHERE 
+        BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_shopping_cart_item_get_product_id $$
+
+CREATE PROCEDURE sp_shopping_cart_item_get_product_id(
+    IN _shopping_cart_item_id           VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        BIN_TO_UUID(product_id) `product_id`
+    FROM
+        shopping_cart_items
+    WHERE
+        BIN_TO_UUID(shopping_cart_item_id) = _shopping_cart_item_id;
 
 END $$
 DELIMITER ;

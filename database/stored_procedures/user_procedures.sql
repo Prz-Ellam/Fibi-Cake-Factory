@@ -1,8 +1,10 @@
+SELECT image_id FROM images;
+
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_create_user $$
+DROP PROCEDURE IF EXISTS sp_users_create $$
 
-CREATE PROCEDURE sp_create_user(
+CREATE PROCEDURE sp_users_create(
     IN _user_id                 VARCHAR(36),
     IN _email                   VARCHAR(255),
     IN _username                VARCHAR(18),
@@ -73,7 +75,8 @@ BEGIN
         last_name       = IFNULL(_last_name, last_name),
         birth_date      = IFNULL(_birth_date, birth_date),
         gender          = IFNULL(_gender, gender),
-        profile_picture = IFNULL(UUID_TO_BIN(_profile_picture), profile_picture)
+        profile_picture = IFNULL(UUID_TO_BIN(_profile_picture), profile_picture),
+        modified_at     = NOW()
     WHERE
         BIN_TO_UUID(user_id) = _user_id
         AND active = TRUE;

@@ -22,7 +22,7 @@ class WishlistObjectController extends Controller
      * @param Response $response
      * @return void
      */
-    public function addObject(Request $request, Response $response): void
+    public function create(Request $request, Response $response): void
     {
         // TODO: Vulnerable
         $productId = $request->getBody("product-id");

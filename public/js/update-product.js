@@ -348,7 +348,7 @@ $(document).ready(function() {
         const requestBody = new FormData(this);
         $.ajax({
             url: `api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
-            method: 'POST',
+            method: 'PUT',
             data: requestBody,
             cache: false,
             contentType: false,
@@ -372,34 +372,29 @@ $(document).ready(function() {
             return;
         }
 
-        modal = document.getElementById('create-category');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('create-category');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
-        const requestBody = new FormData(this);
-        console.log([...requestBody]);
-
-        $('#categories').append(`<option value="${optionsCount}">${requestBody.get('name')}</option>`);
-        $('#categories').multipleSelect('refresh');
-
-        return;
         $.ajax({
-            method: 'POST',
             url: 'api/v1/categories',
-            headers: {
-                'Accept' : 'application/json',
-                'Content-Type' : 'application/json'
-            },
-            data: JSON.stringify(requestBody),
-            //dataType: 'json',
+            method: 'POST',
+            data: $(this).serialize(),
             success: function(response) {
-                console.log(response);
+                
+                fetch('/api/v1/categories')
+                .then(response => response.json())
+                .then(response => {
+                    $('#categories').html('');
+                    response.forEach(category => {
+                        $('#categories').append(`<option value="${category.id}">${category.name}</option>`);
+                    });
+                    $('#categories').multipleSelect('refresh');
+                });
+
             },
             error: function(response, status, error) {
                 console.log(status);
-            },
-            complete: function() {
-                console.log('Complete');
             }
         });
 

@@ -277,7 +277,7 @@ class ProductController extends Controller
 
 
         $videoRepository = new VideoRepository();
-        $videoRepository->deleteMultimediaEntityImages($productId, 'products');
+        $videoRepository->deleteMultimediaEntityVideos($productId, 'products');
 
         $videoId = Uuid::uuid4()->toString();
         $videoName = $video->getName();
@@ -362,6 +362,12 @@ class ProductController extends Controller
             ]);
             return;
         }
+
+        $imageRepository = new ImageRepository();
+        $imageRepository->deleteMultimediaEntityImages($productId, 'products');
+
+        $videoRepository = new VideoRepository();
+        $videoRepository->deleteMultimediaEntityVideos($productId, 'products');
 
         $result = $productRepository->delete($productId);
         if (!$result) {

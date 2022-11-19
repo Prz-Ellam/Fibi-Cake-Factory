@@ -101,7 +101,6 @@ $(document).ready(function () {
                     $.ajax({
                         url: `/api/v1/images/${image}`,
                         method: 'GET',
-                        timeout: 0,
                         xhrFields: {
                             responseType: 'blob'
                         },

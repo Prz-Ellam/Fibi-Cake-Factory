@@ -31,12 +31,9 @@ class CategoryController extends Controller
     public function create(Request $request, Response $response)
     {
         $session = new PhpSession();
-
-        $categoryId = Uuid::uuid4()->toString();
-        $name = $request->getBody("name");
-        $description = $request->getBody("description");
         $userId = $session->get("userId");
 
+        // TODO: Ponerle Not authorized en todos lados
         if (!$userId) {
             $response->setStatusCode(401)->json([
                 "status" => false,
@@ -44,6 +41,10 @@ class CategoryController extends Controller
             ]);
             return;
         }
+
+        $categoryId = Uuid::uuid4()->toString();
+        $name = $request->getBody("name");
+        $description = $request->getBody("description");
 
         $category = new Category();
         $category
@@ -55,7 +56,6 @@ class CategoryController extends Controller
         $validator = new Validator($category);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->setStatusCode(400)->json([
                 "status" => $status,
@@ -98,11 +98,6 @@ class CategoryController extends Controller
     public function update(Request $request, Response $response)
     {
         $session = new PhpSession();
-
-        // TODO: Solo un usuario administrador puede actualizar
-        $categoryId = $request->getRouteParams('categoryId');
-        $name = $request->getBody('name');
-        $description = $request->getBody('description');
         $userId = $session->get('userId');
 
         if (!$userId) {
@@ -112,6 +107,11 @@ class CategoryController extends Controller
             ]);
             return;
         }
+
+        // TODO: Solo un usuario administrador puede actualizar
+        $categoryId = $request->getRouteParams('categoryId');
+        $name = $request->getBody('name');
+        $description = $request->getBody('description');
 
         $category = new Category();
         $category

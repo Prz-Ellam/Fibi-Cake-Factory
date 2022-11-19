@@ -57,35 +57,35 @@ $user = $userRepository->getOne($userId);
                 <div class="mb-4">
                     <label class="form-linputabel" for="email">Correo electrónico</label>
                     <div class="input-group">
-                        <input type="email" class="form-control shadow-none rounded-1" name="email" id="email" placeholder="ejemplo@correo.com">
+                        <input type="email" class="form-control shadow-none rounded-1" name="email" id="email" placeholder="ejemplo@correo.com" value="<?= $user["email"] ?>">
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label" for="name">Nombre de usuario</label>
                     <div class="input-group">
-                        <input type="text" class="form-control shadow-none rounded-1" name="username" id="username" autocomplete="off">
+                        <input type="text" class="form-control shadow-none rounded-1" name="username" id="username" autocomplete="off" value="<?= $user["username"] ?>">
                     </div>
                 </div>
 
                 <div class="form-group mb-4">
                     <label class="form-label" for="birth-date">Fecha de nacimiento</label>
                     <div class="input-group">
-                        <input type="date" class="form-control shadow-none rounded-1" name="birthDate" id="birth-date">
+                        <input type="date" class="form-control shadow-none rounded-1" name="birthDate" id="birth-date" value="<?= $user["birthDate"] ?>">
                     </div>
                 </div>
 
                 <div class="form-group mb-4">
                     <label class="form-label" for="first-name">Nombre</label>
                     <div class="input-group">
-                        <input type="text" class="form-control shadow-none rounded-1" name="firstName" id="first-name">
+                        <input type="text" class="form-control shadow-none rounded-1" name="firstName" id="first-name" value="<?= $user["firstName"] ?>">
                     </div>
                 </div>
 
                 <div class="form-group mb-4">
                     <label class="form-label" for="last-name">Apellido(s)</label>
                     <div class="input-group">
-                        <input type="text" class="form-control shadow-none rounded-1" name="lastName" id="last-name">
+                        <input type="text" class="form-control shadow-none rounded-1" name="lastName" id="last-name" value="<?= $user["lastName"] ?>">
                     </div>
                 </div>
 
@@ -93,15 +93,15 @@ $user = $userRepository->getOne($userId);
                     <label class="form-label" role="button">Sexo</label>
                     <div>
                         <div class="form-check">
-                            <input class="custom-control-input form-check-input shadow-none" type="radio" name="gender" value="1" id="male">
+                            <input class="custom-control-input form-check-input shadow-none" type="radio" name="gender" value="1" id="male" <?php if ($user["gender"] === 1) echo "checked" ?>>
                             <label class="form-check-label" for="male" role="button">Masculino</label>
                         </div>
                         <div class="form-check">
-                            <input class="custom-control-input form-check-input shadow-none" type="radio" name="gender" value="2" id="female">
+                            <input class="custom-control-input form-check-input shadow-none" type="radio" name="gender" value="2" id="female" <?php if ($user["gender"] === 2) echo "checked" ?>>
                             <label class="form-check-label" for="female" role="button">Femenino</label>
                         </div>
                         <div class="form-check">
-                            <input class="custom-control-input form-check-input shadow-none" type="radio" name="gender" value="0" id="other">
+                            <input class="custom-control-input form-check-input shadow-none" type="radio" name="gender" value="0" id="other" <?php if ($user["gender"] === 0) echo "checked" ?>>
                             <label class="form-check-label" for="other" role="button">Otro</label>
                         </div>
                     </div>

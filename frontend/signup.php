@@ -51,7 +51,7 @@
                         <label for="profile-picture" role="button" class="profile-picture-label text-white position-absolute rounded-circle"></label>
                         <img class="img img-fluid rounded-circle" id="picture-box" src="assets/img/blank-profile-picture.svg" alt="Profile picture">
                     </div>
-                    <input type="file" accept="image/*" class="form-control shadow-none rounded-1 position-absolute" name="profilePicture" id="profile-picture" >
+                    <input type="file" accept="image/png, image/gif, image/jpeg, image/jpg" class="form-control shadow-none rounded-1 position-absolute" name="profilePicture" id="profile-picture" >
                 </div>
                 
                 <div class="mb-4">

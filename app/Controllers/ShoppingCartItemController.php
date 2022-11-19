@@ -71,15 +71,40 @@ class ShoppingCartItemController extends Controller
             return;
         }
 
+        $shoppingCartItemRepository = new ShoppingCartItemRepository();
+
+        $productId = $shoppingCartItemRepository->getProductId($shoppingCartItemId);
+        $productRepository = new ProductRepository();
+        $product = $productRepository->getProduct($productId)[0];
+        if (!$product) {
+            $response->json([
+                "status" => false,
+                "message" => "El producto solicitado no existe"
+            ])->setStatusCode(400);
+            return;
+        }
+
+        $itemQuantity = $shoppingCartItemRepository->getQuantity($shoppingCartItemId);
+        if ($product["stock"] < $quantity - $itemQuantity) {
+            $response->json([
+                "status" => false,
+                "message" => "No hay suficiente cantidad de stock"
+            ])->setStatusCode(400);
+            return;
+        }
+        
+
         $shoppingCartItem = new ShoppingCartItem();
         $shoppingCartItem
             ->setShoppingCartItemId($shoppingCartItemId)
-            ->setQuantity($quantity);
+            ->setQuantity($quantity - $itemQuantity);
 
-        $shoppingCartItemRepository = new ShoppingCartItemRepository();
+        
+
         $result = $shoppingCartItemRepository->update($shoppingCartItem);
 
         $response->json([$result]);
+        
     }
 
     public function removeItem(Request $request, Response $response)

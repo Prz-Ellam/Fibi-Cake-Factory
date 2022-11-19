@@ -2,6 +2,8 @@
 
 namespace CakeFactory\Controllers;
 
+use PDOException;
+
 use CakeFactory\Models\Image;
 use CakeFactory\Models\ShoppingCart;
 use CakeFactory\Models\User;
@@ -10,17 +12,13 @@ use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use CakeFactory\Repositories\UserRepository;
 use CakeFactory\Repositories\UserRoleRepository;
-use Exception;
 use Fibi\Database\DB;
 use Fibi\Helpers\Crypto;
 use Fibi\Http\Controller;
 use Fibi\Http\Request;
-use Fibi\Http\Request\PhpCookie;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
-use Fibi\Validation\Rules\Required;
 use Fibi\Validation\Validator;
-use PDOException;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -40,6 +38,7 @@ class UserController extends Controller
      */
     public function create(Request $request, Response $response): void
     {
+        $session = new PhpSession();
         $result = null;
 
         $userId = Uuid::uuid4()->toString();
@@ -54,7 +53,6 @@ class UserController extends Controller
         $confirmPassword = $request->getBody("confirmPassword");
         $profilePicture = $request->getFiles("profilePicture");
 
-        $session = new PhpSession();
         $userRole = ($session->get("role") === "Super Administrador") ? 
             "Administrador" : "Comprador";
 
@@ -78,7 +76,6 @@ class UserController extends Controller
         $validator = new Validator($image);
         $feedback = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->json([
                 "status" => $status,
@@ -142,7 +139,6 @@ class UserController extends Controller
         $validator = new Validator($user);
         $results = $validator->validate();
         $status = $validator->getStatus();
-
         if (!$status) {
             $response->json([
                 "status" => false,
@@ -219,6 +215,7 @@ class UserController extends Controller
     {
         $session = new PhpSession();   
         $userId = $session->get("userId");
+
         $email = $request->getBody("email");
         $username = $request->getBody("username");
         $birthDate = $request->getBody("birthDate");
@@ -226,6 +223,9 @@ class UserController extends Controller
         $lastName = $request->getBody("lastName");
         $gender = $request->getBody("gender");
         $profilePicture = $request->getFile("profilePicture");
+
+        $imageRepository = new ImageRepository();
+        $imageRepository->deleteMultimediaEntityImages($userId, 'users');
 
         $imageId = Uuid::uuid4()->toString();
         $imageName = $profilePicture->getName();
@@ -254,7 +254,6 @@ class UserController extends Controller
             return;
         }
 
-        $imageRepository = new ImageRepository();
         $result = $imageRepository->create($image);
         if (!$result) {
             $response->json([
@@ -329,7 +328,8 @@ class UserController extends Controller
         $res = Crypto::verify($auth["password"], $oldPassword);
         if (!$res)
         {
-            // Esta mal
+            $response->setStatusCode(400)->json([ "Su contraseña no es correcta" ]);
+            return;
         }
 
         if ($newPassword != $confirmNewPassword)

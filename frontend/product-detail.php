@@ -101,11 +101,11 @@
 
             <label class="mb-2">Calificación: </label>
             <div class="rating d-inline">
-                <i class="rating-star far fa-star" value="1"></i>
-                <i class="rating-star far fa-star" value="2"></i>
-                <i class="rating-star far fa-star" value="3"></i>
-                <i class="rating-star far fa-star" value="4"></i>
-                <i class="rating-star far fa-star" value="5"></i>
+                <i class="rate-star rating-star far fa-star" value="1"></i>
+                <i class="rate-star rating-star far fa-star" value="2"></i>
+                <i class="rate-star rating-star far fa-star" value="3"></i>
+                <i class="rate-star rating-star far fa-star" value="4"></i>
+                <i class="rate-star rating-star far fa-star" value="5"></i>
             </div>
             <input type="hidden" name="rate" id="rate">
 

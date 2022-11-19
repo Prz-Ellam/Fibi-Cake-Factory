@@ -7,7 +7,7 @@ use Fibi\Database\DB;
 
 class UserRepository
 {
-    private const CREATE = "CALL sp_create_user(:userId, :email, :username, :firstName, :lastName, :birthDate, :password, :gender, :visible, :userRole, :profilePicture)";
+    private const CREATE = "CALL sp_users_create(:userId, :email, :username, :firstName, :lastName, :birthDate, :password, :gender, :visible, :userRole, :profilePicture)";
     private const UPDATE = "CALL sp_update_user(:userId, :email, :username, :firstName, :lastName, :birthDate, :gender, :profilePicture)";
     private const UPDATE_USER_PASSWORD = "CALL sp_update_user_password(:userId, :password)";
     private const DELETE = "CALL sp_delete_user(?)";

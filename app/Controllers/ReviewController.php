@@ -25,12 +25,12 @@ class ReviewController
     public function create(Request $request, Response $response): void
     {
         $session = new PhpSession();
+        $userId = $session->get("userId");
 
         $reviewId = Uuid::uuid4()->toString();
         $message = $request->getBody("message");
         $rate = $request->getBody("rate");
         $productId = $request->getRouteParams("productId");
-        $userId = $session->get("userId");
 
         $review = new Review();
         $review
@@ -51,8 +51,8 @@ class ReviewController
             return;
         }
 
-        $commentRepository = new ReviewRepository();
-        $status = $commentRepository->create($review);
+        $reviewRepository = new ReviewRepository();
+        $status = $reviewRepository->create($review);
         if (!$status) {
             $response->json([
                 "status" => $status,
@@ -80,12 +80,12 @@ class ReviewController
     public function update(Request $request, Response $response): void
     {
         $session = new PhpSession();
+        $userId = $session->get("userId");
 
         $reviewId = $request->getRouteParams("reviewId");
         $message = $request->getBody("message");
         $rate = $request->getBody("rate");
         $productId = $request->getRouteParams("productId");
-        $userId = $session->get("userId");
 
         $review = new Review();
         $review
@@ -106,8 +106,8 @@ class ReviewController
             return;
         }
 
-        $commentRepository = new ReviewRepository();
-        $status = $commentRepository->update($review);
+        $reviewRepository = new ReviewRepository();
+        $status = $reviewRepository->update($review);
         if (!$status) {
             $response->json([
                 "status" => $status,
