@@ -408,7 +408,8 @@ BEGIN
     ON
         p.product_id = v.multimedia_entity_id
     WHERE
-        p.approved = FALSE
+        p.active = TRUE
+        AND p.approved = FALSE
         AND p.approved_by IS NULL
     GROUP BY
         p.product_id, 

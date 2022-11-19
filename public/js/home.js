@@ -57,7 +57,6 @@ $.ajax({
     url: `api/v1/products/action/recents`,
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         response.forEach(function(product) 
         {
@@ -70,7 +69,6 @@ $.ajax({
     url: `api/v1/products/order/ships`,
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         response.forEach(function(product) 
         {
@@ -103,7 +101,6 @@ $.ajax({
         $.ajax({
             url: `api/v1/users/${response.id}/wishlists`,
             method: 'GET',
-            timeout: 0,
             success: function(response) {
                 response.forEach(function(wishlist) {
                     $('#wishlists-list').append(WishlistItem(wishlist));

@@ -107,7 +107,7 @@ $(document).ready(function() {
     $('#send-message').click(function() {
 
         let message = $('#message').val();
-        
+        /*
         if ($('#chat-file')[0].files.length !== 0)
         {
             const reader = new FileReader();
@@ -126,7 +126,7 @@ $(document).ready(function() {
                 }, 800);
             }
         }
-
+*/
         if (message === '') return;
         postMessage(message);
 

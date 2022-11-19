@@ -28,7 +28,7 @@ fetch(`api/v1/users/${id}/wishlists`)
         });
     });
 
-    const dataTransfer = new DataTransfer();
+const dataTransfer = new DataTransfer();
 
 $(document).ready(function () {
 
@@ -95,10 +95,7 @@ $(document).ready(function () {
 
                 wishlistId = id;
 
-                //let images = card.querySelectorAll('.carousel-item div img');
-
                 $('#image-list').html('');
-
                 result.images.forEach(async function (image) {
 
                     $.ajax({
@@ -189,7 +186,7 @@ $(document).ready(function () {
 
     // Agregar Listas de deseos
     var imageCounter = 0;
-    
+
     $('#images-transfer').on('change', function (e) {
 
         const files = this.files;
@@ -211,7 +208,7 @@ $(document).ready(function () {
             dataTransfer.items.add(file);
 
         });
-        console.log(dataTransfer);
+        
         document.getElementById('images').files = dataTransfer.files;
         this.value = '';
     });
@@ -314,7 +311,6 @@ $(document).ready(function () {
                 complete: function () {
                 }
             });
-
         }
         else if (this.getAttribute('operation') === 'update') {
 

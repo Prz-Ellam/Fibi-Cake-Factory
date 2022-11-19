@@ -238,9 +238,8 @@ class ProductController extends Controller
         $typeOfSell = $request->getBody("type-of-sell");
         $price = $request->getBody("price");
         $stock = $request->getBody("stock");
-
-        $images = $request->getFileArray("images");
-        $videos = $request->getFileArray("videos");
+        $images = $request->getFiles("images");
+        $videos = $request->getFiles("videos");
 
         // Validar que esto existe realmente en la BD
         $categories = $request->getBody("categories");

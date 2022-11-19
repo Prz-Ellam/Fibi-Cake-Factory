@@ -21,9 +21,8 @@ $.ajax({
     method: 'GET',
     async: false,
     success: function(response) {
-        response.forEach((category) =>
-        {
-            $('#categories').append(`<option value="${category.id}">${category.name}</option>`)
+        response.forEach(category => {
+            $('#sales-report-categories').append(`<option value="${category.id}">${category.name}</option>`)
         });
     }
 });
@@ -110,34 +109,38 @@ $(document).ready(function() {
     $('.form-select').addClass('shadow-none');
     $('.page-link').addClass('shadow-none');
 
+    $('#btn-sales-report').click(event => {
+        
+        const from = $('#date-sales-report-from').val();
+        const to =  $('#date-sales-report-to').val();
+        const category = $('#sales-report-categories').val();
+
+        const query = new URLSearchParams();
+        if (from !== '') query.set('from', from);
+        if (to !== '') query.set('to', to);
+        if (category !== '') query.set('category', category);
+
+        $.ajax({
+            url: `/api/v1/reports/sales-report?${query.toString()}`,
+            method: 'GET',
+            success: function(response) {
+                detailedSalesReport.clear();
+                response.forEach(element => {
+
+                    detailedSalesReport.row.add([
+                        element.date,
+                        element.categories,
+                        element.productName,
+                        element.rate,
+                        fmt.format(element.price),
+                        element.stock
+                    ]);
+                
+                });
+                detailedSalesReport.draw(false);
+            }
+        });
+
+    });
+
 });
-
-const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-];
-
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [ 0, 10, 5, 2, 20, 30, 45 ],
-    }]
-};
-
-const config = {
-    type: 'line',
-    data: data,
-    options: {}
-};
-
-const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-);

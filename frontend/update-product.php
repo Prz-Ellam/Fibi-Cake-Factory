@@ -85,14 +85,12 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="videos-transfer" class="form-label" role="button">Videos (mínimo 1)</label>
+                    <label for="videos" class="form-label" role="button">Video</label>
                     <div class="input-group">
-                        <label for="videos-transfer" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir videos</label>
+                        <label for="videos" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir video</label>
                         <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="videos" id="videos" multiple accept="video/*">
-                        <input type="file" id="videos-transfer" class="d-none" multiple accept="video/*">
                     </div>
-                    <div class="my-4" style="overflow-x: scroll; width: 100%; white-space: nowrap;" id="video-list">    
-                    </div>
+                    <div id="video-place" class="mt-3"></div>
                 </div>
 
                 <div class="mb-3">

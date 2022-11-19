@@ -1,3 +1,6 @@
+<?php
+    date_default_timezone_set('America/Monterrey');
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -68,7 +71,7 @@
                 <div class="mb-4">
                     <label for="birth-date" class="form-label" role="button">Fecha de nacimiento</label>
                     <div class="input-group">
-                        <input type="date" class="form-control shadow-none rounded-1" id="birth-date" name="birthDate">
+                        <input type="date" class="form-control shadow-none rounded-1" id="birth-date" name="birthDate" value="<?= date("Y-m-d") ?>">
                     </div>
                 </div>
 

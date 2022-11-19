@@ -106,7 +106,6 @@ class SessionController extends Controller
     {
         $session = new PhpSession();
         $userId = $session->get('userId');
-
         $response->json(["id" => $userId]);
     }
 }

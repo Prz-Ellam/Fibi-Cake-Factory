@@ -8,7 +8,7 @@ var fmt = new Intl.NumberFormat('en-US', {
 
 $.ajax({
     url: `api/v1/users/${id}`,
-    method: "GET",
+    method: 'GET',
     async: false,
     timeout: 0,
     success: function(response) {
@@ -21,12 +21,10 @@ $.ajax({
     url: 'api/v1/categories',
     method: 'GET',
     async: false,
-    timeout: 0,
-    success: function(response)
-    {
+    success: function(response) {
         response.forEach((category) =>
         {
-            $('#categories').append(`<option value="${category.id}">${category.name}</option>`)
+            $('#order-report-categories').append(`<option value="${category.id}">${category.name}</option>`)
         });
     }
 });
@@ -77,5 +75,39 @@ $(document).ready(function() {
     $('.form-control').addClass('shadow-none');
     $('.form-select').addClass('shadow-none');
     $('.page-link').addClass('shadow-none');
+
+    $('#btn-order-report').click(e => {
+
+        const from = $('#date-order-report-from').val();
+        const to =  $('#date-order-report-to').val();
+        const category = $('#order-report-categories').val();
+
+        const query = new URLSearchParams();
+        if (from !== '') query.set('from', from);
+        if (to !== '') query.set('to', to);
+        if (category !== '') query.set('category', category);
+
+        $.ajax({
+            url: `/api/v1/reports/order-report?${query.toString()}`,
+            method: 'GET',
+            success: function(response) {
+
+                table.clear();
+                response.forEach(element => {
+                    table.row.add([
+                        element.date,
+                        element.categories,
+                        element.productName,
+                        element.rate,
+                        fmt.format(element.price)
+                    ]);
+                });
+                table.draw(false);
+
+            }
+        });
+
+
+    });
 
 });

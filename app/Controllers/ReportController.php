@@ -12,15 +12,14 @@ class ReportController extends Controller
 {
     public function getOrderReport(Request $request, Response $response)
     {
-        $from = $request->getQuery("from");
-        $to = $request->getQuery("to");
+        $from = $request->getQuery("from") ?? null;
+        $to = $request->getQuery("to") ?? null;
         $categoryId = $request->getQuery("category");
 
         $session = new PhpSession();
         $userId = $session->get("userId");
 
         $orderRepository = new OrderRepository();
-
         $results = $orderRepository->getOrderReport($userId, $categoryId, $from, $to);
         foreach ($results as &$result)
         {
@@ -47,8 +46,8 @@ class ReportController extends Controller
 
     public function getSalesReport(Request $request, Response $response)
     {
-        $from = $request->getQuery("from");
-        $to = $request->getQuery("to");
+        $from = $request->getQuery("from") ?? null;
+        $to = $request->getQuery("to") ?? null;
         $categoryId = $request->getQuery("category");
 
         $session = new PhpSession();

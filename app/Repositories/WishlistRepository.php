@@ -14,6 +14,7 @@ class WishlistRepository
     private const GET_ALL_BY_USER = "CALL sp_get_user_wishlists(:userId, :count, :offset)";
     private const GET_ALL_BY_USER_PUBLIC = "CALL get_all_by_user_public(:userId, :count, :offset)";
     private const GET_ONE = "CALL sp_get_wishlist(:wishlistId)";
+    private const GET_USER_ID = "CALL sp_wishlists_get_user_id(:wishlistId)";
 
     public function create(Wishlist $wishlist)
     {
@@ -50,11 +51,9 @@ class WishlistRepository
 
     public function getWishlist(string $wishlistId)
     {
-        $result = DB::executeReader(self::GET_ONE, [
+        return DB::executeReader(self::GET_ONE, [
             "wishlistId"        => $wishlistId
-        ]);
-
-        return $result;
+        ])[0] ?? [];
     }
 
     public function getUserWishlists(string $userId, int $count, int $offset) : array
@@ -76,6 +75,13 @@ class WishlistRepository
             "offset"    => $offset
         ]);
     }
-}
 
-?>
+    public function getWishlistUserId(string $wishlistId) : ?string
+    {
+        $result = DB::executeReader(self::GET_USER_ID, [
+            "wishlistId" => $wishlistId
+        ]);
+
+        return $result[0]["user_id"] ?? "";
+    }
+}

@@ -3,6 +3,7 @@
 namespace CakeFactory\Controllers;
 
 use CakeFactory\Models\ShoppingCartItem;
+use CakeFactory\Repositories\ProductRepository;
 use CakeFactory\Repositories\ShoppingCartItemRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use Fibi\Http\Controller;
@@ -20,6 +21,24 @@ class ShoppingCartItemController extends Controller
         $quantity = $request->getBody("quantity");
 
         $userId = (new PhpSession())->get('userId');
+
+        $productRepository = new ProductRepository();
+        $product = $productRepository->getProduct($productId)[0];
+        if (!$product) {
+            $response->json([
+                "status" => false,
+                "message" => "El producto solicitado no existe"
+            ])->setStatusCode(400);
+            return;
+        }
+
+        if ($product["stock"] < $quantity) {
+            $response->json([
+                "status" => false,
+                "message" => "No hay suficiente cantidad de stock"
+            ])->setStatusCode(400);
+            return;
+        }
 
         $shoppingCartRepository = new ShoppingCartRepository();
         $shoppingCartId = $shoppingCartRepository->getUserCart($userId);

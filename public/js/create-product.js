@@ -1,12 +1,12 @@
 import { createProductValidator } from './validators/create-product-validator.js';
 import { getSession } from './utils/session.js';
+import { createCategoryValidator } from './validators/create-category-validator.js';
 const id = getSession();
 
 $.ajax({
-    url: `api/v1/users/${response.id}`,
-    method: "GET",
+    url: `api/v1/users/${id}`,
+    method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         const url = `api/v1/images/${response.profilePicture}`;
         $('.nav-link img').attr('src', url);
@@ -16,7 +16,6 @@ $.ajax({
 $.ajax({
     url: 'api/v1/categories',
     method: 'GET',
-    timeout: 0,
     async: false,
     success: function(response) {
         response.forEach(function(element) {
@@ -28,6 +27,7 @@ $.ajax({
 $(document).ready(function() {
 
     createProductValidator('#create-product-form');
+    createCategoryValidator('#create-category-form');
 
     $('#sell').click(function() {
         $('#price').removeAttr('disabled');
@@ -44,6 +44,7 @@ $(document).ready(function() {
         filter: true
     });
 
+    const imageDataTransfer = new DataTransfer();
     const images = [];
     var imageCounter = 0;
     $('#images-transfer').on('change', function(e) {
@@ -105,9 +106,45 @@ $(document).ready(function() {
 
     });
 
+    $('#video').on('change', function(event) {
+
+        const files = $(this)[0].files;
+        if (files.length === 0) return;
+
+        const file = $(this)[0].files[0];
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        var regexpImages = /^(video\/.*)/i;
+        if (!regexpImages.exec(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La video que ingresaste no es permitida',
+                confirmButtonColor: "#FF5E1F",
+            });
+            $(this).val('');
+            return;
+        }
+
+        fileReader.onloadend = function(e) {
+            $('#video-place').html(`
+                <span class="position-relative" id="video-${1}">
+                    <video class="product-mul" controls>
+                        <source src="${e.target.result}">
+                    </video>
+                </span>
+                <button type="button" class="btn bg-dark btn-outline-info video-close border-0 rounded-0 shadow-sm text-light">&times;</button>
+                `);
+        };
+
+    });
+
+/*
+    const videoDataTransfer = new DataTransfer();
     const videos = [];
     var videoCounter = 0;
-    $('#videos-transfer').on('change', function(e) {
+    $('#video').on('change', function(e) {
 
         const files = $(this)[0].files;
 
@@ -149,60 +186,7 @@ $(document).ready(function() {
         $(this).val('');
 
     });
-
-    $(document).on('click', '.video-close', function(event) {
-
-        const videoHTML = $(this).prev();
-        const id = Number(videoHTML.attr('id').split('-')[1]);
-
-        const deletedVideo = videos.filter(video => {
-            return video.id === id;
-        })[0];
-
-        videos.forEach((element, i) => {
-            if (element.id === deletedVideo.id)
-            {
-                videos.splice(i, 1);
-            }
-        });
-
-        videoHTML.remove();
-        $(this).remove();
-
-        const dataTransfer = new DataTransfer();
-        videos.forEach((element) => {
-            dataTransfer.items.add(element.file);
-        });
-        document.getElementById('videos').files = dataTransfer.files;
-
-    });
-
-    $('#create-category-form').validate({
-        rules: {
-            'name': {
-                required: true,
-                maxlength: 50
-            },
-            'description': {
-                maxlength: 200
-            }
-        },
-        messages: {
-            'name': {
-                required: 'El nombre no puede estar vacío.',
-                maxlength: 'El nombre de la categoría es muy largo'
-            },
-            'description': {
-                maxlength: 'La descripción de la categoría es muy largo'
-            }
-        },
-        errorElement: 'small',
-        errorPlacement: function(error, element) {
-            error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
-        }
-    });
-
-    
+*/
     $('#create-category-form').submit(function(event) {
 
         event.preventDefault();
@@ -268,7 +252,7 @@ $(document).ready(function() {
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu producto ha sido añadido al carrito'
-                }).then((result) => {
+                }).then(result => {
                     //window.location.href = '/home';
                 });
             },

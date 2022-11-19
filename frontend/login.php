@@ -72,39 +72,10 @@ $cookies = new PhpCookie();
                 <div class="text-center">
                     <p class="mb-0">¿Aún no tienes cuenta?</p>
                     <a href="/signup" class="d-block text-orange text-decoration-none">¡Regístrate ahora!</a>        
-                    <hr class="mb-4">
-                    <a class="d-block mb-0 text-orange text-decoration-none" data-bs-toggle="modal" data-bs-target="#restore-password" role="button">¿Olvidaste tu contraseña?</a>
                 </div>
             </form>
         </div>
     </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="restore-password" tabindex="-1" aria-labelledby="restore-password-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content border-0 shadow-sm">
-                <form id="send-mail">
-                    <div class="modal-header border-0">
-                        <h4 class="modal-title" id="restore-password-label">Restablecer contraseña</h4>
-                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ingresa tu correo electrónico y te mandaremos un enlace para que puedas restablecer tu contraseña</p>
-                        <div class="mb-4">
-                            <label class="form-label" for="email" role="button">Correo electrónico</label>
-                            <div class="input-group">
-                                <input type="email" class="form-control shadow-none rounded-1" name="email" id="reset-email" placeholder="correo@ejemplo.com">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-gray shadow-none rounded-1" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-orange shadow-none rounded-1">Enviar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     @footer
 

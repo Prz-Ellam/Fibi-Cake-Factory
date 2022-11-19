@@ -35,21 +35,21 @@
         <div class="row gy-2 gx-3 align-items-center">
             <div class="col-auto">
                 <label for="from" class="">Categorías:</label>
-                <select class="form-select shadow-none rounded-1" id="categories">
-                    <option>Categoria</option>
+                <select class="form-select shadow-none rounded-1" id="sales-report-categories">
+                    <option value="">Todas</option>
                 </select>
             </div>
             <div class="col-auto">
                 <label for="from" class="">Desde:</label>
-                <input type="date" class="form-control shadow-none rounded-1" name="from" id="from">
+                <input type="date" class="form-control shadow-none rounded-1" name="from" id="date-sales-report-from">
             </div>
             <div class="col-auto">
                 <label for="to">Hasta:</label>
-                <input type="date" class="form-control shadow-none rounded-1" name="to" id="to">
+                <input type="date" class="form-control shadow-none rounded-1" name="to" id="date-sales-report-to">
             </div>
             <div class="col-auto ">
                 <label style="visibility: hidden">Categorías:</label>
-                <input type="button" value="Buscar" class="btn btn-orange rounded-1 shadow-none d-block">
+                <input type="button" value="Buscar" class="btn btn-orange rounded-1 shadow-none d-block" id="btn-sales-report">
             </div>
         </div>
         
@@ -92,10 +92,6 @@
 
         <br>
         <br>
-
-        <button class="btn btn-orange shadow-none rounded-1"><i class="fa fa-file-csv"></i> CSV</button>
-        <button class="btn btn-orange shadow-none rounded-1"><i class="fa fa-file-pdf"></i> PDF</button>
-
 
     </div>
 

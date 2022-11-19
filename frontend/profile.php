@@ -1,6 +1,19 @@
+<?php
+
+use CakeFactory\Repositories\UserRepository;
+use Fibi\Session\PhpSession;
+
+// Get User Session
+$session = new PhpSession();
+$userId = $session->get('userId');
+
+// Get User Data
+$userRepository = new UserRepository();
+$user = $userRepository->getOne($userId);
+
+?>
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -23,11 +36,9 @@
     <link rel="stylesheet" href="./styles/profile-picture.css">
     <link rel="stylesheet" href="./styles/footer.css">
 </head>
-
 <body>
     @navbar
 
-    <!-- Main container -->
     <div class="container my-4">
         <div class="row d-flex justify-content-center">
             <form class="form bg-white rounded p-5 col-xl-6 col-lg-6 col-md-7" id="profile-form" novalidate>

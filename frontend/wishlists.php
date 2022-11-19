@@ -1,3 +1,9 @@
+<?php
+
+    
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,11 +51,11 @@
 
                 <nav aria-label="Page navigation example">
                     <ul class="mt-4 pagination justify-content-center">
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Anterior</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Siguiente</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists">Anterior</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists?page=1">1</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists?page=2">2</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists">3</a></li>
+                        <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists">Siguiente</a></li>
                     </ul>
                 </nav>
             </div>

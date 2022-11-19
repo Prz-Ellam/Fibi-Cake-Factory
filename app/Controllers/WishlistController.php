@@ -243,13 +243,31 @@ class WishlistController extends Controller
      */
     public function getWishlist(Request $request, Response $response): void
     {
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
         $wishlistId = $request->getRouteParams("wishlistId");
         $wishlistRepository = new WishlistRepository();
-        $result = $wishlistRepository->getWishlist($wishlistId)[0];
+        $wishlist = $wishlistRepository->getWishlist($wishlistId);
 
-        $result["images"] = json_decode($result["images"]);
+        $wishlistUserId = $wishlistRepository->getWishlistUserId($wishlistId);
 
-        $response->json($result);
+        // Las listas privadas solo pueden ser vistas por el usuario que las creo
+        if ($userId !== $wishlistUserId && $wishlist["visible"] === 0) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
+
+        // Format JSON for Front-End correctly
+        if ($wishlist != []) {
+            $wishlist["images"] = json_decode($wishlist["images"]);
+            $wishlist["visible"] = (bool)$wishlist["visible"];
+        }
+
+        $response->json($wishlist);
     }
 
     /**

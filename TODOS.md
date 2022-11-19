@@ -39,3 +39,16 @@
 - Obtener todos los objetos de una lista de deseos
 - Agregar un objeto a la lista
 - Eliminar un objeto de la lista
+
+
+
+
+TODO: 
+Poder eliminar usuarios
+Productos sin disponibilidad
+Edición de productos
+Limitar peso de archivos en el servidor
+Paginación
+Favoritos de un usuario
+Cotizaciones
+Host

@@ -186,8 +186,6 @@ class Request
 
     public function getFileArray(string $key)
     {
-        var_dump($this->files);die;
-
         $rawImages = $this->files[$key] ?? null;
         if (!$rawImages)
         {

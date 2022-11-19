@@ -1,11 +1,22 @@
+import { getSession } from './utils/session.js';
+const id = getSession();
+
+$.ajax({
+    url: `api/v1/users/${id}`,
+    method: 'GET',
+    async: false,
+    success: function (response) {
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
+    }
+});
+
 $.ajax({
     url: '/api/v1/categories',
     method: 'GET',
-    timeout: 0,
     async: false,
-    success: function(response)
-    {
-        response.forEach((element) => {
+    success: function(response) {
+        response.forEach(element => {
             $('#categories').append(`<option value="${element.id}">${element.name}</option>`);
         });
     }
@@ -15,8 +26,7 @@ $.ajax({
     url: `/api/v1/products/${new URLSearchParams(window.location.search).get("search") || '0'}`,
     method: 'GET',
     async: false,
-    success: function(response)
-    {
+    success: function(response) {
         console.log(response);
 
         $('#name').val(response.name);
@@ -24,12 +34,87 @@ $.ajax({
         $('#price').val(response.price);
         $('#stock').val(response.stock);
 
-        response.categories.forEach((element) => {
+        response.images.forEach(async function (image) {
+
+            $.ajax({
+                url: `/api/v1/images/${image}`,
+                method: 'GET',
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: (response, status, headers) => {
+
+                    const contentDisposition = headers.getResponseHeader('content-disposition');
+
+                    const filenameRegex = new RegExp(/\"(.+)\"/);
+                    const filename = filenameRegex.exec(contentDisposition)[1];
+                    const mime = headers.getResponseHeader('content-type');
+                    const lastModified = headers.getResponseHeader('last-modified');
+                    const id = headers.getResponseHeader('x-image-id');
+
+                    $('#image-list').append(/*html*/`
+                    <span class="position-relative" style="display: inline-block" id="${id}">
+                        <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute">&times;</button>
+                        <img class="product-mul" src="/api/v1/images/${image}">
+                    </span>
+                    `);
+
+                    const file = new File([response], filename, {
+                        type: mime,
+                        lastModified: new Date(lastModified)
+                    });
+                    dataTransfer.items.add(file);
+
+                    document.getElementById('images').files = dataTransfer.files;
+                    console.log(document.getElementById('images').files);
+                }
+            });
+        });
+
+        response.videos.forEach(async function (video) {
+
+            $.ajax({
+                url: `/api/v1/videos/${video}`,
+                method: 'GET',
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: (response, status, headers) => {
+
+                    const contentDisposition = headers.getResponseHeader('content-disposition');
+
+                    const filenameRegex = new RegExp(/\"(.+)\"/);
+                    const filename = filenameRegex.exec(contentDisposition)[1];
+                    const mime = headers.getResponseHeader('content-type');
+                    const lastModified = headers.getResponseHeader('last-modified');
+                    const id = headers.getResponseHeader('x-image-id');
+
+                    $('#video-place').html(`
+                    <span class="position-relative" id="video-${id}">
+                        <video class="product-mul" controls>
+                            <source src="/api/v1/videos/${video}">
+                        </video>
+                    </span>
+                    <button type="button" class="btn bg-dark btn-outline-info video-close border-0 rounded-0 shadow-sm text-light">&times;</button>
+                    `);
+
+                    const file = new File([response], filename, {
+                        type: mime,
+                        lastModified: new Date(lastModified)
+                    });
+                    dataTransfer.items.add(file);
+
+                    document.getElementById('videos').files = dataTransfer.files;
+                }
+            });
+        });
+
+        response.categories.forEach(element => {
             $(`[value="${element.id}"`).attr('selected', '');
         });
     }
 });
-
+const dataTransfer = new DataTransfer();
 
 $(document).ready(function() {
 
@@ -196,33 +281,24 @@ $(document).ready(function() {
 
     });
 
-    const videos = [];
-    var videoCounter = 0;
-    $('#videos-transfer').on('change', function(e) {
+    $('#videos').on('change', function(e) {
 
         const files = $(this)[0].files;
         $.each(files, function(i, file) {
 
             let reader = new FileReader();
             reader.onload = function(e) {
-                $('#video-list').append(`
-                <span class="position-relative" id="video-${videoCounter}">
+                $('#video-place').html(`
+                <span class="position-relative">
                     <video class="product-mul" controls>
                         <source src="${e.target.result}">
                     </video>
                 </span>
                 <button type="button" class="btn bg-dark btn-outline-info video-close border-0 rounded-0 shadow-sm text-light">&times;</button>
                 `);
-                videos.push({
-                    'id': videoCounter,
-                    'file': file
-                });
-                videoCounter++;
-
+                
                 const dataTransfer = new DataTransfer();
-                videos.forEach((element) => {
-                    dataTransfer.items.add(element.file);
-                });
+                dataTransfer.items.add(file);
                 document.getElementById('videos').files = dataTransfer.files;
             };
             reader.readAsDataURL(file);
@@ -265,7 +341,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 
@@ -287,13 +363,12 @@ $(document).ready(function() {
 
     });
 
-    optionsCount = 5;
     $('#create-category-form').submit(function(event) {
 
         event.preventDefault();
 
         let validations = $(this).valid();
-        if (validations === false) {
+        if (!validations) {
             return;
         }
 

@@ -5,29 +5,9 @@ import 'https://kit.fontawesome.com/48ce36e499.js';
 
 import { loginValidator } from './validators/login-validator.js';
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     loginValidator('#login-form');
-
-    $('#send-mail').validate({
-        rules: {
-            'email': {
-                required: true,
-                email: false,
-                email5322: true
-            }
-        },
-        messages: {
-            'email': {
-                required: 'El correo electrónico no puede estar vacío.',
-                email5322: 'El correo electrónico que ingresó no es válido'
-            }
-        },
-        errorElement: 'small',
-        errorPlacement: function (error, element) {
-            error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
-        }
-    });
 
     $('#btn-password').click(function () {
         let mode = $('#password').attr('type');
@@ -72,26 +52,8 @@ $(document).ready(function () {
                         confirmButtonColor: "#FF5E1F",
                     });
                 }
-            },
-            complete: function () {
-
             }
         });
-
-    });
-
-    $('#send-mail').submit(function (event) {
-
-        event.preventDefault();
-
-        let validations = $(this).valid();
-        if (!validations) {
-            return;
-        }
-
-        const modal = document.getElementById('restore-password');
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        modalInstance.hide();
 
     });
 

@@ -1,3 +1,16 @@
+import { getSession } from './utils/session.js';
+const id = getSession();
+
+$.ajax({
+    url: `api/v1/users/${id}`,
+    method: 'GET',
+    async: false,
+    success: function (response) {
+        const url = `api/v1/images/${response.profilePicture}`;
+        $('.nav-link img').attr('src', url);
+    }
+});
+
 var fmt = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
