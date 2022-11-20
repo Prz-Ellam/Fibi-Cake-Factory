@@ -239,6 +239,7 @@ BEGIN
         p.approved,
         (SELECT IFNULL(ROUND(AVG(rate), 2), 'No reviews') FROM reviews WHERE BIN_TO_UUID(product_id) = _product_id AND active = TRUE) 'rate',
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(c.category_id)) categories,
+        GROUP_CONCAT(DISTINCT c.name) categories_name,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
         BIN_TO_UUID(v.video_id) `video`
     FROM
@@ -746,6 +747,8 @@ DELIMITER ;
 
 
 -- Mejor calificados
+CALL sp_products_get_all_by_rate('asc', null, 10, 1);
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_get_all_by_rate $$
 
@@ -759,6 +762,7 @@ BEGIN
 
     SELECT
         BIN_TO_UUID(p.product_id) id,
+        p.price,
         p.name,
         IFNULL(AVG(r.rate), 'No reviews') rate,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
