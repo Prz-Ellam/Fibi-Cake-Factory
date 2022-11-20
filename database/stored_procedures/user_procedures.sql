@@ -144,6 +144,8 @@ END $$
 DELIMITER ;
 
 
+CALL sp_get_users_except('admin', '5bb0d011-0579-4ade-9b16-8afc92c2e9c9');
+
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_users_except $$

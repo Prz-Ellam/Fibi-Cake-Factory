@@ -266,7 +266,7 @@ $(document).ready(function() {
 
     });
 
-    $('#videos').on('change', function(e) {
+    $('#video').on('change', function(e) {
 
         const files = $(this)[0].files;
         $.each(files, function(i, file) {
@@ -284,7 +284,7 @@ $(document).ready(function() {
                 
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
-                document.getElementById('videos').files = dataTransfer.files;
+                document.getElementById('video').files = dataTransfer.files;
             };
             reader.readAsDataURL(file);
 

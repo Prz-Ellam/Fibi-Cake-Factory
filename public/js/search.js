@@ -3,11 +3,11 @@ const id = getSession();
 
 const search = new URLSearchParams(window.location.search).get("search");
 $('#search').val(search);
+$('#product-search').val(search);
 
 $.ajax({
     url: `/api/v1/users/filter/search?search=${search}`,
     method: 'GET',
-    timeout: 0,
     success: function(response)
     {
         response.forEach((user) =>
@@ -39,10 +39,9 @@ $.ajax({
     url: 'api/v1/categories',
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response)
     {
-        response.forEach((category) =>
+        response.forEach(category =>
         {
             $('#categories').append(`<option value="${category.id}">${category.name}</option>`)
         });
@@ -102,7 +101,6 @@ function WishlistItem(wishlist)
 $.ajax({
     url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
-    timeout: 0,
     success: function(response) {
         response.forEach(function(wishlist) {
             $('#wishlists-list').append(WishlistItem(wishlist));

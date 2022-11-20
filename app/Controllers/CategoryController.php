@@ -202,4 +202,12 @@ class CategoryController extends Controller
         $categories = $categoryRepository->getAll();
         $response->json($categories);
     }
+
+    public function getCategory(Request $request, Response $response)
+    {
+        $categoryId = $request->getRouteParams("categoryId");
+        $categoryRepository = new CategoryRepository();
+        $categories = $categoryRepository->getAll();
+        $response->json($categories);
+    }
 }

@@ -49,7 +49,7 @@
                                 <select class="form-select shadow-none" name="categories" id="categories">
                                     <option value="1">Categorías</option>
                                 </select>
-                                <input type="text" class="form-control shadow-none" placeholder="Producto" aria-label="Username" aria-describedby="basic-addon1">
+                                <input type="text" class="form-control shadow-none" placeholder="Producto" aria-label="Username" aria-describedby="basic-addon1" id="product-search">
                                 <button class="btn btn-primary bg-orange shadow-none"><i class="fas fa-search text-white"></i></button>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                     <option value="sells desc">Los menos vendidos</option>
                                     <option value="price asc">Precio: de más bajo a más alto</option>
                                     <option value="price desc">Precio: de más alto a más bajo</option>
-                                    <option value="rates asc">Los mejor calificados</option>
+                                    <option value="rates desc">Los mejor calificados</option>
                                     <option value="alpha asc">Alfabeticamente de la A a la Z</option>
                                     <option value="alpha desc">Alfabeticamente de la Z a la A</option>
                                 </select>

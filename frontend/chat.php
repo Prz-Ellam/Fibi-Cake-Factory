@@ -107,10 +107,9 @@
                 <div class="bg-white card col-12 col-md-9 rounded-0 overflow-auto h-100" id="messages-container">
                 
                     <div class="d-flex justify-content-between mt-3">
-                        <a class="d-block text-decoration-none text-brown" href="/sandbox">
-                            <img class="img-fluid rounded-circle" width="40" height="40" id="chat-picture" src="assets/img/elp.jpg">
-                            <span class="ms-2 text-black"><b id="chat-name">Eliam Rodríguez Pérez</b></span>
-                        </a>
+                        <div class="d-block text-decoration-none text-brown" id="user-label">
+                            <span class="ms-2 text-black"><b id="chat-name"></b></span>
+                        </div>
                     </div>
     
                     <hr>

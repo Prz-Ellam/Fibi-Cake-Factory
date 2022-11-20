@@ -67,8 +67,8 @@ $.ajax({
         $('#name').text(product.name);
 
         let data = ' ';
-        product.categories.forEach(category => {
-            data += category.name;
+        product.categories_name.forEach(category => {
+            data += category;
         });
         $('#category').text(data);
 
@@ -94,9 +94,9 @@ $.ajax({
 
             $('#video').attr('src', canvas.toDataURL());
         }, false);
-        video.src = `api/v1/videos/${product.videos[0]}`;
+        video.src = `api/v1/videos/${product.video}`;
         
-        $('.mini-zoom').attr('src', 'api/v1/images/' + product.videos[0]);
+        $('.mini-zoom').attr('src', 'api/v1/images/' + product.video);
         if (product.rate !== 'No reviews') {
             setRates(Number(product.rate));
         }

@@ -412,7 +412,7 @@ $app->post('/api/v1/categories', [ new CategoryController(), 'create' ]);
 $app->put('/api/v1/categories/{categoryId}', [ new CategoryController(), 'update' ]);
 $app->delete('/api/v1/categories/{categoryId}', [ new CategoryController(), 'delete' ]);
 $app->get('/api/v1/categories', [ new CategoryController(), 'getCategories' ]);
-
+$app->get('/api/v1/categories/{categoryId}', [ new CategoryController(), 'getCategory' ]);
 
 
 // Products

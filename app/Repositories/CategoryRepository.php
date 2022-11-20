@@ -13,6 +13,7 @@ class CategoryRepository
     private const DELETE = "CALL sp_delete_category(:categoryId)";
     private const GET_ALL = "CALL sp_get_categories()";
     private const GET_ALL_BY_PRODUCT = "CALL sp_categories_get_all_by_product(:productId)";
+    private const GET_ONE = "CALL sp_categories_get_one(:categoryId)";
 
     public function create(Category $category) : bool
     {

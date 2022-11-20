@@ -430,11 +430,11 @@ class UserController extends Controller
     public function getAll(Request $request, Response $response): void
     {
         // https://developer.wordpress.org/rest-api/reference/posts/#list-posts
-        $search = $request->getQuery('search');
-        $id = $request->getQuery('exclude') ?? "";
+        $search = $request->getQuery("search");
+        $id = $request->getQuery("exclude") ?? "";
 
         $userRepository = new UserRepository();
-        $users = $userRepository->getAllExcept($id);
+        $users = $userRepository->getAllExcept($id, $search);
 
         $response
             ->setHeader("Access-Control-Allow-Origin", "*")
@@ -451,9 +451,10 @@ class UserController extends Controller
     public function getAllByFilter(Request $request, Response $response): void
     {
         $search = $request->getQuery("search");
+        $id = $request->getQuery("exclude") ?? "";
 
         $userRepository = new UserRepository();
-        $users = $userRepository->getAllByFilter($search);
+        $users = $userRepository->getAllExcept($id, $search);
 
         $response->json($users);
     }

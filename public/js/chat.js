@@ -1,7 +1,7 @@
 var chatParticipantId = null;
 var chatId = null;
 
-function loadChat(_chatId) {
+function loadChat(_chatId, _username) {
     chatId = _chatId;
     $.ajax({
         url: '/api/v1/chatParticipants/userId',
@@ -21,8 +21,8 @@ function loadChat(_chatId) {
         success: function(response)
         {
             $('#comment-box').empty();
-            $('#chat-name').val('');
-            $('#chat-picture').attr('src', '');
+            $('#chat-name').text(_username);
+            //$('#user-label').attr('href', `/profile?id=${ui.item.value}`)
 
             response.forEach(function(message)
             {
@@ -46,7 +46,7 @@ function loadChat(_chatId) {
 
 const chatComponent = /*html*/`
 {{#each this}}
-<div class="d-flex chat rounded-1 p-1" role="button" onclick="loadChat('{{chat-id}}');">
+<div class="d-flex chat rounded-1 p-1" role="button" onclick="loadChat('{{chat-id}}', '{{username}}');">
     <img style="width: 64px; height: 64px" class="img-fluid rounded-circle" src="api/v1/images/{{profile-picture}}">
     <div class="row ms-2 align-self-center" style="white-space: nowrap; width: 75%; text-overflow: ellipsis; overflow: hidden;">
         <span class="fw-bold">{{username}}</span>
@@ -194,11 +194,11 @@ $(document).ready(function() {
             $.ajax({
                 data: {term : request.term},
                 method: 'GET',
-                url: `/api/v1/users?exclude=${id}`,
+                url: `/api/v1/users?exclude=${id}&search=${$('#search-users').val()}`,
                 success: function(data) {
                     // TODO: ?
                     const list = [];
-                    data.forEach((element) => {
+                    data.forEach(element => {
                         list.push(element.username);
                     });
 
@@ -213,7 +213,7 @@ $(document).ready(function() {
         },
         minLength: 1,
         open: function(){
-            setTimeout(function () {
+            setTimeout(() => {
                 $('.ui-autocomplete').css('z-index', 99999999999999);
             }, 0);
         },
@@ -232,9 +232,6 @@ $(document).ready(function() {
 		    // manually update the textbox and hidden field
 			// $(this).attr('user-id', ui.item.value);
 			$("#search-users").val(ui.item.label);
-
-
-            console.log(ui.item.value);
 
             $.ajax({
                 url: '/api/v1/chats/findOrCreate',
@@ -267,6 +264,9 @@ $(document).ready(function() {
                 timeout: 0,
                 success: function(response)
                 {
+                    $('#chat-name').text(ui.item.label);
+                    //$('#user-label').attr('href', `/profile?id=${ui.item.value}`);
+
                     $('#comment-box').empty();
 
                     response.forEach(function(message)

@@ -315,7 +315,7 @@ class ProductController extends Controller
 
             $imagesId[] = $imageId;
         }
-/*
+
         $videoRepository = new VideoRepository();
         $videoRepository->deleteMultimediaEntityVideos($productId, 'products');
 
@@ -355,7 +355,7 @@ class ProductController extends Controller
             ])->setStatusCode(400);
             return;
         }
-*/
+
 
         $response->json([
             "status" => $result,
@@ -472,6 +472,7 @@ class ProductController extends Controller
         $product = $product[0];
 
         $product["categories"] = explode(',', $product["categories"]);
+        $product["categories_name"] = explode(',', $product["categories_name"]);
         $product["images"] = explode(',', $product["images"]);
         //$product["videos"] = explode(',', $product["videos"]);
 
