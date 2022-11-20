@@ -102,7 +102,7 @@ fetch(`api/v1/users/${userId}/wishlists`)
     .then(response => response.json())
     .then(response => {
         const template = Handlebars.compile(wishlistCard);
-        const html = template(response);
+        const html = template(response.wishlists);
         $('#customer-wishlist-container').append(html);
         $('#seller-wishlist-container').append(html);
         var carouselsDOM = document.querySelectorAll('.carousel');
@@ -110,6 +110,63 @@ fetch(`api/v1/users/${userId}/wishlists`)
             var carousel = new bootstrap.Carousel(carouselDOM);
             carousel.cycle();
         });
+
+        const pagination = response.pagination;
+        if (pagination.page > 1) {
+            $("ul.pagination").append(`
+                <li class="page-item">
+                    <a class="page-link text-brown" href="?page=${pagination.page - 1}">Anterior</a>
+                </li>
+            `);
+        }
+        else {
+            $("ul.pagination").append(`
+                <li class="page-item disabled">
+                    <a class="page-link">Anterior</a>
+                </li>
+            `);
+        }
+
+        let numberOfButtons = (pagination.pages > 5) ? 5 : pagination.pages;
+
+        for (let i = 0; i < numberOfButtons; i++) {
+            $("ul.pagination").append(`
+                <li class="page-item ${ i + 1 === pagination.page ? "disabled" : "" }">
+                    <a class="page-link ${ i + 1 === pagination.page ? "" : "text-brown" } shadow-none" href="?page=${i + 1}">${i + 1}</a>
+                </li>
+            `);
+        }
+
+        if (pagination.pages > numberOfButtons) {
+
+            $("ul.pagination").append(`
+                <li class="page-item disabled">
+                    <span class="page-link shadow-none">...</span>
+                </li>
+            `);
+
+            $("ul.pagination").append(`
+                <li class="page-item">
+                    <a class="page-link text-brown shadow-none" href="?page=${pagination.pages}">${pagination.pages}</a>
+                </li>
+            `);
+
+        }
+
+        if (pagination.page + 1 > pagination.pages) {
+            $("ul.pagination").append(`
+                <li class="page-item disabled">
+                    <a class="page-link shadow-none">Siguiente</a>
+                </li>
+            `);
+        }
+        else {
+            $("ul.pagination").append(`
+                <li class="page-item">
+                    <a class="page-link text-brown shadow-none" href="?page=${parseInt(pagination.page) + 1}">Siguiente</a>
+                </li>
+            `);
+        }
     });
 
 function WishlistItem(wishlist)
@@ -130,7 +187,7 @@ $.ajax({
     method: 'GET',
     timeout: 0,
     success: function(response) {
-        response.forEach(function(wishlist) {
+        response.wishlists.forEach(function(wishlist) {
             $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }

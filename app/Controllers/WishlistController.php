@@ -346,7 +346,9 @@ class WishlistController extends Controller
         }
 
 
-        $total = $wishlistRepository->getUserCount($userId);
+        $total = ($userId === $userIdSession) ?
+            $wishlistRepository->getUserCount($userId) :
+            $wishlistRepository->getUserCountPublic($userId);
 
         $response->json([
             "wishlists" => $result,

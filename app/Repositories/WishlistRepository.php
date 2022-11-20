@@ -16,6 +16,7 @@ class WishlistRepository
     private const GET_ONE = "CALL sp_get_wishlist(:wishlistId)";
     private const GET_USER_ID = "CALL sp_wishlists_get_user_id(:wishlistId)";
     private const GET_USER_COUNT = "CALL sp_wishlists_get_user_count(:userId)";
+    private const GET_USER_COUNT_PUBLIC = "CALL sp_wishlists_get_user_public_count(:userId)";
 
     public function create(Wishlist $wishlist)
     {
@@ -89,6 +90,15 @@ class WishlistRepository
     public function getUserCount(string $userId) : ?int
     {
         $result = DB::executeReader(self::GET_USER_COUNT, [
+            "userId" => $userId
+        ]);
+
+        return $result[0]["count"] ?? -1;
+    }
+
+    public function getUserCountPublic(string $userId) : ?int
+    {
+        $result = DB::executeReader(self::GET_USER_COUNT_PUBLIC, [
             "userId" => $userId
         ]);
 

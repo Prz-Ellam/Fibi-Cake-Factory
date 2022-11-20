@@ -141,6 +141,25 @@ $(document).ready(function() {
             }
         });
 
+        $.ajax({
+            url: `/api/v1/reports/sales-report2?${query.toString()}`,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+                groupSalesReport.clear();
+                response.forEach(element => {
+
+                    groupSalesReport.row.add([
+                        element.date,
+                        element.category,
+                        element.quantity
+                    ]);
+                
+                });
+                groupSalesReport.draw(false);
+            }
+        });
+
     });
 
 });

@@ -1,4 +1,5 @@
 import { getSession } from './utils/session.js';
+import { updateProductValidator } from './validators/update-product-validator.js';
 const id = getSession();
 
 $.ajax({
@@ -35,6 +36,12 @@ $.ajax({
         $('#description').val(response.description);
         $('#price').val(response.price);
         $('#stock').val(response.stock);
+        if (response.is_quotable) {
+            $('#cotizar').attr('checked', '');
+        }
+        else {
+            $('#vender').attr('checked', '');
+        }
 
         response.images.forEach(async function (image) {
 
@@ -119,6 +126,8 @@ $.ajax({
 
 $(document).ready(function() {
 
+    updateProductValidator('#update-product-form');
+
     $('#sell').click(function() {
         $('#price').removeAttr('disabled');
     });
@@ -131,69 +140,6 @@ $(document).ready(function() {
         selectAll: false,
         width: '100%',
         filter: true
-    });
-
-    $.validator.addMethod('fileCount', function(value, element, parameter) {
-        return (element.files.length >= Number(parameter));
-    }, 'Please complete the input file');
-
-    $('#product-edition-form').validate({
-        rules: {
-            'name': {
-                required: true
-            },
-            'description': {
-                required: true
-            },
-            'price': {
-                required: true,
-                min: 0.01
-            },
-            'stock': {
-                required: true,
-                number: true,
-                min: 1
-            },
-            'images': {
-                fileCount: 3
-            },
-            'videos': {
-                fileCount: 1
-            },
-            'categories': {
-                required: true
-            }
-        },
-        messages: {
-            'name': {
-                required: 'El nombre del producto no puede estar vacío.'
-            },
-            'description': {
-                required: 'La descripción del producto no puede estar vacía.'
-            },
-            'price': {
-                required: 'Si el producto es para vender, el precio no puede estar vacío',
-                min: 'El precio del producto no puede ser $0.00 M.N'
-            },
-            'stock': {
-                required: 'La cantidad de producto no puede estar vacía',
-                number: 'La cantidad debe ser un número',
-                min: 'Debe haber al menos un producto en existencia'
-            },
-            'images': {
-                fileCount: 'La cantidad de imágenes debe ser mínimo 3'
-            },
-            'videos': {
-                fileCount: 'La cantidad de videos debe ser mínimo 1'
-            },
-            'categories': {
-                required: 'Las categorías no pueden estar vacías'
-            }
-        },
-        errorElement: 'small',
-        errorPlacement: function(error, element) {
-            error.insertAfter(element.parent()).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
-        }
     });
 
     $('#create-category-form').validate({
@@ -221,7 +167,6 @@ $(document).ready(function() {
         }
     });
 
-    const images = [];
     var imageCounter = 0;
     $('#images-transfer').on('change', function(e) {
 
@@ -269,11 +214,26 @@ $(document).ready(function() {
     $('#video').on('change', function(e) {
 
         const files = $(this)[0].files;
-        $.each(files, function(i, file) {
+        if (files.length === 0) return;
 
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                $('#video-place').html(`
+        const file = $(this)[0].files[0];
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        var regexpImages = /^(video\/.*)/i;
+        if (!regexpImages.exec(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La video que ingresaste no es permitida',
+                confirmButtonColor: "#FF5E1F",
+            });
+            $(this).val('');
+            return;
+        }
+
+        fileReader.onloadend = function(e) {
+            $('#video-place').html(`
                 <span class="position-relative">
                     <video class="product-mul" controls>
                         <source src="${e.target.result}">
@@ -281,43 +241,26 @@ $(document).ready(function() {
                 </span>
                 <button type="button" class="btn bg-dark btn-outline-info video-close border-0 rounded-0 shadow-sm text-light">&times;</button>
                 `);
-                
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                document.getElementById('video').files = dataTransfer.files;
-            };
-            reader.readAsDataURL(file);
+        };
 
-        });
+    });
 
-        $(this).val('');
-
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 1500,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
     });
 
     $(document).on('click', '.video-close', function(event) {
 
-        const videoHTML = $(this).prev();
-        const id = Number(videoHTML.attr('id').split('-')[1]);
-
-        const deletedVideo = videos.filter((video) => {
-            return video.id === id;
-        })[0];
-
-        videos.forEach((element, i) => {
-            if (element.id === deletedVideo.id)
-            {
-                videos.splice(i, 1);
-            }
-        });
-
-        videoHTML.remove();
-        $(this).remove();
-
-        const dataTransfer = new DataTransfer();
-        videos.forEach((element) => {
-            dataTransfer.items.add(element.file);
-        });
-        document.getElementById('videos').files = dataTransfer.files;
+        $('#video-place').html('');
+        document.getElementById('video').value = '';
 
     });
 
@@ -340,6 +283,16 @@ $(document).ready(function() {
             processData: false,
             success: function(response) {
                 console.log(response);
+                if (response.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Completado!',
+                        text: response.message,
+                        confirmButtonColor: "#FF5E1F",
+                    }).then(result => {
+                        window.location.href = '/home';
+                    });
+                }
             },
             error: function(response, status, error) {
                 console.log(status);

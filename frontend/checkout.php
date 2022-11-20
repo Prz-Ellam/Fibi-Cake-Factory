@@ -127,24 +127,32 @@
                                     <div class="col-lg-12 mb-4">
                                         <label>Fecha de vencimiento</label>
                                         <div class="input-group col-12 px-0">
-                                            <select class="form-select shadow-none" name="exp-year" id="exp-year">
-                                                <option>Año</option>
-                                                <option value="2022">2022</option>
-                                            </select>
                                             <select class="form-select shadow-none" name="exp-month" id="exp-month">
-                                                <option>Mes</option>
-                                                <option value="1">Enero</option>
-                                                <option value="2">Febrero</option>
-                                                <option value="3">Marzo</option>
-                                                <option value="4">Abril</option>
-                                                <option value="5">Mayo</option>
-                                                <option value="6">Junio</option>
-                                                <option value="7">Julio</option>
-                                                <option value="8">Agosto</option>
-                                                <option value="9">Septiembre</option>
-                                                <option value="10">Octubre</option>
-                                                <option value="11">Noviembre</option>
-                                                <option value="12">Diciembre</option>
+                                                <option value="">Mes</option>
+                                                <option value="1">01</option>
+                                                <option value="2">02</option>
+                                                <option value="3">03</option>
+                                                <option value="4">04</option>
+                                                <option value="5">05</option>
+                                                <option value="6">06</option>
+                                                <option value="7">07</option>
+                                                <option value="8">08</option>
+                                                <option value="9">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            <select class="form-select shadow-none" name="exp-year" id="exp-year">
+                                                <option value="">Año</option>
+                                                <option value="2022">2022</option>
+                                                <option value="2022">2023</option>
+                                                <option value="2022">2024</option>
+                                                <option value="2022">2025</option>
+                                                <option value="2022">2026</option>
+                                                <option value="2022">2027</option>
+                                                <option value="2022">2028</option>
+                                                <option value="2022">2029</option>
+                                                <option value="2022">2030</option>
                                             </select>
                                         </div>
                                         <div id="errors-exp">
@@ -160,7 +168,7 @@
                                     </div>
                                 </span>
 
-                                <div id="paypal-section">
+                                <div id="paypal-section" class="d-none">
                                     <!--<button class="btn btn-warning w-100 rounded-1 shadow-none d-none">Paypal</button>-->
                                 </div>
 
@@ -234,6 +242,7 @@
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
     <script src="https://www.paypal.com/sdk/js?client-id=AYRWL7VDLGBBSSSutwgu3nPO8ZDZKNGCiON9pO_X-dGx3lgkWMLL2xlQjDycSG5qA3bh4IRsjMMgHunl"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
     <!-- JavaScript -->
     <script type="module" src="./js/checkout.js"></script>

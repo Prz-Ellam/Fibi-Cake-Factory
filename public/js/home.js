@@ -13,7 +13,7 @@ function CarouselCard(product)
             <input type="hidden" name="product-id" value="${product.id}">
             <input type="hidden" name="quantity" value="1">
             <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
-            <h5 class="fw-bold price mb-0">${fmt.format(product.price)}</h5>
+            <h5 class="fw-bold price mb-0">${ (product.is_quotable) ? 'Cotizable' : fmt.format(product.price)}</h5>
             <p>${product.name}</p>
             ${ (product.userId === id) ?
             `<div class="d-flex justify-content-center">
@@ -37,7 +37,6 @@ $.ajax({
     url: 'api/v1/session',
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         id = response.id;
         $.ajax({
@@ -70,6 +69,7 @@ $.ajax({
     method: 'GET',
     async: false,
     success: function(response) {
+        console.log(response);
         response.forEach(function(product) 
         {
             $('#sellers').append(CarouselCard(product));
@@ -102,7 +102,7 @@ $.ajax({
             url: `api/v1/users/${response.id}/wishlists`,
             method: 'GET',
             success: function(response) {
-                response.forEach(function(wishlist) {
+                response.wishlists.forEach(function(wishlist) {
                     $('#wishlists-list').append(WishlistItem(wishlist));
                 });
             }
@@ -143,12 +143,6 @@ $(document).ready(function()
                 
             }
         });
-
-    });
-
-    $('#start-shop').click(function() {
-
-        window.location.href = '/search';
 
     });
 

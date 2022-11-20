@@ -5,8 +5,7 @@ namespace CakeFactory\Models;
 class Quote
 {
     private ?string $quoteId = null;
-    private ?string $sellerId = null;
-    private ?string $shopperId = null;
+    private ?string $userId = null;
     private ?string $productId = null;
     private ?float $price = null;
 
@@ -21,25 +20,14 @@ class Quote
         return $this;
     }
 
-    public function getSellerId() : ?string
+    public function getUserId() : ?string
     {
-        return $this->sellerId;
+        return $this->userId;
     }
 
-    public function setSellerId(?string $sellerId) : self
+    public function setUserId(?string $userId) : self
     {
-        $this->sellerId = $sellerId;
-        return $this;
-    }
-
-    public function getShopperId() : ?string
-    {
-        return $this->shopperId;
-    }
-
-    public function setShopperId(?string $shopperId): self
-    {
-        $this->shopperId = $shopperId;
+        $this->userId = $userId;
         return $this;
     }
 

@@ -50,11 +50,11 @@
                 <div class="mb-4">
                     <label class="form-label" role="button">Tipo de venta</label>
                     <div class="form-check">
-                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="sell" value="1" checked>
+                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="vender" value="0">
                         <label class="form-check-label" for="sell" role="button">Es para vender</label>
                     </div>
                     <div class="form-check">
-                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="cotizar" value="2">
+                        <input class="custom-control-input form-check-input shadow-none" type="radio" name="type-of-sell" id="cotizar" value="1">
                         <label class="form-check-label" for="cotizar" role="button">Es para cotizar</label>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="videos" class="form-label" role="button">Video</label>
+                    <label for="video" class="form-label" role="button">Video</label>
                     <div class="input-group">
                         <label for="video" role="button" class="btn btn-success rounded-1 w-100"><i class="fa fa-upload" aria-hidden="true"></i> Añadir video</label>
                         <input type="file" class="form-control shadow-none position-absolute" style="scale: 0.01" name="video" id="video" multiple accept="video/*">
@@ -150,6 +150,9 @@
     
     <!-- jQuery Validation 1.19.5 -->
     <script src="vendor/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    
+    <!-- Sweet Alert -->
+    <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     
     <!-- Multiple Select -->
     <script src="vendor/node_modules/multiple-select/dist/multiple-select.min.js"></script>

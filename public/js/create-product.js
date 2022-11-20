@@ -24,6 +24,7 @@ $.ajax({
     }
 });
 
+const imageDataTransfer = new DataTransfer();
 $(document).ready(function() {
 
     createProductValidator('#create-product-form');
@@ -44,64 +45,48 @@ $(document).ready(function() {
         filter: true
     });
 
-    const images = [];
     var imageCounter = 0;
     $('#images-transfer').on('change', function(e) {
 
-        const files = $(this)[0].files;
-        $.each(files, function(i, file) {
+        const files = this.files;
+        const filesArray = Array.from(files);
+
+        filesArray.forEach(file => {
 
             let fileReader = new FileReader();
             fileReader.onload = function(e) {
                 $('#image-list').append(/*html*/`
-                    <span class="position-relative" id="image-${imageCounter}">
+                    <span class="position-relative d-inline-block" id="image-${imageCounter}">
                         <button type="button" class="btn btn-outline-info bg-dark image-close border-0 rounded-0 shadow-sm text-light position-absolute">&times;</button>
                         <img class="product-mul" src="${e.target.result}">
                     </span>
                 `);
-                images.push({
-                    'id': imageCounter,
-                    'file': file
-                });
-                imageCounter++;
+            }
 
-                const dataTransfer = new DataTransfer();
-                images.forEach((element) => {
-                    dataTransfer.items.add(element.file);
-                });
-                document.getElementById('images').files = dataTransfer.files;
-            };
             fileReader.readAsDataURL(file);
+            imageDataTransfer.items.add(file);
 
         });
-
-        $(this).val('');
+        
+        document.getElementById('images').files = imageDataTransfer.files;
+        this.value = '';
+        console.log(document.getElementById('images').files);
 
     });
 
     $(document).on('click', '.image-close', function(event) {
 
-        const imageHTML = $(this).parent();
-        const id = Number(imageHTML.attr('id').split('-')[1]);
+        event.preventDefault();
 
-        const deletedImage = images.filter((image) => {
-            return image.id === id;
-        })[0];
+        const imageList = document.getElementById('image-list');
+        // Devuelve el indice de un elemento con respecto a su nodo padre
+        const index = Array.from(imageList.children).indexOf(this.parentNode);
 
-        images.forEach((element, i) => {
-            if (element.id === deletedImage.id)
-            {
-                images.splice(i, 1);
-            }
-        });
+        imageDataTransfer.items.remove(index);
+        this.parentNode.remove();
 
-        imageHTML.remove();
-
-        const dataTransfer = new DataTransfer();
-        images.forEach(element => {
-            dataTransfer.items.add(element.file);
-        });
-        document.getElementById('images').files = dataTransfer.files;
+        document.getElementById('images').files = imageDataTransfer.files;
+        console.log(document.getElementById('images').files);
 
     });
 
@@ -136,6 +121,13 @@ $(document).ready(function() {
                 <button type="button" class="btn bg-dark btn-outline-info video-close border-0 rounded-0 shadow-sm text-light">&times;</button>
                 `);
         };
+
+    });
+
+    $(document).on('click', '.video-close', function(event) {
+
+        $('#video-place').html('');
+        document.getElementById('video').value = '';
 
     });
 
@@ -207,12 +199,14 @@ $(document).ready(function() {
             success: function(response) {
                 console.log(response);
 
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Tu producto ha sido añadido al carrito'
-                }).then(result => {
-                    //window.location.href = '/home';
-                });
+                if (response.status) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.message
+                    }).then(result => {
+                        window.location.href = '/home';
+                    });
+                }
             },
             error: function(response, status, error) {
                 console.log(status);

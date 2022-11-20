@@ -110,6 +110,8 @@ DELIMITER ;
 
 
 
+CALL sp_get_sales_report_2('5bb0d011-0579-4ade-9b16-8afc92c2e9c9', '69096b1f-a8e5-4b0e-94ae-a6f0b5299a52', null, null);
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_sales_report_2 $$
 

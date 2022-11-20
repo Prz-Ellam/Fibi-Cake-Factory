@@ -17,8 +17,8 @@ $.ajax({
 });
 
 const page = new URLSearchParams(window.location.search).get("page") || '';
-const count = new URLSearchParams(window.location.search).get("count") || '';
-fetch(`api/v1/users/${id}/wishlists?page=${page}&count=${count}`)
+//const count = new URLSearchParams(window.location.search).get("count") || '';
+fetch(`api/v1/users/${id}/wishlists?page=${page}`)
     .then(response => response.json())
     .then(response => {
         console.log(response);
@@ -344,7 +344,7 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (response, status, headers) {
-                    fetch(`api/v1/users/${id}/wishlists?page=${page}&count=${count}`)
+                    fetch(`api/v1/users/${id}/wishlists?page=${page}`)
                         .then(response => response.json())
                         .then(response => {
                             $('#wishlist-container').empty();

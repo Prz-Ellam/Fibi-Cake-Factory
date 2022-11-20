@@ -2,8 +2,10 @@
 
 namespace CakeFactory\Controllers;
 
+use CakeFactory\Models\Quote;
 use CakeFactory\Models\ShoppingCartItem;
 use CakeFactory\Repositories\ProductRepository;
+use CakeFactory\Repositories\QuoteRepository;
 use CakeFactory\Repositories\ShoppingCartItemRepository;
 use CakeFactory\Repositories\ShoppingCartRepository;
 use Fibi\Http\Controller;
@@ -37,6 +39,22 @@ class ShoppingCartItemController extends Controller
                 "status" => false,
                 "message" => "No hay suficiente cantidad de stock"
             ])->setStatusCode(400);
+            return;
+        }
+
+        if ($product["is_quotable"]) {
+
+            // Crear una cotizacion 
+            $quote = new Quote();
+            $quote
+                ->setQuoteId(Uuid::uuid4()->toString())
+                ->setUserId($userId)
+                ->setProductId($productId);
+
+            $quoteRepository = new QuoteRepository();
+            $quoteRepository->create($quote);
+
+            $response->json("Este es cotizable");
             return;
         }
 

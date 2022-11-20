@@ -60,7 +60,7 @@ AS
 SELECT
     s.created_at `date`,
     c.name `category`,
-    BIN_TO_UUID(c.user_id) `category_id`,
+    BIN_TO_UUID(c.category_id) `category_id`,
     COUNT(s.quantity) `quantity`,
     BIN_TO_UUID(p.user_id) `user_id`
 FROM

@@ -102,7 +102,7 @@ $.ajax({
     url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
     success: function(response) {
-        response.forEach(function(wishlist) {
+        response.wishlists.forEach(function(wishlist) {
             $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }

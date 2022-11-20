@@ -8,6 +8,7 @@ use CakeFactory\Controllers\ChatParticipantController;
 use CakeFactory\Controllers\ImageController;
 use CakeFactory\Controllers\OrderController;
 use CakeFactory\Controllers\ProductController;
+use CakeFactory\Controllers\QuoteController;
 use CakeFactory\Controllers\ReportController;
 use CakeFactory\Controllers\ReviewController;
 use CakeFactory\Controllers\SessionController;
@@ -148,6 +149,21 @@ $app->get('/product', function(Request $request, Response $response) {
     }
 
     $response->view('product-detail', 'auth-layout');
+});
+
+$app->get('/quotes', function(Request $request, Response $response) {
+
+    $session = new PhpSession();
+
+    $login = $session->has('userId');
+
+    if ($login === false)
+    {
+        $response->redirect('/');
+        return;
+    }
+
+    $response->view('quotes', 'auth-layout');
 });
 
 $app->get('/products', function(Request $request, Response $response) {
@@ -495,7 +511,7 @@ $app->get('/api/v1/users/filter/search', [ new UserController(), 'getAllByFilter
 
 
 
-
+$app->get('/api/v1/quotes/pending', [ new QuoteController(), 'getUserAllPending' ]);
 
 
 $app->get('/api/v1/products/order/price', [ new ProductController(), 'getAllByPrice' ]);

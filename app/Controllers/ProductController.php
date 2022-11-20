@@ -46,8 +46,6 @@ class ProductController extends Controller
         // TODO: Validar que esto existe realmente en la BD
         $categories = $request->getBody("categories") ?? [];
         
-
-
         //DB::beginTransaction();
 
         $product = new Product();
@@ -359,14 +357,7 @@ class ProductController extends Controller
 
         $response->json([
             "status" => $result,
-            "data" => [
-                "id" => $productId,
-                "name" => $name,
-                "description" => $description,
-                "typeOfSell" => $typeOfSell,
-                "price" => $price,
-                "stock" => $stock
-            ]
+            "message" => "El producto fue actualizado exitosamente"
         ]);
     }
 

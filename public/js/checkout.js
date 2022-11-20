@@ -1,11 +1,9 @@
 import { getSession } from './utils/session.js';
-
 const id = getSession();
 
 $.ajax({
     url: `api/v1/users/${id}`,
     method: 'GET',
-    timeout: 0,
     success: function(response) {
         const url = `api/v1/images/${response.profilePicture}`;
         $('.nav-link img').attr('src', url);
@@ -17,11 +15,11 @@ var fmt = new Intl.NumberFormat('en-US', {
     currency: 'USD',
 });
 
+let checkoutTotal = 0;
 $.ajax({
     url: `api/v1/shopping-cart`,
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
 
         let total = 0;
@@ -37,24 +35,35 @@ $.ajax({
         });
         $('#subtotal').text(`${fmt.format(total)} M.N`);
         $('#total').text(`${fmt.format(total)} M.N`);
+        checkoutTotal = total;
     }
 });
 
 $(document).ready(function() {
 
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [
-                    {
-                        amount: {
-                            value: '500.99'
-                        }
+    paypal.Button.render({
+        env: 'sandbox',
+        client: {
+            sandbox: 'AYRWL7VDLGBBSSSutwgu3nPO8ZDZKNGCiON9pO_X-dGx3lgkWMLL2xlQjDycSG5qA3bh4IRsjMMgHunl'
+        },
+        payment: function (data, actions) {
+            return actions.payment.create({
+                transactions: [{
+                    amount: {
+                        total: checkoutTotal,
+                        currency: 'MXN'
                     }
-                ]
-            })
+                }]
+            });
+        },
+        onAuthorize: function (data, actions) {
+            return actions.payment.execute()
+                    .then(function() {
+                        $('#msform').submit();
+                        //window.location = "<?php echo PayPalBaseUrl ?>orderDetails.php?paymentID="+data.paymentID+"&payerID="+data.payerID+"&token="+data.paymentToken+"&pid=<?php echo $productId; ?>";
+                    });
         }
-    }).render('#paypal-section');
+    }, '#paypal-section');
 
     $.validator.addMethod('email5322', function(value, element) {
         return this.optional(element) || /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(value);
@@ -169,7 +178,7 @@ $(document).ready(function() {
         errorElement: 'small',
         errorPlacement: function(error, element) {
 
-            if ($(element)[0].name === 'exp-year' || $(element)[0].name === 'exp-month')
+            if ($(element)[0].name === 'exp-year' )
             {
                 $('#errors-exp').append(error).addClass('text-danger').addClass('form-text').attr('id', element[0].id + '-error-label');
                 return;
@@ -284,12 +293,12 @@ $(document).ready(function() {
 
     $('#radio-card').click(function() {
         $('#card-section').removeClass('d-none');
-        $('#paypal-section button').addClass('d-none');
+        $('#paypal-section').addClass('d-none');
     });
 
     $('#radio-paypal').click(function() {
         $('#card-section').addClass('d-none');
-        $('#paypal-section button').removeClass('d-none');
+        $('#paypal-section').removeClass('d-none');
     });
 
 });

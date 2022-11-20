@@ -72,7 +72,7 @@ $.ajax({
         });
         $('#category').text(data);
 
-        $('#price').text(fmt.format(product.price));
+        $('#price').text((product.is_quotable) ? 'Cotizable' : fmt.format(product.price));
         $('#rate-number').text(product.rate);
         $('#description').text(product.description);
         $('#zoom').attr('src', 'api/v1/images/' + product.images[0]);

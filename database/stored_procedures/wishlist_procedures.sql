@@ -180,6 +180,28 @@ DELIMITER ;
 
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_wishlists_get_user_public_count $$
+
+CREATE PROCEDURE sp_wishlists_get_user_public_count(
+    IN _user_id                 VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        COUNT(*) `count`
+    FROM
+        wishlists 
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id
+        AND visible = TRUE
+        AND active = TRUE;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
 DROP PROCEDURE IF EXISTS get_all_by_user_public $$
 
 CREATE PROCEDURE get_all_by_user_public(

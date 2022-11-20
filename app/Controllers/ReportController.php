@@ -31,8 +31,8 @@ class ReportController extends Controller
 
     public function getSalesReport2(Request $request, Response $response)
     {
-        $from = $request->getQuery("from");
-        $to = $request->getQuery("to");
+        $from = $request->getQuery("from") ?? null;
+        $to = $request->getQuery("to") ?? null;
         $categoryId = $request->getQuery("category");
 
         $session = new PhpSession();

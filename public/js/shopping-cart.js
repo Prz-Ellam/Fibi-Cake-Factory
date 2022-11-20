@@ -142,6 +142,19 @@ $(document).ready(function()
             data: { "quantity": quantity },
             success: function(response) {
                 console.log(response);
+            },
+            error: function (xhr, status, error) {
+                const response = xhr.responseJSON;
+                console.log(response);
+
+                $.ajax({
+                    url: `api/v1/shopping-cart`,
+                    method: 'GET',
+                    async: false,
+                    success: function(response) {
+                        window.location.href = '/shopping-cart';
+                    }
+                });
             }
         })
 

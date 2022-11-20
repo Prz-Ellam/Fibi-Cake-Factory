@@ -54,6 +54,8 @@ $user = $userRepository->getOne($userId);
                         <?php if ($user["visible"] && $user["userRole"] == "Vendedor"): ?>
                         <a href="/products" class="dropdown-item">Mis productos</a>
                         <div class="dropdown-divider"></div>
+                        <a href="/quotes" class="dropdown-item">Cotizaciones</a>
+                        <div class="dropdown-divider"></div>
                         <?php endif ?>
                         <a href="/logout" class="dropdown-item" id="close-session">Cerrar sesión</a>
                     </div>
