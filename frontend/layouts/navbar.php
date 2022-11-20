@@ -1,3 +1,18 @@
+<?php
+
+use CakeFactory\Repositories\UserRepository;
+use Fibi\Session\PhpSession;
+
+$session = new PhpSession();
+$userId = $session->get("userId");
+if (!$userId) return;
+
+$userRepository = new UserRepository();
+$user = $userRepository->getOne($userId);
+
+//var_dump($user);
+
+?>
 <header class="fixed-top sticky-top">
     <nav class="navbar navbar-expand-lg navbar-dark scrolling-navbar">
         <a class="navbar-brand ms-2" href="/"><img src="assets/img/Brand-Logo.svg" id="brand-logo"></a>
@@ -17,19 +32,16 @@
                 <li class="nav-item">
                     <a href="/chat" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fa fa-bell"></i>
-                        <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>-->
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/wishlists" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fa fa-heart"></i>
-                        <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">1</span>-->
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/shopping-cart" class="me-3 position-relative primary-nav-item nav-link text-white fw-bold rounded-3">
                         <i class="fas fa-shopping-cart"></i>
-                        <!--<span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">3</span>-->
                     </a>
                 </li>
                 <li class="nav-item dropdown">
@@ -39,8 +51,10 @@
                     <div class="dropdown-menu dropdown-menu-end bg-white rounded-1 shadow-sm">
                         <a href="/profile" class="dropdown-item">Mi perfil</a>
                         <div class="dropdown-divider"></div>
+                        <?php if ($user["visible"] && $user["userRole"] == "Vendedor"): ?>
                         <a href="/products" class="dropdown-item">Mis productos</a>
                         <div class="dropdown-divider"></div>
+                        <?php endif ?>
                         <a href="/logout" class="dropdown-item" id="close-session">Cerrar sesión</a>
                     </div>
                 </li>
@@ -56,12 +70,16 @@
                 <li class="nav-item">
                     <a class="nav-link ms-1 me-4 p-1 text-brown" href="/home">Inicio</a>
                 </li>
+                <?php if ($user["visible"]): ?>
                 <li class="nav-item">
                     <a class="nav-link me-4 p-1 text-brown" href="/create-product">Vender</a>
                 </li>
+                <?php endif ?>
+                <?php if ($user["visible"] && $user["userRole"] == "Vendedor"): ?>
                 <li class="nav-item">
                     <a class="nav-link me-4 p-1 text-brown" href="/sales-report">Reporte de ventas</a>
                 </li>
+                <?php endif ?>
                 <li class="nav-item">
                     <a class="nav-link me-4 p-1 text-brown" href="/orders-report">Reporte de compras</a>
                 </li>

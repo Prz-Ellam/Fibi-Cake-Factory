@@ -123,7 +123,7 @@ $app->get('/home', function(Request $request, Response $response) {
         return;
     }
 
-    $response->view('home');
+    $response->view('home', 'auth-layout');
 
 });
 
@@ -377,10 +377,10 @@ $app->get('/search', function(Request $request, Response $response) {
 
 // Users
 $app->post('/api/v1/users', [ new UserController(), 'create' ]);
-$app->put('/api/v1/users/{userId}', [ new UserController(), 'update' ]);
-$app->put('/api/v1/users/{userId}/password', [ new UserController(), 'updatePassword' ]);
+$app->post('/api/v1/users/{userId}', [ new UserController(), 'update' ]);
+$app->post('/api/v1/users/{userId}/password', [ new UserController(), 'updatePassword' ]);
 $app->delete('/api/v1/users/{userId}', [ new UserController(), 'delete' ]);
-$app->get('/api/v1/users', [ new UserController(), 'getAll' ]);
+$app->get('/api/v1/users', [ new UserController(), 'getAllByFilter' ]);
 $app->get('/api/v1/users/{userId}', [ new UserController(), 'getUser' ]);
 
 

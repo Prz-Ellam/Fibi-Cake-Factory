@@ -16,16 +16,77 @@ $.ajax({
     }
 });
 
-fetch(`api/v1/users/${id}/wishlists`)
+const page = new URLSearchParams(window.location.search).get("page") || '';
+const count = new URLSearchParams(window.location.search).get("count") || '';
+fetch(`api/v1/users/${id}/wishlists?page=${page}&count=${count}`)
     .then(response => response.json())
     .then(response => {
-        const html = template(response);
+        console.log(response);
+        const html = template(response.wishlists);
         $('#wishlist-container').append(html);
         var carouselsDOM = document.querySelectorAll('.carousel');
         carouselsDOM.forEach(carouselDOM => {
             var carousel = new bootstrap.Carousel(carouselDOM);
             carousel.cycle();
         });
+
+        const pagination = response.pagination;
+        if (pagination.page > 1) {
+            $("ul.pagination").append(`
+                <li class="page-item">
+                    <a class="page-link text-brown" href="?page=${pagination.page - 1}">Anterior</a>
+                </li>
+            `);
+        }
+        else {
+            $("ul.pagination").append(`
+                <li class="page-item disabled">
+                    <a class="page-link">Anterior</a>
+                </li>
+            `);
+        }
+
+        let numberOfButtons = (pagination.pages > 5) ? 5 : pagination.pages;
+
+        for (let i = 0; i < numberOfButtons; i++) {
+            $("ul.pagination").append(`
+                <li class="page-item ${ i + 1 === pagination.page ? "disabled" : "" }">
+                    <a class="page-link ${ i + 1 === pagination.page ? "" : "text-brown" } shadow-none" href="?page=${i + 1}">${i + 1}</a>
+                </li>
+            `);
+        }
+
+        if (pagination.pages > numberOfButtons) {
+
+            $("ul.pagination").append(`
+                <li class="page-item disabled">
+                    <span class="page-link shadow-none">...</span>
+                </li>
+            `);
+
+            $("ul.pagination").append(`
+                <li class="page-item">
+                    <a class="page-link text-brown shadow-none" href="?page=${pagination.pages}">${pagination.pages}</a>
+                </li>
+            `);
+
+        }
+
+        if (pagination.page + 1 > pagination.pages) {
+            $("ul.pagination").append(`
+                <li class="page-item disabled">
+                    <a class="page-link shadow-none">Siguiente</a>
+                </li>
+            `);
+        }
+        else {
+            $("ul.pagination").append(`
+                <li class="page-item">
+                    <a class="page-link text-brown shadow-none" href="?page=${parseInt(pagination.page) + 1}">Siguiente</a>
+                </li>
+            `);
+        }
+
     });
 
 const dataTransfer = new DataTransfer();
@@ -283,11 +344,11 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (response, status, headers) {
-                    fetch(`api/v1/users/${id}/wishlists`)
+                    fetch(`api/v1/users/${id}/wishlists?page=${page}&count=${count}`)
                         .then(response => response.json())
                         .then(response => {
                             $('#wishlist-container').empty();
-                            const html = template(response);
+                            const html = template(response.wishlists);
                             $('#wishlist-container').append(html);
                             var carouselsDOM = document.querySelectorAll('.carousel');
                             carouselsDOM.forEach(carouselDOM => {
@@ -322,11 +383,11 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response, status, headers) {
 
-                    fetch(`api/v1/users/${id}/wishlists`)
+                    fetch(`api/v1/users/${id}/wishlists?page=${page}&count=${count}`)
                         .then(response => response.json())
                         .then(response => {
                             $('#wishlist-container').empty();
-                            const html = template(response);
+                            const html = template(response.wishlists);
                             $('#wishlist-container').append(html);
                             var carouselsDOM = document.querySelectorAll('.carousel');
                             carouselsDOM.forEach(carouselDOM => {

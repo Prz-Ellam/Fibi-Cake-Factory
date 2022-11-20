@@ -21,6 +21,7 @@ $.ajax({
 $.ajax({
     url: `/api/v1/users/${id}`,
     method: 'GET',
+    async: false,
     success: function (response) {
         $('#picture-box').attr('src', `/api/v1/images/${response.profilePicture}`);
         //$('#email').val(response.email);
@@ -262,60 +263,55 @@ $(document).ready(function () {
         }
     });
 
-    // TODO: Generalizar esto
-    $.fn.password = function (options) {
+    $('#new-password').on('input', () => {
 
-        $(this).on('input', () => {
+        var value = $('#new-password').val();
 
-            var value = $(this).val();
+        if (value === '') {
+            $('.pwd-lowercase').removeClass('text-danger text-success');
+            $('.pwd-uppercase').removeClass('text-danger text-success');
+            $('.pwd-number').removeClass('text-danger text-success');
+            $('.pwd-specialchars').removeClass('text-danger text-success');
+            $('.pwd-length').removeClass('text-danger text-success');
+            return;
+        }
 
-            if (value === '') {
-                $('.pwd-lowercase').removeClass('text-danger text-success');
-                $('.pwd-uppercase').removeClass('text-danger text-success');
-                $('.pwd-number').removeClass('text-danger text-success');
-                $('.pwd-specialchars').removeClass('text-danger text-success');
-                $('.pwd-length').removeClass('text-danger text-success');
-                return;
-            }
+        if (/[a-z]/g.test(value)) {
+            $('.pwd-lowercase').addClass('text-success').removeClass('text-danger');
+        }
+        else {
+            $('.pwd-lowercase').addClass('text-danger').removeClass('text-success')
+        }
 
-            if (/[a-z]/g.test(value)) {
-                $('.pwd-lowercase').addClass('text-success').removeClass('text-danger');
-            }
-            else {
-                $('.pwd-lowercase').addClass('text-danger').removeClass('text-success')
-            }
+        if (/[A-Z]/g.test(value)) {
+            $('.pwd-uppercase').addClass('text-success').removeClass('text-danger');
+        }
+        else {
+            $('.pwd-uppercase').addClass('text-danger').removeClass('text-success')
+        }
 
-            if (/[A-Z]/g.test(value)) {
-                $('.pwd-uppercase').addClass('text-success').removeClass('text-danger');
-            }
-            else {
-                $('.pwd-uppercase').addClass('text-danger').removeClass('text-success')
-            }
+        if (/[0-9]/g.test(value)) {
+            $('.pwd-number').addClass('text-success').removeClass('text-danger');
+        }
+        else {
+            $('.pwd-number').addClass('text-danger').removeClass('text-success')
+        }
 
-            if (/[0-9]/g.test(value)) {
-                $('.pwd-number').addClass('text-success').removeClass('text-danger');
-            }
-            else {
-                $('.pwd-number').addClass('text-danger').removeClass('text-success')
-            }
+        if (/[¡”"#$%&;/=’¿?!:;,.\-_+*{}\[\]]/g.test(value)) {
+            $('.pwd-specialchars').addClass('text-success').removeClass('text-danger');
+        }
+        else {
+            $('.pwd-specialchars').addClass('text-danger').removeClass('text-success')
+        }
 
-            if (/[¡”"#$%&;/=’¿?!:;,.\-_+*{}\[\]]/g.test(value)) {
-                $('.pwd-specialchars').addClass('text-success').removeClass('text-danger');
-            }
-            else {
-                $('.pwd-specialchars').addClass('text-danger').removeClass('text-success')
-            }
+        if (value.length >= 8) {
+            $('.pwd-length').addClass('text-success').removeClass('text-danger');
+        }
+        else {
+            $('.pwd-length').addClass('text-danger').removeClass('text-success');
+        }
 
-            if (value.length >= 8) {
-                $('.pwd-length').addClass('text-success').removeClass('text-danger');
-            }
-            else {
-                $('.pwd-length').addClass('text-danger').removeClass('text-success')
-            }
-
-        });
-
-    }
+    });
 
     $('#btn-old-password').click(function () {
         let mode = $('#old-password').attr('type');
@@ -356,19 +352,18 @@ $(document).ready(function () {
         }
     });
 
-    $('#new-password').password();
+    $('#profile-form').submit(function (event) {
 
-    $('#profile-form').submit(function (e) {
+        event.preventDefault();
 
-        e.preventDefault();
-
-        if ($('#profile-form').valid() === false) {
+        let validations = $(this).valid();
+        if (!validations) {
             return;
         }
 
         $.ajax({
             url: `/api/v1/users/${id}`,
-            method: 'PUT',
+            method: 'POST',
             data: new FormData(this),
             cache: false,
             contentType: false,
@@ -378,9 +373,51 @@ $(document).ready(function () {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Completado!',
-                        text: 'La información se ha actualizado con éxito',
+                        text: response.message,
                         confirmButtonColor: "#FF5E1F",
                     });
+                }
+            },
+            error: function (response, status, error) {
+                const responseText = response.responseJSON;
+                if (!responseText.status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: responseText.message,
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                }
+            }
+        });
+
+    });
+
+
+    $('#password-form').submit(function (event) {
+
+        event.preventDefault();
+
+        let validations = $(this).valid();
+        if (!validations) {
+            return;
+        }
+
+        $.ajax({
+            url: `/api/v1/users/${id}/password`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Completado!',
+                        text: response.message,
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                    $('#old-password').val('');
+                    $('#new-password').val('');
+                    $('#confirm-new-password').val('');
                 }
             },
             error: function (response, status, error) {
@@ -394,29 +431,6 @@ $(document).ready(function () {
                         confirmButtonColor: "#FF5E1F",
                     });
                 }
-            },
-            complete: function () {
-
-            }
-        });
-
-    });
-
-
-    $('#password-form').submit(function (e) {
-
-        e.preventDefault();
-
-        if ($('#password-form').valid() === false) {
-            return;
-        }
-
-        $.ajax({
-            url: `/api/v1/users/${id}/password`,
-            method: 'PUT',
-            data: $(this).serialize(),
-            success: function (response) {
-                console.log(response);
             }
         });
 

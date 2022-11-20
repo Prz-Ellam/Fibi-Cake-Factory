@@ -49,9 +49,9 @@ DELIMITER ;
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_update_user $$
+DROP PROCEDURE IF EXISTS sp_users_update $$
 
-CREATE PROCEDURE sp_update_user(
+CREATE PROCEDURE sp_users_update(
     IN _user_id                 VARCHAR(36),
     IN _email                   VARCHAR(255),
     IN _username                VARCHAR(18),
@@ -84,9 +84,9 @@ DELIMITER ;
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_update_user_password $$
+DROP PROCEDURE IF EXISTS sp_users_update_password $$
 
-CREATE PROCEDURE sp_update_user_password(
+CREATE PROCEDURE sp_users_update_password(
     IN _user_id                 VARCHAR(36),
     IN _password                VARCHAR(255)
 )
@@ -95,7 +95,8 @@ BEGIN
     UPDATE
         users
     SET
-        password = IFNULL(_password, password)
+        password        = IFNULL(_password, password),
+        modified_at     = NOW()
     WHERE
         BIN_TO_UUID(user_id) = _user_id
         AND active = TRUE;
@@ -106,9 +107,9 @@ DELIMITER ;
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_delete_user $$
+DROP PROCEDURE IF EXISTS sp_users_delete $$
 
-CREATE PROCEDURE sp_delete_user(
+CREATE PROCEDURE sp_users_delete(
     IN _user_id                 VARCHAR(36)
 )
 BEGIN
@@ -116,7 +117,8 @@ BEGIN
     UPDATE
         users
     SET
-        active = FALSE
+        active          = FALSE,
+        modified_at     = NOW()
     WHERE
         BIN_TO_UUID(user_id) = _user_id;
 
@@ -144,8 +146,7 @@ END $$
 DELIMITER ;
 
 
-CALL sp_get_users_except('admin', '5bb0d011-0579-4ade-9b16-8afc92c2e9c9');
-
+CALL sp_get_users_except('', '');
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_users_except $$
@@ -160,6 +161,9 @@ BEGIN
         BIN_TO_UUID(u.user_id) id,
         u.email,
         u.username,
+        u.first_name,
+        u.last_name,
+        u.profile_picture,
         ur.name userRole
     FROM
         users AS u
@@ -214,7 +218,8 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_user_by_filter $$
 
 CREATE PROCEDURE sp_get_user_by_filter(
-    IN _filter                 VARCHAR(255)
+    IN _filter                  VARCHAR(255),
+    IN _except                  VARCHAR(36)
 )
 BEGIN
 
@@ -236,8 +241,7 @@ BEGIN
         BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
     WHERE
         u.username LIKE CONCAT('%', _filter, '%')
-        OR u.email LIKE CONCAT('%', _filter, '%');
-
+        AND BIN_TO_UUID(u.user_id) != _except;
 END $$
 DELIMITER ;
 

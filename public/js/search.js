@@ -6,11 +6,11 @@ $('#search').val(search);
 $('#product-search').val(search);
 
 $.ajax({
-    url: `/api/v1/users/filter/search?search=${search}`,
+    url: `/api/v1/users?exclude=${id}&search=${search}`,
     method: 'GET',
     success: function(response)
     {
-        response.forEach((user) =>
+        response.forEach(user =>
         {
             $('#users-section').append(/*html*/`
                 <a href="/profile?id=${user.id}" class="col-lg-4 col-md-6 col-sm-12  text-decoration-none text-brown">

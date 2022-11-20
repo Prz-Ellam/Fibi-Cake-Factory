@@ -314,9 +314,14 @@ class WishlistController extends Controller
         $session = new PhpSession();
 
         // TODO: que aqui salgan tanto las publicas como las normales
-        $count = $request->getQuery("count") ?? 19;
+        $count = $request->getQuery("count") ?? 12;
+        if ($count === "") $count = 12;
+
         $page = $request->getQuery("page") ?? 1;
+        if ($page === "") $page = 1;
+
         $offset = floor($count * ($page - 1));
+        if ($offset < 0) $offset = 0;
 
         $userId = $request->getRouteParams("userId");
         $userIdSession = $session->get("userId");
@@ -340,7 +345,17 @@ class WishlistController extends Controller
             $element["images"] = json_decode($element["images"]);
         }
 
-        $response->json($result);
+
+        $total = $wishlistRepository->getUserCount($userId);
+
+        $response->json([
+            "wishlists" => $result,
+            "pagination" => [
+                //"total" => $total,
+                "pages" => ceil((float)$total / $count),
+                "page" => (int)$page
+            ]
+        ]);
     }
 
 }

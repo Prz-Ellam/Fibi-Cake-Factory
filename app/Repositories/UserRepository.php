@@ -8,13 +8,12 @@ use Fibi\Database\DB;
 class UserRepository
 {
     private const CREATE = "CALL sp_users_create(:userId, :email, :username, :firstName, :lastName, :birthDate, :password, :gender, :visible, :userRole, :profilePicture)";
-    private const UPDATE = "CALL sp_update_user(:userId, :email, :username, :firstName, :lastName, :birthDate, :gender, :profilePicture)";
-    private const UPDATE_USER_PASSWORD = "CALL sp_update_user_password(:userId, :password)";
-    private const DELETE = "CALL sp_delete_user(?)";
-    private const LOGIN = "CALL login(:loginOrEmail, :password)";
+    private const UPDATE = "CALL sp_users_update(:userId, :email, :username, :firstName, :lastName, :birthDate, :gender, :profilePicture)";
+    private const UPDATE_USER_PASSWORD = "CALL sp_users_update_password(:userId, :password)";
+    private const DELETE = "CALL sp_users_delete(:userId)";
     private const GET_ONE = "CALL sp_get_user(:userId)";
     private const GET_ALL_EXCEPT = "CALL sp_get_users_except(:search, :userId)";
-    private const GET_ALL_BY_FILTER = "CALL sp_get_user_by_filter(:filter)";
+    private const GET_ALL_BY_FILTER = "CALL sp_get_user_by_filter(:filter, :except)";
     private const IS_USERNAME_AVAILABLE = "CALL sp_username_exists(:userId, :username)";
     private const IS_EMAIL_AVAILABLE = "CALL sp_email_exists(:userId, :email)";
     // GET_ALL
@@ -22,7 +21,7 @@ class UserRepository
 
     public function create(User $user) : bool
     {
-        $result = DB::executeNonQuery(self::CREATE, [
+        return DB::executeNonQuery(self::CREATE, [
             "userId"            => $user->getUserId(),
             "email"             => $user->getEmail(),
             "username"          => $user->getUsername(),
@@ -34,9 +33,7 @@ class UserRepository
             "visible"           => $user->isVisible(),
             "userRole"          => $user->getUserRole(),
             "profilePicture"    => $user->getProfilePicture()
-        ]);
-
-        return $result > 0;
+        ]) > 0;
     }
 
     public function update(User $user) : bool
@@ -61,9 +58,11 @@ class UserRepository
         ]) > 0;
     }
 
-    public function delete(int $id) : bool
+    public function delete(int $userId) : bool
     {
-        DB::executeNonQuery(self::DELETE, []);
+        DB::executeNonQuery(self::DELETE, [
+            "userId"            => $userId
+        ]);
         return true;
     }
 
@@ -85,10 +84,11 @@ class UserRepository
         return $result;
     }
 
-    public function getAllByFilter(string $filter)
+    public function getAllByFilter(string $filter, string $except = "")
     {
         return DB::executeReader(self::GET_ALL_BY_FILTER, [
-            "filter" => $filter
+            "filter" => $filter,
+            "except" => $except
         ]);
     }
 

@@ -27,8 +27,6 @@ class ChatMessageController extends Controller
         $chatParticipantId = $request->getBody("chatParticipantId");
         $messageContent = $request->getBody("messageContent");
 
-        // TODO: Validar que siempre sea un UUID
-
         $chatMessage = new ChatMessage();
         $chatMessage
             ->setChatMessageId($chatMessageId)
@@ -39,8 +37,7 @@ class ChatMessageController extends Controller
         $feedback = $validator->validate();
         $status = $validator->getStatus();
 
-        if (!$status)
-        {
+        if (!$status) {
             $response->setStatusCode(400)->json([
                 "status" => $status,
                 "data" => $feedback

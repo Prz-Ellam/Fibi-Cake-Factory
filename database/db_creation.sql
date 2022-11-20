@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS `users`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT users_pk
-        PRIMARY KEY (user_id)
+    CONSTRAINT `users_pk`
+        PRIMARY KEY (`user_id`)
 );
 
 DROP TABLE IF EXISTS `user_roles`;
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS `user_roles`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT user_roles_pk
-        PRIMARY KEY (user_role_id)
+    CONSTRAINT `user_roles_pk`
+        PRIMARY KEY (`user_role_id`)
 );
 
 -- Products
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS `products`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT products_pk
-        PRIMARY KEY (product_id)
+    CONSTRAINT `products_pk`
+        PRIMARY KEY (`product_id`)
 );
 
 -- Categories
@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS `categories`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT categories_pk
-        PRIMARY KEY (category_id)
+    CONSTRAINT `categories_pk`
+        PRIMARY KEY (`category_id`)
 );
 
 -- Products Categories
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS `products_categories`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT products_categories_pk
-        PRIMARY KEY (product_category_id)
+    CONSTRAINT `products_categories_pk`
+        PRIMARY KEY (`product_category_id`)
 );
 
 
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `reviews`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT reviews_pk
-        PRIMARY KEY (review_id)
+    CONSTRAINT `reviews_pk`
+        PRIMARY KEY (`review_id`)
 );
 
 
@@ -111,8 +111,8 @@ CREATE TABLE IF NOT EXISTS `wishlists`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT wishlists_pk
-        PRIMARY KEY (wishlist_id)
+    CONSTRAINT `wishlists_pk`
+        PRIMARY KEY (`wishlist_id`)
 );
 
 -- Wishlist Objects
@@ -124,8 +124,8 @@ CREATE TABLE IF NOT EXISTS `wishlist_objects`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT wishlist_objects_pk
-        PRIMARY KEY (wishlist_object_id)
+    CONSTRAINT `wishlist_objects_pk`
+        PRIMARY KEY (`wishlist_object_id`)
 );
 
 
@@ -139,8 +139,8 @@ CREATE TABLE IF NOT EXISTS `shopping_carts`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT shopping_carts_pk
-        PRIMARY KEY (shopping_cart_id)
+    CONSTRAINT `shopping_carts_pk`
+        PRIMARY KEY (`shopping_cart_id`)
 );
 
 
@@ -155,8 +155,8 @@ CREATE TABLE IF NOT EXISTS `shopping_cart_items`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT shopping_cart_items_pk
-        PRIMARY KEY (shopping_cart_item_id)
+    CONSTRAINT `shopping_cart_items_pk`
+        PRIMARY KEY (`shopping_cart_item_id`)
 );
 
 
@@ -174,8 +174,8 @@ CREATE TABLE IF NOT EXISTS `orders`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT orders_pk
-        PRIMARY KEY (order_id)
+    CONSTRAINT `orders_pk`
+        PRIMARY KEY (`order_id`)
 );
 
 
@@ -191,8 +191,8 @@ CREATE TABLE IF NOT EXISTS `shoppings`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT shoppings_pk
-        PRIMARY KEY (shopping_id)
+    CONSTRAINT `shoppings_pk`
+        PRIMARY KEY (`shopping_id`)
 );
 
 
@@ -211,8 +211,8 @@ CREATE TABLE IF NOT EXISTS `images`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT images_pk
-        PRIMARY KEY (image_id)
+    CONSTRAINT `images_pk`
+        PRIMARY KEY (`image_id`)
 );
 
 -- Max de LONGBLOB es 4GB pero no aceptaron mucho tampoco, porque 4GB es demasiado
@@ -229,8 +229,8 @@ CREATE TABLE IF NOT EXISTS `videos`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT videos_pk
-        PRIMARY KEY (video_id)
+    CONSTRAINT `videos_pk`
+        PRIMARY KEY (`video_id`)
 );
 
 -- Chats
@@ -240,8 +240,8 @@ CREATE TABLE IF NOT EXISTS `chats`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN DEFAULT TRUE,
-    CONSTRAINT chats_pk
-        PRIMARY KEY (chat_id)
+    CONSTRAINT `chats_pk`
+        PRIMARY KEY (`chat_id`)
 );
 
 -- Chat Participants
@@ -253,8 +253,8 @@ CREATE TABLE IF NOT EXISTS `chat_participants`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT chat_participants_pk
-        PRIMARY KEY (chat_participant_id)
+    CONSTRAINT `chat_participants_pk`
+        PRIMARY KEY (`chat_participant_id`)
 );
 
 -- Chat Messages
@@ -266,15 +266,15 @@ CREATE TABLE IF NOT EXISTS `chat_messages`(
     `created_at`                TIMESTAMP NOT NULL DEFAULT NOW(),
     `modified_at`               TIMESTAMP NOT NULL DEFAULT NOW(),
     `active`                    BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT chat_messages_pk
-        PRIMARY KEY (chat_message_id)
+    CONSTRAINT `chat_messages_pk`
+        PRIMARY KEY (`chat_message_id`)
 );
 
 
 
-DROP TABLE IF EXISTS quotes;
+DROP TABLE IF EXISTS `quotes`;
 
-CREATE TABLE IF NOT EXISTS quotes(
+CREATE TABLE IF NOT EXISTS `quotes`(
     quote_id                    BINARY(16) NOT NULL UNIQUE,
     seller_id                   BINARY(16) NOT NULL,
     shopper_id                  BINARY(16) NOT NULL,
@@ -283,8 +283,8 @@ CREATE TABLE IF NOT EXISTS quotes(
     created_at                  TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at                 TIMESTAMP DEFAULT NOW(),
     active                      BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT quotes_pk
-        PRIMARY KEY (quote_id)
+    CONSTRAINT `quotes_pk`
+        PRIMARY KEY (`quote_id`)
 );
 
 
@@ -320,10 +320,10 @@ CREATE TABLE IF NOT EXISTS multimedia_entities(
 
 
 -- Foreign keys
-ALTER TABLE users
-    ADD CONSTRAINT users_user_roles_fk
-        FOREIGN KEY (user_role)
-        REFERENCES user_roles(user_role_id);
+ALTER TABLE `users`
+    ADD CONSTRAINT `users_user_roles_fk`
+        FOREIGN KEY (`user_role`)
+        REFERENCES `user_roles`(`user_role_id`);
 
 ALTER TABLE products
     ADD CONSTRAINT products_users_fk

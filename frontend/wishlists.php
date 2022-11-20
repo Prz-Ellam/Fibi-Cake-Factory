@@ -1,7 +1,18 @@
 <?php
+/*
+use CakeFactory\Repositories\WishlistRepository;
+use Fibi\Session\PhpSession;
 
-    
+$session = new PhpSession();
+//$userId = new $session->get("userId");
+$userId = $_SESSION["userId"];
 
+$wishlistRepository = new WishlistRepository();
+$wishlists = $wishlistRepository->getUserWishlists($userId, 10, 0);
+
+var_dump($wishlists);
+//die;
+*/
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +61,10 @@
                 </div>
 
                 <nav aria-label="Page navigation example">
+                    <ul class="mt-4 pagination justify-content-center"></ul>
+                </nav>
+<!--
+                <nav aria-label="Page navigation example">
                     <ul class="mt-4 pagination justify-content-center">
                         <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists">Anterior</a></li>
                         <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists?page=1">1</a></li>
@@ -58,6 +73,7 @@
                         <li class="page-item"><a class="page-link text-brown shadow-none" href="/wishlists">Siguiente</a></li>
                     </ul>
                 </nav>
+-->
             </div>
         </div>
     </div>

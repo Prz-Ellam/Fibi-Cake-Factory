@@ -12,8 +12,6 @@ $.ajax({
     }
 });
 
-// TODO: Checkout inaccesible si no hay productos en el carrito de compras
-
 var fmt = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

@@ -225,7 +225,7 @@ class UserController extends Controller
         $profilePicture = $request->getFile("profilePicture");
 
         $imageRepository = new ImageRepository();
-        $imageRepository->deleteMultimediaEntityImages($userId, 'users');
+        $imageRepository->deleteMultimediaEntityImages($userId, "users");
 
         $imageId = Uuid::uuid4()->toString();
         $imageName = $profilePicture->getName();
@@ -290,15 +290,16 @@ class UserController extends Controller
         $userRepository = new UserRepository();
         $result = $userRepository->update($user);
         if (!$result) {
-            $response->json([
+            $response->setStatusCode(400)->json([
                 "status" => false,
                 "message" => "No se pudo editar el usuario"
-            ])->setStatusCode(400);
+            ]);
             return;
         }
 
         $response->json([
-            "status" => true
+            "status" => true,
+            "message" => "El usuario se actualizó exitosamente"
         ]);
     }
 
@@ -315,6 +316,7 @@ class UserController extends Controller
     public function updatePassword(Request $request, Response $response): void
     {
         $userId = $request->getRouteParams("userId");
+
         $oldPassword = $request->getBody("oldPassword");
         $newPassword = $request->getBody("newPassword");
         $confirmNewPassword = $request->getBody("confirmNewPassword");
@@ -328,13 +330,19 @@ class UserController extends Controller
         $res = Crypto::verify($auth["password"], $oldPassword);
         if (!$res)
         {
-            $response->setStatusCode(400)->json([ "Su contraseña no es correcta" ]);
+            $response->setStatusCode(400)->json([ 
+                "status" => false,
+                "message" => "Su contraseña no es correcta" 
+            ]);
             return;
         }
 
         if ($newPassword != $confirmNewPassword)
         {
-            $response->json([ "Las contraseñas no coinciden" ]);
+            $response->setStatusCode(400)->json([ 
+                "status" => false,
+                "message" => "Las contraseñas no coinciden"
+            ]);
             return;
         }
 
@@ -343,14 +351,17 @@ class UserController extends Controller
         $result = $userRepository->updatePassword($userId, $passwordHashed);
         if (!$result)
         {
-            $response->json([ "No se pudo realizar la operacion" ]);
+            $response->setStatusCode(400)->json([ 
+                "status" => false,
+                "message" => "No se pudo realizar la operacion"
+            ]);
             return;
         }
 
-        // TODO: Test json
-        $response->json([$res]);
-
-        //$userRepository->updatePassword();
+        $response->json([ 
+            "status" => true,
+            "message" => "Su contraseña se actualizó exitosamente"
+        ]);
     }
 
     /**
@@ -450,11 +461,16 @@ class UserController extends Controller
      */
     public function getAllByFilter(Request $request, Response $response): void
     {
-        $search = $request->getQuery("search");
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
+        $search = $request->getQuery("search") ?? "";
         $id = $request->getQuery("exclude") ?? "";
 
+
         $userRepository = new UserRepository();
-        $users = $userRepository->getAllExcept($id, $search);
+        $users = $userRepository->getAllByFilter($search, $userId);
+
 
         $response->json($users);
     }

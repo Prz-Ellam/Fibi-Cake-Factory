@@ -1,3 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cake Factory</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Nunito&family=Roboto:ital,wght@0,400;1,500&display=swap" rel="stylesheet">
+     
+    <!-- Bootstrap 5.0.0 -->
+    <link rel="stylesheet" href="vendor/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Intro JS -->
+    <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+
+    <!-- Sweet Alert -->
+    <link rel="stylesheet" href="vendor/node_modules/sweetalert2/dist/sweetalert2.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./styles/navbar.css">
+    <link rel="stylesheet" href="./styles/colors.css">
+    <link rel="stylesheet" href="./styles/layout.css">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/footer.css">
+</head>
+<body>
+
+@navbar
+
 <div id="banner">
     <div class="cte">
         <h1 class="text-center text-white text-uppercase font-weight-bold mb-4" id="hero-title">¡Conquistando el sabor supremo!</h1>
@@ -89,3 +127,35 @@
         </form>
     </div>
 </div>
+
+@footer
+
+    <!-- jQuery 3.6.0 -->
+    <script src="vendor/node_modules/jquery/dist/jquery.min.js"></script>
+
+    <!-- jQuery Validation 1.19.5 -->
+    <script src="vendor/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <!-- Bootstrap 5.0.0 -->
+    <script src="vendor/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
+
+    <!-- Intro JS -->
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js" type="text/javascript"></script>
+
+    <!-- Owl Carousel -->
+    <script src="vendor/node_modules/owl.carousel/dist/owl.carousel.min.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="./js/home.js"></script>
+</body>
+
+</html>
