@@ -8,17 +8,20 @@ CREATE PROCEDURE sp_quotes_create(
 )
 BEGIN
 
+    IF NOT EXISTS (SELECT BIN_TO_UUID(`quote_id`) FROM `quotes` WHERE BIN_TO_UUID(`user_id`) = _user_id AND BIN_TO_UUID(`product_id`) = _product_id)
+    THEN
     -- TOOD: Solo si el producto tiene la bandera is_quotable en TRUE, si no no
-    INSERT INTO quotes(
-        quote_id,
-        user_id,
-        product_id
-    )
-    VALUES(
-        UUID_TO_BIN(_quote_id),
-        UUID_TO_BIN(_user_id),
-        UUID_TO_BIN(_product_id)
-    );
+        INSERT INTO quotes(
+            quote_id,
+            user_id,
+            product_id
+        )
+        VALUES(
+            UUID_TO_BIN(_quote_id),
+            UUID_TO_BIN(_user_id),
+            UUID_TO_BIN(_product_id)
+        );
+    END IF;
 
 END $$
 DELIMITER ;
@@ -55,6 +58,7 @@ CREATE PROCEDURE sp_quotes_get_user_pending(
 BEGIN
 
     SELECT
+        BIN_TO_UUID(q.quote_id) `quote_id`,
         u.username,
         BIN_TO_UUID(u.profile_picture) `profile_picture`,
         p.name
@@ -69,7 +73,30 @@ BEGIN
     ON
         BIN_TO_UUID(q.user_id) = BIN_TO_UUID(u.user_id)
     WHERE
-        BIN_TO_UUID(p.user_id) = _user_id;
+        BIN_TO_UUID(p.user_id) = _user_id
+        AND q.price IS NULL;
+
+END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_quotes_update $$
+
+CREATE PROCEDURE sp_quotes_update(
+    IN _quote_id                VARCHAR(36),
+    IN _price                   DECIMAL(15, 2)
+)
+BEGIN
+
+    UPDATE
+        quotes
+    SET
+        price           = _price,
+        modified_at     = NOW()
+    WHERE
+        BIN_TO_UUID(quote_id) = _quote_id;
 
 END $$
 DELIMITER ;

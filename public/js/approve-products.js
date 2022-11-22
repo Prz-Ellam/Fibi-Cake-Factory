@@ -75,7 +75,6 @@ $(document).ready(function() {
         $.ajax({
             url: `/api/v1/products/${id}/approve`,
             method: 'POST',
-            timeout: 0,
             success: function(response)
             {
                 console.log(response);
@@ -97,7 +96,6 @@ $(document).ready(function() {
         $.ajax({
             url: `/api/v1/products/${id}/denied`,
             method: 'POST',
-            timeout: 0,
             success: function(response)
             {
                 console.log(response);

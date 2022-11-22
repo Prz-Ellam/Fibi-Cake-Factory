@@ -129,11 +129,31 @@ $app->get('/home', function(Request $request, Response $response) {
 });
 
 $app->get('/users', function(Request $request, Response $response) {
+    $session = new PhpSession();
+
+    $login = $session->has('userId');
+
+    if (!$login)
+    {
+        $response->redirect('/');
+        return;
+    }
+    
+    if ($session->get('role') !== "Super Administrador")
+    {
+        $response->redirect('/');
+        return;
+    }
+
     $response->view('users', 'auth-layout');
 });
 
 $app->get('/categories', function(Request $request, Response $response) {
     $response->view('categories', 'auth-layout');
+});
+
+$app->get('/quotes', function(Request $request, Response $response) {
+    $response->view('quotes', 'auth-layout');
 });
 
 $app->get('/product', function(Request $request, Response $response) {
@@ -157,8 +177,7 @@ $app->get('/quotes', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
-    {
+    if (!$login) {
         $response->redirect('/');
         return;
     }
@@ -172,7 +191,14 @@ $app->get('/products', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
+    {
+        $response->redirect('/');
+        return;
+    }
+
+    $visible = $session->get("visible");
+    if (!$visible)
     {
         $response->redirect('/');
         return;
@@ -280,7 +306,14 @@ $app->get('/create-product', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
+    {
+        $response->redirect('/');
+        return;
+    }
+
+    $visible = $session->get("visible");
+    if (!$visible)
     {
         $response->redirect('/');
         return;
@@ -295,7 +328,14 @@ $app->get('/update-product', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
+    {
+        $response->redirect('/');
+        return;
+    }
+
+    $visible = $session->get("visible");
+    if (!$visible)
     {
         $response->redirect('/');
         return;
@@ -310,7 +350,14 @@ $app->get('/sales-report', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
+    {
+        $response->redirect('/');
+        return;
+    }
+
+    $visible = $session->get("visible");
+    if (!$visible)
     {
         $response->redirect('/');
         return;
@@ -325,7 +372,7 @@ $app->get('/orders-report', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
     {
         $response->redirect('/');
         return;
@@ -340,7 +387,7 @@ $app->get('/profile', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
     {
         $response->redirect('/');
         return;
@@ -378,7 +425,7 @@ $app->get('/search', function(Request $request, Response $response) {
 
     $login = $session->has('userId');
 
-    if ($login === false)
+    if (!$login)
     {
         $response->redirect('/');
         return;
@@ -510,7 +557,7 @@ $app->get('/api/v1/reports/sales-report', [ new ReportController(), 'getSalesRep
 $app->get('/api/v1/users/filter/search', [ new UserController(), 'getAllByFilter' ]);
 
 
-
+$app->post('/api/v1/quotes/{quoteId}', [ new QuoteController(), 'setPrice' ]);
 $app->get('/api/v1/quotes/pending', [ new QuoteController(), 'getUserAllPending' ]);
 
 

@@ -49,6 +49,7 @@ class SessionController extends Controller
         $passwordHashed = $result["password"];
         $userId = $result["user_id"];
         $userRole = $result["user_role"];
+        $visible = $result["visible"];
 
         $passwordCheck = Crypto::verify($passwordHashed, $password);
         if (!$passwordCheck) {
@@ -63,6 +64,7 @@ class SessionController extends Controller
         $session->set('userId', $userId);
         $session->set('loginOrEmail', $loginOrEmail);
         $session->set('role', $userRole);
+        $session->set("visible", $visible);
 
         if ($remember)
         {

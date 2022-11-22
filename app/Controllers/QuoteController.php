@@ -32,4 +32,23 @@ class QuoteController
         $response->json($quotes);
 
     }
+
+    public function setPrice(Request $request, Response $response) {
+
+        $quoteId = $request->getRouteParams("quoteId");
+        $price = $request->getBody("price");
+
+        if (!$price || $price < 0) {
+            $response->setStatusCode(400)->json([
+                "status" => false,
+                "message" => "El precio no es correcto"
+            ]);
+            return;
+        }
+
+        $quoteRepository = new QuoteRepository();
+        $result = $quoteRepository->update($quoteId, $price);
+
+        $response->json($result);
+    }
 }

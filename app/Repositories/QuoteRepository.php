@@ -29,4 +29,13 @@ class QuoteRepository
         ]);
 
     }
+
+    public function update(string $quoteId, string $price) {
+
+        return DB::executeNonQuery(self::UPDATE, [
+            "quoteId"       => $quoteId,
+            "price"         => $price
+        ]) > 0;
+
+    }
 }

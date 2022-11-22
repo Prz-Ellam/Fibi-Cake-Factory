@@ -53,22 +53,17 @@
                         </div>
                     </div>
 
-                    <table class="table table-hover" style="width: 100%" id="wishlist-table">
+                    <table class="table table-hover" style="width: 100%" id="quotes-table">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Usuario</th>
                                 <th>Producto</th>
                                 <th>Precio</th>
+                                <th>Aprobar</th>
                             </tr>
                         </thead>
                         <tbody class="align-middle" id="table-body">
-                        <tr>
-                                <td>#</td>
-                                <td>Usuario</td>
-                                <td>Producto</td>
-                                <td><input type="number"></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>

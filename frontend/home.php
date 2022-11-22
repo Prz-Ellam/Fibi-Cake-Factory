@@ -41,7 +41,7 @@
         <h1 class="text-center text-white text-uppercase font-weight-bold mb-4" id="hero-title">¡Conquistando el sabor supremo!</h1>
         <hr class="bg-white">
         <p class="text-white h4 mb-4">Pasteles únicos y variados todos los días</p>
-        <a href="/search" class="btn btn-md btn-secondary shadow-none p-3 bg-orange h5 start-shop rounded-1" id="start-shop">Empezar a comprar <i class="fa fa-angle-right" aria-hidden="true"></i></a>
+        <a href="/search" class="btn btn-md btn-secondary shadow-none p-3 btn-orange h5 start-shop rounded-1" id="start-shop">Empezar a comprar <i class="fa fa-angle-right" aria-hidden="true"></i></a>
     </div>
 </div>
 

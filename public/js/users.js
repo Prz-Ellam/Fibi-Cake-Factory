@@ -67,8 +67,8 @@ $(document).ready(function() {
 
         table.row(row).remove().draw();
 
-        modal = document.getElementById('delete-user');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('delete-user');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
     });
@@ -566,8 +566,8 @@ $(document).ready(function() {
             return;
         }
 
-        modal = document.getElementById('add-user');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('add-user');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
         const requestBody = new FormData(this);

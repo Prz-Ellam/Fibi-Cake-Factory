@@ -11,6 +11,7 @@ BEGIN
         BIN_TO_UUID(u.user_id) as 'user_id',
         u.password,
         ur.name as 'user_role',
+        u.visible `visible`,
         BIN_TO_UUID(u.profile_picture) as 'profile_picture'
     FROM
         users AS u
