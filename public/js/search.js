@@ -1,7 +1,7 @@
 import { getSession } from './utils/session.js';
 const id = getSession();
 
-const search = new URLSearchParams(window.location.search).get("search");
+const search = new URLSearchParams(window.location.search).get("search") || '';
 $('#search').val(search);
 $('#product-search').val(search);
 
@@ -22,16 +22,6 @@ $.ajax({
                 </a>
             `)
         })
-    }
-});
-
-$.ajax({
-    url: `api/v1/users/${id}`,
-    method: "GET",
-    async: false,
-    success: function(response) {
-        const url = `api/v1/images/${response.profilePicture}`;
-        $('.nav-link img').attr('src', url);
     }
 });
 

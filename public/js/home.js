@@ -39,15 +39,17 @@ $.ajax({
     async: false,
     success: function(response) {
         id = response.id;
-        $.ajax({
-            url: `api/v1/users/${response.id}`,
-            method: "GET",
-            async: false,
-            timeout: 0,
-            success: function(response) {
-                const url = `api/v1/images/${response.profilePicture}`;
-                $('.nav-link img').attr('src', url);
-            }
+    }
+});
+
+$.ajax({
+    url: `api/v1/products?filter=rates`,
+    method: 'GET',
+    async: false,
+    success: function(response) {
+        response.forEach(function(product) 
+        {
+            $('#rates').append(CarouselCard(product));
         });
     }
 });

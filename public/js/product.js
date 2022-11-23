@@ -27,16 +27,6 @@ const id = getSession();
 
 const productId = new URLSearchParams(window.location.search).get("search");
 
-$.ajax({
-    url: `api/v1/users/${id}`,
-    method: "GET",
-    async: false,
-    success: function (response) {
-        const url = `api/v1/images/${response.profilePicture}`;
-        $('.nav-link img').attr('src', url);
-    }
-});
-
 function setRates(index) {
 
     const stars = $('.rating').children();

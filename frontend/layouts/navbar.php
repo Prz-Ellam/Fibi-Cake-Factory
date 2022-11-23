@@ -46,7 +46,7 @@ $user = $userRepository->getOne($userId);
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="assets/img/default.jpg" alt="logo" class=" img-fluid rounded-circle" style="width:32px; height:32px">
+                        <img src="/api/v1/images/<?= $user["profilePicture"] ?>" alt="logo" class=" img-fluid rounded-circle" style="width:32px; height:32px">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end bg-white rounded-1 shadow-sm">
                         <a href="/profile" class="dropdown-item">Mi perfil</a>

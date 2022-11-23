@@ -1,16 +1,6 @@
 import { getSession } from './utils/session.js';
 const userId = getSession();
 
-$.ajax({
-    url: `api/v1/users/${userId}`,
-    method: "GET",
-    async: false,
-    success: function (response) {
-        const url = `api/v1/images/${response.profilePicture}`;
-        $('.nav-link img').attr('src', url);
-    }
-});
-
 $(document).ready(() => {
 
     const table = $('#quotes-table').DataTable({

@@ -3,16 +3,6 @@ import { getSession } from './utils/session.js';
 
 const id = getSession();
 
-$.ajax({
-    url: `api/v1/users/${id}`,
-    method: "GET",
-    async: false,
-    timeout: 0,
-    success: function(response) {
-        const url = `api/v1/images/${response.profilePicture}`;
-        $('.nav-link img').attr('src', url);
-    }
-});
 /*
 $.getJSON(`/api/v1/users/${id}/products/approved`, {
     format: 'json',

@@ -3,16 +3,6 @@ import { updateProductValidator } from './validators/update-product-validator.js
 const id = getSession();
 
 $.ajax({
-    url: `api/v1/users/${id}`,
-    method: 'GET',
-    async: false,
-    success: function (response) {
-        const url = `api/v1/images/${response.profilePicture}`;
-        $('.nav-link img').attr('src', url);
-    }
-});
-
-$.ajax({
     url: '/api/v1/categories',
     method: 'GET',
     async: false,

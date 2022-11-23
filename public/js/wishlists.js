@@ -6,16 +6,6 @@ import { wishlistValidator } from './validators/wishlist-validator.js';
 
 const template = Handlebars.compile(wishlistCard);
 
-$.ajax({
-    url: `api/v1/users/${id}`,
-    method: 'GET',
-    async: false,
-    success: function (response) {
-        const url = `api/v1/images/${response.profilePicture}`;
-        $('.nav-link img').attr('src', url);
-    }
-});
-
 const page = new URLSearchParams(window.location.search).get("page") || '';
 //const count = new URLSearchParams(window.location.search).get("count") || '';
 fetch(`api/v1/users/${id}/wishlists?page=${page}`)
