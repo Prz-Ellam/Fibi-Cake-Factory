@@ -38,17 +38,19 @@ $(document).ready(function () {
     // Validar que solo se inserten imagenes
     $('#profile-picture').on('change', function (e) {
 
+        const files = Array.from(this.files);
+
         // Si se le da Cancelar, se pone la imagen por defecto y el path vacio
-        if ($(this)[0].files.length === 0) {
+        if (files.length === 0) {
             $('#picture-box').attr('src', './assets/img/blank-profile-picture.svg');
             $('#profile-picture').val('');
             return;
         }
 
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL($(this)[0].files[0]);
+        const file = files[0];
 
-        const file = $(this)[0].files[0];
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
 
         // Allowing file type as image/*
         var allowedExtensions  = /(jpg|jpeg|png|gif)$/i;

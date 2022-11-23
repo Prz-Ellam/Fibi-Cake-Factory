@@ -182,8 +182,25 @@ $(document).ready(function() {
 
     $('#sortings').change(function() {
         const querys = this.value.split(' ');
+        const category = $('#categories').val();
+        console.log(category);
 
-        fetch(`api/v1/products?filter=${querys[0]}&order=${querys[1]}&search=${search}`)
+        fetch(`api/v1/products?filter=${querys[0]}&order=${querys[1]}&search=${search}&category=${category}`)
+        .then(response => response.json())
+        .then(response => {
+            $('#product-search-container').empty();
+            const template = Handlebars.compile(productCard);
+            $('#product-search-container').append(template(response));
+        });
+    });
+
+    $('#categories').change(function() {
+        let querys = $('#sortings').val().split(' ');
+        if (querys[0] === '') querys = [ '', 'asc' ];
+        const category = $('#categories').val();
+        console.log(category);
+
+        fetch(`api/v1/products?filter=${querys[0]}&order=${querys[1]}&search=${search}&category=${category}`)
         .then(response => response.json())
         .then(response => {
             $('#product-search-container').empty();

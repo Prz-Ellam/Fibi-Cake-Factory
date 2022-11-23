@@ -47,16 +47,15 @@
                         <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <select class="form-select shadow-none" name="categories" id="categories">
-                                    <option value="1">Categorías</option>
+                                    <option value="">Categorías</option>
                                 </select>
-                                <input type="text" class="form-control shadow-none" placeholder="Producto" aria-label="Username" aria-describedby="basic-addon1" id="product-search">
-                                <button class="btn btn-primary bg-orange shadow-none"><i class="fas fa-search text-white"></i></button>
+            
                             </div>
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="input-group mb-3">
                                 <select class="form-select shadow-none" id="sortings">
-                                    <option>Filtros</option>
+                                    <option value="">Filtros</option>
                                     <option value="sells asc">Los más vendidos</option>
                                     <option value="sells desc">Los menos vendidos</option>
                                     <option value="price asc">Precio: de más bajo a más alto</option>

@@ -620,7 +620,8 @@ CREATE PROCEDURE sp_products_get_all_by_ships(
     IN _order                       VARCHAR(4),
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
-    IN _offset                      INT
+    IN _offset                      INT,
+    IN _category_id                 VARCHAR(36)
 )
 BEGIN
 
@@ -637,9 +638,15 @@ BEGIN
         shoppings AS s
     ON 
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
     WHERE
         p.name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND p.active = TRUE AND approved = TRUE
+        AND (BIN_TO_UUID(pc.category_id) = _category_id
+        OR _category_id IS NULL)
     GROUP BY 
         p.product_id, 
         p.name, 
@@ -647,35 +654,6 @@ BEGIN
     ORDER BY
         CASE _order WHEN 'asc'  THEN COUNT(s.quantity) END ASC,
         CASE _order WHEN 'desc' THEN COUNT(s.quantity) END DESC;
-
-
-    --SELECT
-    --    BIN_TO_UUID(p.product_id) id,
-    --    p.name,
-    --    p.price,
-    --    IFNULL(SUM(s.quantity), 0) sells,
-    --    GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images
-    --FROM
-    --    products AS p
-    --LEFT JOIN
-    --    shoppings AS s
-    --ON
-    --    BIN_TO_UUID(p.product_id) = BIN_TO_UUID(s.product_id)
-    --INNER JOIN
-    --    images AS i
-    --ON
-    --    p.product_id = i.multimedia_entity_id
-    --WHERE
-    --    p.name LIKE CONCAT('%', IFNULL(NULL, ''), '%')
-    --    AND p.active = TRUE
-    --    AND approved = TRUE
-    --GROUP BY
-    --    p.product_id,
-    --    p.name,
-    --    p.price
-    --ORDER BY
-    --    CASE _order WHEN 'asc'  THEN COUNT(s.quantity) END ASC,
-    --    CASE _order WHEN 'desc' THEN COUNT(s.quantity) END DESC;
 
 END $$
 DELIMITER ;
@@ -690,7 +668,8 @@ CREATE PROCEDURE sp_products_get_all_by_price(
     IN _order                       VARCHAR(4),
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
-    IN _offset                      INT
+    IN _offset                      INT,
+    IN _category_id                 VARCHAR(36)
 )
 BEGIN
 
@@ -701,10 +680,16 @@ BEGIN
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
     WHERE
         name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
-        AND active = TRUE
-        AND approved = TRUE
+        AND p.active = TRUE
+        AND p.approved = TRUE
+        AND (BIN_TO_UUID(pc.category_id) = _category_id
+        OR _category_id IS NULL)
     ORDER BY
         CASE _order WHEN 'asc'  THEN price END ASC,
         CASE _order WHEN 'desc' THEN price END DESC;
@@ -722,7 +707,8 @@ CREATE PROCEDURE sp_products_get_all_by_alpha(
     IN _order                       VARCHAR(4),
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
-    IN _offset                      INT
+    IN _offset                      INT,
+    IN _category_id                 VARCHAR(36)
 )
 BEGIN
 
@@ -733,10 +719,16 @@ BEGIN
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
     WHERE
         name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
-        AND active = TRUE
-        AND approved = TRUE
+        AND p.active = TRUE
+        AND p.approved = TRUE
+        AND (BIN_TO_UUID(pc.category_id) = _category_id
+        OR _category_id IS NULL)
     ORDER BY
         CASE _order WHEN 'asc'  THEN name END ASC,
         CASE _order WHEN 'desc' THEN name END DESC;
@@ -747,8 +739,6 @@ DELIMITER ;
 
 
 -- Mejor calificados
-CALL sp_products_get_all_by_rate('asc', null, 10, 1);
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_get_all_by_rate $$
 
@@ -756,7 +746,8 @@ CREATE PROCEDURE sp_products_get_all_by_rate(
     IN _order                       VARCHAR(4),
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
-    IN _offset                      INT
+    IN _offset                      INT,
+    IN _category_id                 VARCHAR(36)
 )
 BEGIN
 
@@ -772,9 +763,15 @@ BEGIN
         reviews AS r
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(r.product_id)
+    INNER JOIN
+        products_categories AS pc
+    ON
+        BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
     WHERE
         p.active = TRUE
         AND p.approved = TRUE
+        AND (BIN_TO_UUID(pc.category_id) = _category_id
+        OR _category_id IS NULL)
     GROUP BY
         BIN_TO_UUID(p.product_id),
         p.name

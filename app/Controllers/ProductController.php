@@ -482,8 +482,8 @@ class ProductController extends Controller
         $search = $request->getQuery("search") ?? "";
         $filter = $request->getQuery("filter") ?? "";
         $order = $request->getQuery("order") ?? "asc";
-
-        //var_dump($filter);die;
+        $category = $request->getQuery("category") ?? null;
+        if ($category === "") $category = null;
 
         $userId = (new PhpSession())->get('userId');
         // TODO: Validar que coincida con la sesión
@@ -492,19 +492,19 @@ class ProductController extends Controller
         $products = [];
         switch ($filter) {
             case "sells":
-                $products = $productRepository->getAllByShips($order, $search);
+                $products = $productRepository->getAllByShips($order, $search, $category);
                 break;
             case "price":
-                $products = $productRepository->getAllByPrice($order, $search);
+                $products = $productRepository->getAllByPrice($order, $search, $category);
                 break;
             case "rates":
-                $products = $productRepository->getAllByRate($order, $search);
+                $products = $productRepository->getAllByRate($order, $search, $category);
                 break;
             case "alpha":
-                $products = $productRepository->getAllByAlpha($order, $search);
+                $products = $productRepository->getAllByAlpha($order, $search, $category);
                 break;
             default:
-                $products = $productRepository->getAllByShips($order, $search);
+                $products = $productRepository->getAllByShips($order, $search, $category);
         }
 
         foreach ($products as &$element) {

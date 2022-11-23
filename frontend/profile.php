@@ -206,6 +206,22 @@ $user = $userRepository->getOne($userId);
         </div>
     </div>
 
+    <div class="container my-5">
+        <div class="row d-flex justify-content-center">
+            <form class="form bg-white shadow-sm rounded p-5 col-xl-6 col-lg-6 col-md-7" id="password-form" method="get" action="#" novalidate>
+                <!-- Inputs -->
+                <div class="mb-4">
+                    <h1 class="form-title text-center h2">Eliminar usuario</h1>
+                </div>
+
+                <hr class="mb-4">
+
+                <button class="btn btn-danger w-100">Eliminar perfil</button>
+
+            </form>
+        </div>
+    </div>
+
     @footer
 
     <!-- jQuery 3.6.0 -->
