@@ -10,7 +10,6 @@ $.ajax({
     url: `api/v1/users/${id}`,
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         const url = `api/v1/images/${response.profilePicture}`;
         $('.nav-link img').attr('src', url);
@@ -42,7 +41,7 @@ $.ajax({
                     <td>${element.date}</td>
                     <td>${element.categories}</td>
                     <td>${element.productName}</td>
-                    <td>${element.rate}</td>
+                    <td>${(element.rate === 'No reviews') ? element.rate : parseFloat(element.rate).toFixed(2)}</td>
                     <td>${fmt.format(element.price)}</td>
                 </tr>
             `);
@@ -98,7 +97,7 @@ $(document).ready(function() {
                         element.date,
                         element.categories,
                         element.productName,
-                        element.rate,
+                        (element.rate === 'No reviews') ? element.rate : parseFloat(element.rate).toFixed(2),
                         fmt.format(element.price)
                     ]);
                 });

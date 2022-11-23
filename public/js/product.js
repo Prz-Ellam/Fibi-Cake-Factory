@@ -14,7 +14,6 @@ function CommentComponent(comment) {
                 </span>
                 <p class="mb-0">${comment.message}</p>
                 <small>${comment.createdAt}</small><br>
-                <div class="badge bg-primary btn-update-review" role="button">Editar</div>
                 <div class="badge bg-danger btn-delete-review" role="button">Eliminar</div>
             </div>
         </div>
@@ -133,9 +132,8 @@ function WishlistItem(wishlist)
 $.ajax({
     url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
-    timeout: 0,
     success: function(response) {
-        response.forEach(function(wishlist) {
+        response.wishlists.forEach(function(wishlist) {
             $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }
@@ -212,17 +210,45 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-delete-review', function(event) {
 
-        const id = this.closest('.comment-component').id;
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¿Estás seguro que deseas eliminar el comentario?, esta acción es irreversible',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#DD3333',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then(result => {
 
-        fetch(`/api/v1/products/${productId}/reviews/${id}`,
-        {
-            method: 'DELETE'
-        })
-        .then(response => response.json())
-        .then(response => {
-            console.log(response)
+            if (result.isConfirmed) {
+
+                const id = this.closest('.comment-component').id;
+
+                fetch(`/api/v1/products/${productId}/reviews/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(response => {
+                    
+                    $('#comment-section').empty();
+
+                    fetch(`/api/v1/products/${productId}/comments`)
+                    .then(response => response.json())
+                    .then(response => {
+                        $('#message-box').val('');
+                        $('.rating-star').removeClass('fas').addClass('far');
+                        response.forEach(comment => {
+                            $('#comment-section').append(CommentComponent(comment));
+                        });
+                    })
+
+                });
+
+            }
+
         });
-
+        
     });
 
     $('.add-cart').click(function () {
@@ -291,6 +317,9 @@ $(document).ready(function () {
         event.preventDefault();
 
         const text = $('#message-box').val();
+        const rate = $('#rate').val();
+
+        if (!text || !rate) return;
 
         $.ajax({
             url: `/api/v1/products/${productId}/reviews`,

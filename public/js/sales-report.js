@@ -38,7 +38,7 @@ $.ajax({
                     <td>${element.date}</td>
                     <td>${element.categories}</td>
                     <td>${element.productName}</td>
-                    <td>${element.rate}</td>
+                    <td>${(element.rate === 'No reviews') ? element.rate : parseFloat(element.rate).toFixed(2)}</td>
                     <td>${fmt.format(element.price)}</td>
                     <td>${element.stock}</td>
                 </tr>
@@ -131,7 +131,7 @@ $(document).ready(function() {
                         element.date,
                         element.categories,
                         element.productName,
-                        element.rate,
+                        (element.rate === 'No reviews') ? element.rate : parseFloat(element.rate).toFixed(2),
                         fmt.format(element.price),
                         element.stock
                     ]);
