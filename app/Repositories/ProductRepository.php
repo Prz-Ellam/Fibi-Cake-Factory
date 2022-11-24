@@ -26,10 +26,10 @@ class ProductRepository
     private const GET_ALL_BY_USER_PENDING = "CALL sp_get_user_products_pending(:userId)";
     // GET_ALL_BY_ADMIN_APPROVE
     private const GET_ALL_BY_RECENT = "CALL sp_products_get_all_by_recents(:userId)";
-    private const GET_ALL_BY_ALPHA = "CALL sp_products_get_all_by_alpha(:order, :filter, :limit, :offset, :categoryId)";
-    private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate(:order, :filter, :limit, :offset, :categoryId)";
-    private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price(:order, :filter, :limit, :offset, :categoryId)";
-    private const GET_ALL_BY_SHIPS = "CALL sp_products_get_all_by_ships(:order, :filter, :limit, :offset, :categoryId)";
+    private const GET_ALL_BY_ALPHA = "CALL sp_products_get_all_by_alpha(:order, :filter, :limit, :offset, :categoryId, :userId)";
+    private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate(:order, :filter, :limit, :offset, :categoryId, :userId)";
+    private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price(:order, :filter, :limit, :offset, :categoryId, :userId)";
+    private const GET_ALL_BY_SHIPS = "CALL sp_products_get_all_by_ships(:order, :filter, :limit, :offset, :categoryId, :userId)";
     private const GET_ALL_BY_CATEGORY = "CALL sp_products_get_all_by_category";
     private const GET_ALL_BY_USER_FAVORITES = "CALL sp_products_get_user_favorites(:userId)";
 
@@ -145,9 +145,10 @@ class ProductRepository
         ]) ?? [];
     }
 
-    public function getAllByAlpha(string $order = "asc", ?string $filter = null, ?string $category = null) : array
+    public function getAllByAlpha(string $userId, string $order = "asc", ?string $filter = null, ?string $category = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_ALPHA, [
+            "userId" => $userId,
             "order" => $order,
             "filter" => $filter,
             "limit" => null,
@@ -156,9 +157,10 @@ class ProductRepository
         ]);
     }
 
-    public function getAllByRate(string $order = "asc", ?string $filter = null, ?string $category = null) : array
+    public function getAllByRate(string $userId, string $order = "asc", ?string $filter = null, ?string $category = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_RATE, [
+            "userId" => $userId,
             "order" => $order,
             "filter" => $filter,
             "limit" => null,
@@ -167,9 +169,10 @@ class ProductRepository
         ]);
     }
 
-    public function getAllByPrice(string $order = "asc", ?string $filter = null, ?string $category = null) : array
+    public function getAllByPrice(string $userId, string $order = "asc", ?string $filter = null, ?string $category = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_PRICE, [
+            "userId" => $userId,
             "order" => $order,
             "filter" => $filter,
             "limit" => null,
@@ -178,14 +181,15 @@ class ProductRepository
         ]);
     }
 
-    public function getAllByShips(string $order = "asc", ?string $filter = null, ?string $category = null) : array
+    public function getAllByShips(string $userId, string $order = "asc", ?string $filter = null, ?string $category = null) : array
     {
         return DB::executeReader(self::GET_ALL_BY_SHIPS, [
             "order" => $order,
             "filter" => $filter,
             "limit" => null,
             "offset" => null,
-            "categoryId" => $category
+            "categoryId" => $category,
+            "userId" => $userId
         ]);
     }
 

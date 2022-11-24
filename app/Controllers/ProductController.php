@@ -522,16 +522,16 @@ class ProductController extends Controller
         $products = [];
         switch ($filter) {
             case "sells":
-                $products = $productRepository->getAllByShips($order, $search, $category);
+                $products = $productRepository->getAllByShips($userId, $order, $search, $category);
                 break;
             case "price":
-                $products = $productRepository->getAllByPrice($order, $search, $category);
+                $products = $productRepository->getAllByPrice($userId, $order, $search, $category);
                 break;
             case "rates":
-                $products = $productRepository->getAllByRate($order, $search, $category);
+                $products = $productRepository->getAllByRate($userId, $order, $search, $category);
                 break;
             case "alpha":
-                $products = $productRepository->getAllByAlpha($order, $search, $category);
+                $products = $productRepository->getAllByAlpha($userId, $order, $search, $category);
                 break;
             case "recents":
                 $products = $productRepository->getAllByRecent($userId);
