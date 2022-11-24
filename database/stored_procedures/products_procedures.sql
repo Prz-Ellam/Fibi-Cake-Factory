@@ -638,14 +638,15 @@ CREATE PROCEDURE sp_products_get_all_by_ships(
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
     IN _offset                      INT,
-    IN _category_id                 VARCHAR(36)
+    IN _category_id                 VARCHAR(36),
+    IN _user_id                     VARCHAR(36)
 )
 BEGIN
 
     SELECT 
         BIN_TO_UUID(p.product_id) id, 
         p.name, 
-        p.price, 
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         p.is_quotable,
         IFNULL(SUM(s.quantity), 0) quantity,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images,
@@ -660,6 +661,17 @@ BEGIN
         products_categories AS pc
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         p.name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND p.active = TRUE AND approved = TRUE
@@ -687,14 +699,15 @@ CREATE PROCEDURE sp_products_get_all_by_price(
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
     IN _offset                      INT,
-    IN _category_id                 VARCHAR(36)
+    IN _category_id                 VARCHAR(36),
+    IN _user_id                     VARCHAR(36)
 )
 BEGIN
 
     SELECT
         BIN_TO_UUID(p.product_id) id,
         name,
-        price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         is_quotable,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
@@ -703,15 +716,28 @@ BEGIN
         products_categories AS pc
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND p.active = TRUE
         AND p.approved = TRUE
         AND (BIN_TO_UUID(pc.category_id) = _category_id
         OR _category_id IS NULL)
+    GROUP BY
+        p.product_id
     ORDER BY
-        CASE _order WHEN 'asc'  THEN price END ASC,
-        CASE _order WHEN 'desc' THEN price END DESC;
+        CASE _order WHEN 'asc'  THEN IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) END ASC,
+        CASE _order WHEN 'desc' THEN IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) END DESC;
 
 END $$
 DELIMITER ;
@@ -727,14 +753,15 @@ CREATE PROCEDURE sp_products_get_all_by_alpha(
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
     IN _offset                      INT,
-    IN _category_id                 VARCHAR(36)
+    IN _category_id                 VARCHAR(36),
+    IN _user_id                     VARCHAR(36)
 )
 BEGIN
 
     SELECT
         BIN_TO_UUID(p.product_id) id,
         name,
-        price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         is_quotable,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
@@ -743,12 +770,25 @@ BEGIN
         products_categories AS pc
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         name LIKE CONCAT('%', IFNULL(_filter, ''), '%')
         AND p.active = TRUE
         AND p.approved = TRUE
         AND (BIN_TO_UUID(pc.category_id) = _category_id
         OR _category_id IS NULL)
+    GROUP BY
+        p.product_id
     ORDER BY
         CASE _order WHEN 'asc'  THEN name END ASC,
         CASE _order WHEN 'desc' THEN name END DESC;
@@ -767,16 +807,18 @@ CREATE PROCEDURE sp_products_get_all_by_rate(
     IN _filter                      VARCHAR(255),
     IN _limit                       INT,
     IN _offset                      INT,
-    IN _category_id                 VARCHAR(36)
+    IN _category_id                 VARCHAR(36),
+    IN _user_id                     VARCHAR(36)
 )
 BEGIN
 
     SELECT
         BIN_TO_UUID(p.product_id) id,
-        p.price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         p.name,
         p.is_quotable,
         IFNULL(AVG(r.rate), 'No reviews') rate,
+        BIN_TO_UUID(p.user_id) `userId`,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
@@ -788,6 +830,17 @@ BEGIN
         products_categories AS pc
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(pc.product_id)
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         p.active = TRUE
         AND p.approved = TRUE
