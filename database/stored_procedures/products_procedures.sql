@@ -278,11 +278,13 @@ END $$
 DELIMITER ;
 
 
-
+CALL sp_products_get_all_by_recents('d356d225-0cab-4b25-9d6a-fefa66a71990');
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_get_all_by_recents $$
 
-CREATE PROCEDURE sp_products_get_all_by_recents()
+CREATE PROCEDURE sp_products_get_all_by_recents(
+    IN _user_id                     VARCHAR(36)
+)
 BEGIN
 
     SELECT
@@ -290,7 +292,7 @@ BEGIN
         p.name,
         p.description,
         p.is_quotable,
-        p.price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         p.stock,
         p.approved,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
@@ -306,6 +308,17 @@ BEGIN
         videos AS v
     ON
         BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         p.active = TRUE
         AND p.approved = TRUE
@@ -315,7 +328,8 @@ BEGIN
         p.description, 
         p.is_quotable, 
         p.price, 
-        p.stock, 
+        p.stock,
+        c.q_price, 
         p.approved,
         p.user_id
     ORDER BY

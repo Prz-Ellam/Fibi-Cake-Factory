@@ -100,3 +100,25 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_quotes_get_by_user_product $$
+
+CREATE PROCEDURE sp_quotes_get_by_user_product(
+    IN _user_id                 VARCHAR(36),
+    IN _product_id              VARCHAR(36)
+)
+BEGIN
+
+    SELECT
+        COUNT(*) `count`
+    FROM
+        quotes
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id
+        AND BIN_TO_UUID(product_id) = _product_id;
+
+END $$
+DELIMITER ;

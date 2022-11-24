@@ -25,7 +25,7 @@ class ProductRepository
     private const GET_ALL_BY_USER_DENIED = "CALL sp_get_user_products_denied(:userId)";
     private const GET_ALL_BY_USER_PENDING = "CALL sp_get_user_products_pending(:userId)";
     // GET_ALL_BY_ADMIN_APPROVE
-    private const GET_ALL_BY_RECENT = "CALL sp_products_get_all_by_recents()";
+    private const GET_ALL_BY_RECENT = "CALL sp_products_get_all_by_recents(:userId)";
     private const GET_ALL_BY_ALPHA = "CALL sp_products_get_all_by_alpha(:order, :filter, :limit, :offset, :categoryId)";
     private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate(:order, :filter, :limit, :offset, :categoryId)";
     private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price(:order, :filter, :limit, :offset, :categoryId)";
@@ -138,9 +138,11 @@ class ProductRepository
         ]) > 0;
     }
 
-    public function getAllByRecent()
+    public function getAllByRecent(string $userId)
     {
-        return DB::executeReader(self::GET_ALL_BY_RECENT, []) ?? [];
+        return DB::executeReader(self::GET_ALL_BY_RECENT, [
+            "userId"        => $userId
+        ]) ?? [];
     }
 
     public function getAllByAlpha(string $order = "asc", ?string $filter = null, ?string $category = null) : array

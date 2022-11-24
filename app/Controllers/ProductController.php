@@ -534,7 +534,7 @@ class ProductController extends Controller
                 $products = $productRepository->getAllByAlpha($order, $search, $category);
                 break;
             case "recents":
-                $products = $productRepository->getAllByRecent();
+                $products = $productRepository->getAllByRecent($userId);
                 break;
             case "favorites":
                 $products = $productRepository->getAllByUserFavorites($userId);

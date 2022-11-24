@@ -23,7 +23,7 @@ function CarouselCard(product)
             <input type="hidden" name="product-id" value="${product.id}">
             <input type="hidden" name="quantity" value="1">
             <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
-            <h5 class="fw-bold price mb-0">${ (product.is_quotable) ? 'Cotizable' : fmt.format(product.price)}</h5>
+            <h5 class="fw-bold price mb-0">${ (product.price === 'Cotizable') ? product.price : fmt.format(product.price)}</h5>
             <p>${product.name}</p>
             ${ (product.userId === id) ?
             `<div class="d-flex justify-content-center">

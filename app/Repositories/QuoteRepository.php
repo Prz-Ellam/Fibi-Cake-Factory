@@ -11,6 +11,7 @@ class QuoteRepository
     private const UPDATE = "CALL sp_quotes_update(:quoteId, :price)";
     private const DELETE = "CALL sp_quotes_delete(:quoteId)";
     private const GET_USER_ALL_PENDING = "CALL sp_quotes_get_user_pending(:userId)";
+    private const GET_BY_USER_PRODUCT = "CALL sp_quotes_get_by_user_product(:userId, :productId)";
 
     public function create(Quote $quote) {
 
@@ -36,6 +37,17 @@ class QuoteRepository
             "quoteId"       => $quoteId,
             "price"         => $price
         ]) > 0;
+
+    }
+
+    public function getByUserProduct(string $userId, string $productId) {
+
+        $result = DB::executeReader(self::GET_BY_USER_PRODUCT, [
+            "userId"        => $userId,
+            "productId"     => $productId
+        ]);
+
+        return $result[0]["count"] ?? false;
 
     }
 }

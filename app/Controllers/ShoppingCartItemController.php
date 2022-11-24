@@ -42,7 +42,10 @@ class ShoppingCartItemController extends Controller
             return;
         }
 
-        if ($product["is_quotable"]) {
+        $quoteRepository = new QuoteRepository();
+        $isInQuote = $quoteRepository->getByUserProduct($userId, $productId);
+        
+        if ($product["is_quotable"] && !$isInQuote) {
 
             // Crear una cotizacion 
             $quote = new Quote();

@@ -185,12 +185,14 @@ CREATE PROCEDURE sp_get_shopping_cart_items(
 )
 BEGIN
 
+    SET @user_id := (SELECT BIN_TO_UUID(user_id) FROM shopping_carts WHERE BIN_TO_UUID(shopping_cart_id) = _shopping_cart_id);
+
     SELECT
         BIN_TO_UUID(sci.shopping_cart_item_id) id,
         BIN_TO_UUID(p.product_id) product_id,
         p.name,
         sci.quantity,
-        p.price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         BIN_TO_UUID(i.image_id) image
     FROM
         shopping_cart_items AS sci
@@ -203,6 +205,17 @@ BEGIN
     ON
         BIN_TO_UUID(p.product_id) = BIN_TO_UUID(i.multimedia_entity_id)
         AND i.multimedia_entity_type = 'products'
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = @user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         BIN_TO_UUID(sci.shopping_cart_id) = _shopping_cart_id
         AND sci.active = TRUE
