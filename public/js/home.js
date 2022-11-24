@@ -1,4 +1,14 @@
-
+function WishlistItem(wishlist) {
+    return /*html*/`
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+            <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
+            ${wishlist.name}
+            </span>
+        <input class="custom-control-input form-check-input shadow-none me-1" name="wishlists[]" type="checkbox" value="${wishlist.id}" aria-label="...">
+    </li>
+    `;
+}
 
 function CarouselCard(product)
 {
@@ -43,7 +53,7 @@ $.ajax({
 });
 
 $.ajax({
-    url: `api/v1/products?filter=rates`,
+    url: `api/v1/products?filter=rates&order=desc`,
     method: 'GET',
     async: false,
     success: function(response) {
@@ -55,7 +65,7 @@ $.ajax({
 });
 
 $.ajax({
-    url: `api/v1/products/action/recents`,
+    url: `api/v1/products?filter=recents`,
     method: 'GET',
     async: false,
     success: function(response) {
@@ -67,7 +77,20 @@ $.ajax({
 });
 
 $.ajax({
-    url: `api/v1/products/order/ships`,
+    url: `api/v1/products?filter=favorites`,
+    method: 'GET',
+    async: false,
+    success: function(response) {
+        console.log(response);
+        response.forEach(function(product) 
+        {
+            $('#favorites').append(CarouselCard(product));
+        });
+    }
+});
+
+$.ajax({
+    url: `api/v1/products?filter=sells`,
     method: 'GET',
     async: false,
     success: function(response) {
@@ -79,41 +102,18 @@ $.ajax({
     }
 });
 
-
-function WishlistItem(wishlist)
-{
-    return /*html*/`
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>
-            <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
-            ${wishlist.name}
-            </span>
-        <input class="custom-control-input form-check-input shadow-none me-1" name="wishlists[]" type="checkbox" value="${wishlist.id}" aria-label="...">
-    </li>
-    `;
-}
-
 $.ajax({
-    url: 'api/v1/session',
+    url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
-    async: false,
     success: function(response) {
-        console.log(response.id);
-
-        $.ajax({
-            url: `api/v1/users/${response.id}/wishlists`,
-            method: 'GET',
-            success: function(response) {
-                response.wishlists.forEach(function(wishlist) {
-                    $('#wishlists-list').append(WishlistItem(wishlist));
-                });
-            }
+        response.wishlists.forEach(function(wishlist) {
+            $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }
 });
 
-$(document).ready(function()
-{
+$(document).ready(function() {
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -157,11 +157,9 @@ $(document).ready(function()
 
         event.preventDefault();
 
-        modal = document.getElementById('select-wishlist');
-        modalInstance = bootstrap.Modal.getInstance(modal);
+        const modal = document.getElementById('select-wishlist');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
-
-        console.log($(this).serialize());
 
         $.ajax({
             url: `api/v1/wishlist-objects`,
@@ -213,30 +211,6 @@ $(document).ready(function()
             4000: {
                 items: 8
             }
-        }
-    });
-
-    $("#search").autocomplete({
-        delay: 0,
-        source: function(request, response) {
-            $.ajax({
-                data: {term : request.term},
-                method: "GET",
-                dataType: "json",
-                url: '../Controllers/SearchBox.php',
-                success: function(data) {
-                    response(data);
-                }
-            });
-        },
-        minLength: 1,
-        open: function(){
-            setTimeout(function () {
-                $('.ui-autocomplete').css('z-index', 99999999999999);
-            }, 0);
-        },
-        select: function(event, ui) {
-            alert("Selecciono: " + ui.item.label);
         }
     });
 

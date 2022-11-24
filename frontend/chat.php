@@ -1,3 +1,16 @@
+<?php
+
+use CakeFactory\Repositories\UserRepository;
+use Fibi\Session\PhpSession;
+
+$session = new PhpSession();
+$userId = $session->get("userId");
+if (!$userId) return;
+
+$userRepository = new UserRepository();
+$user = $userRepository->getOne($userId);
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,13 +71,17 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="assets/img/default.jpg" alt="logo" class=" img-fluid rounded-circle" style="width:32px; height:32px">
+                                <img src="/api/v1/images/<?= $user["profilePicture"] ?>" alt="logo" class=" img-fluid rounded-circle" style="width:32px; height:32px">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end bg-white rounded-1 shadow-sm">
                                     <a href="/profile" class="dropdown-item">Mi perfil</a>
                                     <div class="dropdown-divider"></div>
+                                    <?php if ($user["visible"] && $user["userRole"] == "Vendedor"): ?>
                                     <a href="/products" class="dropdown-item">Mis productos</a>
                                     <div class="dropdown-divider"></div>
+                                    <a href="/quotes" class="dropdown-item">Cotizaciones</a>
+                                    <div class="dropdown-divider"></div>
+                                    <?php endif ?>
                                     <a href="/logout" class="dropdown-item" id="close-session">Cerrar sesión</a>
                                 </div>
                             </li>

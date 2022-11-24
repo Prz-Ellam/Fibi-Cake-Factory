@@ -36,7 +36,6 @@ $(document).ready(function() {
             method: 'POST',
             data: $(this).serialize(),
             success: function (response) {
-                console.log(response);
                 if (response.status) {
                     window.location.href = '/home';
                 }

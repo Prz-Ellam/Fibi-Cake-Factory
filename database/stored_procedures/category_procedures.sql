@@ -75,6 +75,27 @@ END $$
 DELIMITER ;
 
 
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_delete_categories_product $$
+
+CREATE PROCEDURE sp_delete_categories_product(
+    IN _product_id                  VARCHAR(36)
+)
+BEGIN
+
+    UPDATE
+        products_categories
+    SET
+        active          = FALSE,
+        modified_at     = NOW()
+    WHERE
+        BIN_TO_UUID(product_id) = _product_id;
+
+END $$
+DELIMITER ;
+
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_categories $$
 

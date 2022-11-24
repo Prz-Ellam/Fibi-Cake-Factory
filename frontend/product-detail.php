@@ -124,42 +124,8 @@
 
             <hr>
 
-            <div class="owl-carousel owl-theme sellers">
-                <div class="item">
-                    <div class="text-center car-prueba p-4 m-4 rounded">
-                        <a href="/product"><img src="assets/img/IMG001.jpg" class="p-3"></a>
-                        <h5 class="fw-bold price mb-0">$297.00</h5>
-                        <p>Fresas con crema</p>
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
-                            <button class="btn btn-danger shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item">
-                    <div class="bg-white text-center car-prueba m-4 p-3">
-                        <a href="/product"><img src="assets/img/E001S007866.jpg" class="p-3"></a>
-                        <h5 class="fw-bold price h6 mb-0">$297.00</h5>
-                        <p>Bambino tentación de fresa</p>
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
-                            <button class="btn btn-danger shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item">
-                    <div class="bg-white text-center car-prueba m-4 p-3">
-                        <a href="/product"><img src="assets/img/E001S011649.jpg" class="p-3"></a>
-                        <h5 class="fw-bold price mb-0">$297.00</h5>
-                        <p>Tentación de frutas</p>
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-primary shadow-none bg-orange rounded-1 me-1 add-cart">Agregar al carrito</button>
-                            <button class="btn btn-danger shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
+            <div class="owl-carousel owl-theme sellers" id="users">
+                
             </div>
         </div>
     </section>

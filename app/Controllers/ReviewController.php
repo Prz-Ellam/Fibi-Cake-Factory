@@ -4,6 +4,7 @@ namespace CakeFactory\Controllers;
 
 use CakeFactory\Models\Review;
 use CakeFactory\Repositories\ReviewRepository;
+use CakeFactory\Repositories\ShoppingRepository;
 use Fibi\Http\Request;
 use Fibi\Http\Response;
 use Fibi\Session\PhpSession;
@@ -31,6 +32,16 @@ class ReviewController
         $message = $request->getBody("message");
         $rate = $request->getBody("rate");
         $productId = $request->getRouteParams("productId");
+
+        $shoppingRepository = new ShoppingRepository();
+        $result = $shoppingRepository->exists($productId, $userId);
+        if (!$result) {
+            $response->setStatusCode(400)->json([
+                "status" => false,
+                "message" => "No ha comprado este producto"
+            ]);
+            return;
+        }
 
         $review = new Review();
         $review

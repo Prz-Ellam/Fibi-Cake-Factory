@@ -1,3 +1,34 @@
+function CarouselCard(product)
+{
+    var fmt = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    return /*html*/`
+    <div class="item">
+        <form class="text-center car-prueba p-4 m-4 rounded" id="add-cart">
+            <input type="hidden" name="product-id" value="${product.id}">
+            <input type="hidden" name="quantity" value="1">
+            <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
+            <h5 class="fw-bold price mb-0">${ (product.is_quotable) ? 'Cotizable' : fmt.format(product.price)}</h5>
+            <p>${product.name}</p>
+            ${ (product.userId === id) ?
+            `<div class="d-flex justify-content-center">
+                <a href="/update-product?search=${product.id}" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
+                <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
+            </div>`
+            :
+            `<div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
+                <button type="button" class="btn btn-danger shadow-none rounded-1 add-wishlist" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
+            </div>`
+            }
+        </form>
+    </div>
+    `;
+}
+
 function CommentComponent(comment) {
     return /*html*/`
     <div class="d-flex comment-component" id="${comment.id}">
@@ -40,11 +71,13 @@ function setRates(index) {
     }
 }
 
+var productOwnerId = null;
 $.ajax({
     url: `/api/v1/products/${productId || '0'}`,
     method: 'GET',
     async: false,
     success: function (response) {
+        productOwnerId = response.user;
         console.log(response);
         const product = response;
 
@@ -90,6 +123,18 @@ $.ajax({
             setRates(Number(product.rate));
         }
         $('.add-wishlists').val(product.id);
+
+        $.ajax({
+            url: `api/v1/users/${response.user}/products`,
+            method: 'GET',
+            async: false,
+            success: function(response) {
+                response.forEach(function(product) 
+                {
+                    $('#users').append(CarouselCard(product));
+                });
+            }
+        });
 
     }
 });
@@ -328,6 +373,17 @@ $(document).ready(function () {
                     });
                 })
 
+            },
+            error: function (response, status, error) {
+                const responseText = response.responseJSON;
+                if (!responseText.status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: responseText.message,
+                        confirmButtonColor: "#FF5E1F",
+                    });
+                }
             }
         });
 

@@ -16,7 +16,6 @@ class ProductRepository
     private const DELETE = "CALL sp_products_delete(:productId)";
     private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
     private const GET_ONE = "CALL sp_get_product(:productId)";
-    private const GET_RECENT_PRODUCTS = "CALL sp_get_recent_products()";
     private const FIND_ALL_BY_PENDING = "CALL sp_get_pending_products()";
 
     private const APPROVE = "CALL sp_product_approve(:productId, :userId)";
@@ -26,12 +25,13 @@ class ProductRepository
     private const GET_ALL_BY_USER_DENIED = "CALL sp_get_user_products_denied(:userId)";
     private const GET_ALL_BY_USER_PENDING = "CALL sp_get_user_products_pending(:userId)";
     // GET_ALL_BY_ADMIN_APPROVE
+    private const GET_ALL_BY_RECENT = "CALL sp_products_get_all_by_recents()";
     private const GET_ALL_BY_ALPHA = "CALL sp_products_get_all_by_alpha(:order, :filter, :limit, :offset, :categoryId)";
     private const GET_ALL_BY_RATE = "CALL sp_products_get_all_by_rate(:order, :filter, :limit, :offset, :categoryId)";
     private const GET_ALL_BY_PRICE = "CALL sp_products_get_all_by_price(:order, :filter, :limit, :offset, :categoryId)";
     private const GET_ALL_BY_SHIPS = "CALL sp_products_get_all_by_ships(:order, :filter, :limit, :offset, :categoryId)";
     private const GET_ALL_BY_CATEGORY = "CALL sp_products_get_all_by_category";
-    private const GET_ALL_BY_USER_RECOMENDATIONS = "CALL sp_products_get_all_by_user_recomendations";
+    private const GET_ALL_BY_USER_FAVORITES = "CALL sp_products_get_user_favorites(:userId)";
 
     private const GET_ALL_BY_APPROVED_BY = "CALL sp_products_get_all_by_approved_by(:approved_by)";
 
@@ -117,11 +117,6 @@ class ProductRepository
         ]);
     }
 
-    public function getRecentProducts()
-    {
-        return DB::executeReader(self::GET_RECENT_PRODUCTS, []) ?? [];
-    }
-
     public function findAllByPending() : array
     {
         return DB::executeReader(self::FIND_ALL_BY_PENDING);
@@ -141,6 +136,11 @@ class ProductRepository
             "productId" => $productId,
             "userId" => $userId
         ]) > 0;
+    }
+
+    public function getAllByRecent()
+    {
+        return DB::executeReader(self::GET_ALL_BY_RECENT, []) ?? [];
     }
 
     public function getAllByAlpha(string $order = "asc", ?string $filter = null, ?string $category = null) : array
@@ -191,6 +191,13 @@ class ProductRepository
     {
         return DB::executeReader(self::GET_ALL_BY_APPROVED_BY, [
             "approved_by" => $approvedBy
+        ]);
+    }
+
+    public function getAllByUserFavorites(string $userId): array
+    {
+        return DB::executeReader(self::GET_ALL_BY_USER_FAVORITES, [
+            "userId" => $userId
         ]);
     }
 

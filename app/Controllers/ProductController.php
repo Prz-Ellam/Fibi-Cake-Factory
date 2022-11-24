@@ -6,6 +6,7 @@ use CakeFactory\Models\Image;
 use CakeFactory\Models\Product;
 use CakeFactory\Models\ProductCategory;
 use CakeFactory\Models\Video;
+use CakeFactory\Repositories\CategoryRepository;
 use CakeFactory\Repositories\ImageRepository;
 use CakeFactory\Repositories\ProductCategoryRepository;
 use CakeFactory\Repositories\ProductRepository;
@@ -333,17 +334,6 @@ class ProductController extends Controller
             ->setMultimediaEntityId($productId)
             ->setMultimediaEntityType('products');
 
-        $validator = new Validator($video);
-        $feedback = $validator->validate();
-        $status = $validator->getStatus();
-        if (!$status) {
-            $response->setStatusCode(400)->json([
-                "response" => $status,
-                "message" => $feedback
-            ]);
-            return;
-        }
-
         $videoRepository = new VideoRepository();
         $result = $videoRepository->create($video);
         if (!$result) {
@@ -354,6 +344,47 @@ class ProductController extends Controller
             return;
         }
 
+        $categoryRepository = new CategoryRepository();
+        $categoryRepository->deleteCategoriesProduct($productId);
+        foreach ($categories as $categoryId) {
+
+            $productCategoryId = Uuid::uuid4()->toString();
+
+            $productCategory = new ProductCategory();
+            $productCategory
+                ->setProductCategoryId($productCategoryId)
+                ->setProductId($productId)
+                ->setCategoryId($categoryId);
+
+            $validator = new Validator($productCategory);
+            $feedback = $validator->validate();
+            $status = $validator->getStatus();
+            if (!$status) {
+                $response->json([
+                    "response" => $status,
+                    "data" => $feedback
+                ])->setStatusCode(400);
+                return;
+            }
+
+            $productCategoryRepository = new ProductCategoryRepository();
+            $result = $productCategoryRepository->create($productCategory);
+            if (!$result) {
+                $response->json(["response" => "No"])->setStatusCode(400);
+                return;
+            }
+        }
+
+        $validator = new Validator($video);
+        $feedback = $validator->validate();
+        $status = $validator->getStatus();
+        if (!$status) {
+            $response->setStatusCode(400)->json([
+                "response" => $status,
+                "message" => $feedback
+            ]);
+            return;
+        }
 
         $response->json([
             "status" => $result,
@@ -436,7 +467,6 @@ class ProductController extends Controller
             }
 
             $element["images"] = explode(',', $element["images"]);
-            $element["videos"] = explode(',', $element["videos"]);
         }
 
         $response->json($result);
@@ -503,15 +533,17 @@ class ProductController extends Controller
             case "alpha":
                 $products = $productRepository->getAllByAlpha($order, $search, $category);
                 break;
+            case "recents":
+                $products = $productRepository->getAllByRecent();
+                break;
+            case "favorites":
+                $products = $productRepository->getAllByUserFavorites($userId);
+                break;
             default:
                 $products = $productRepository->getAllByShips($order, $search, $category);
         }
 
         foreach ($products as &$element) {
-            //$element["categories"] = json_decode($element["categories"], true);
-            //foreach ($element["categories"] as &$category) {
-            //    $category = json_decode($category, true);
-            //}
 
             $element["images"] = explode(',', $element["images"]);
             //$element["videos"] = explode(',', $element["videos"]);
@@ -522,6 +554,7 @@ class ProductController extends Controller
 
     public function getRecentProducts(Request $request, Response $response)
     {
+        /*
         $productRepository = new ProductRepository();
         $result = $productRepository->getRecentProducts();
 
@@ -531,6 +564,7 @@ class ProductController extends Controller
         }
 
         $response->json($result);
+        */
     }
 
     public function getPendingProducts(Request $request, Response $response)

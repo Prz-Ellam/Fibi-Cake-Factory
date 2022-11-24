@@ -97,7 +97,7 @@
                     <label class="form-label tags-label" for="categories">Categorías</label>
                     <button type="button" class="btn btn-orange badge shadow-none ms-2" data-bs-toggle="modal" data-bs-target="#create-category">Crear categoría</button>
                     <div>
-                        <select id="categories" name="categories" multiple="multiple" placeholder="Seleccionar" width="100%">
+                        <select id="categories" name="categories[]" multiple="multiple" placeholder="Seleccionar" width="100%">
                         </select>
                     </div>
                 </div>

@@ -58,12 +58,12 @@ BEGIN
     UPDATE
         products
     SET
-        name            = IFNULL(_name, name),
-        description     = IFNULL(_description, description),
-        is_quotable     = IFNULL(_is_quotable, is_quotable),
-        price           = IFNULL(_price, price),
-        stock           = IFNULL(_stock, stock),
-        modified_at     = NOW()
+        name                = IFNULL(_name, name),
+        description         = IFNULL(_description, description),
+        is_quotable         = IFNULL(_is_quotable, is_quotable),
+        price               = IFNULL(_price, price),
+        stock               = IFNULL(_stock, stock),
+        modified_at         = NOW()
     WHERE
         BIN_TO_UUID(product_id) = _product_id
         AND active = TRUE;
@@ -84,8 +84,8 @@ BEGIN
     UPDATE
         products
     SET
-        active          = FALSE 
-        AND modified_at = NOW()
+        active              = FALSE 
+        AND modified_at     = NOW()
     WHERE
         BIN_TO_UUID(product_id) = _product_id;
 
@@ -237,6 +237,7 @@ BEGIN
         p.price,
         p.stock,
         p.approved,
+        BIN_TO_UUID(p.user_id) `user`,
         (SELECT IFNULL(ROUND(AVG(rate), 2), 'No reviews') FROM reviews WHERE BIN_TO_UUID(product_id) = _product_id AND active = TRUE) 'rate',
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(c.category_id)) categories,
         GROUP_CONCAT(DISTINCT c.name) categories_name,
@@ -279,9 +280,9 @@ DELIMITER ;
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS sp_get_recent_products $$
+DROP PROCEDURE IF EXISTS sp_products_get_all_by_recents $$
 
-CREATE PROCEDURE sp_get_recent_products()
+CREATE PROCEDURE sp_products_get_all_by_recents()
 BEGIN
 
     SELECT
@@ -318,7 +319,7 @@ BEGIN
         p.approved,
         p.user_id
     ORDER BY
-        p.created_at ASC;
+        p.created_at DESC;
 
 END $$
 DELIMITER ;
@@ -410,8 +411,9 @@ BEGIN
     UPDATE
         products
     SET
-        approved = TRUE,
-        approved_by = UUID_TO_BIN(_user_id)
+        approved        = TRUE,
+        approved_by     = UUID_TO_BIN(_user_id),
+        modified_at     = NOW()
     WHERE
         BIN_TO_UUID(product_id) = _product_id;
 
@@ -432,8 +434,9 @@ BEGIN
     UPDATE
         products
     SET
-        approved = FALSE,
-        approved_by = UUID_TO_BIN(_user_id)
+        approved        = FALSE,
+        approved_by     = UUID_TO_BIN(_user_id),
+        modified_at     = NOW()
     WHERE
         BIN_TO_UUID(product_id) = _product_id;
 
@@ -629,6 +632,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) id, 
         p.name, 
         p.price, 
+        p.is_quotable,
         IFNULL(SUM(s.quantity), 0) quantity,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images,
         BIN_TO_UUID(p.user_id) userId
@@ -677,6 +681,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) id,
         name,
         price,
+        is_quotable,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
@@ -716,6 +721,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) id,
         name,
         price,
+        is_quotable,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
         products AS p
@@ -755,6 +761,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) id,
         p.price,
         p.name,
+        p.is_quotable,
         IFNULL(AVG(r.rate), 'No reviews') rate,
         (SELECT GROUP_CONCAT(BIN_TO_UUID(image_id)) FROM images WHERE BIN_TO_UUID(multimedia_entity_id) = BIN_TO_UUID(p.product_id)) images
     FROM
@@ -833,3 +840,80 @@ BEGIN
 END $$
 DELIMITER ;
 
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_products_get_user_favorites $$
+
+CREATE PROCEDURE sp_products_get_user_favorites(
+    IN _user_id                     VARCHAR(36)
+)
+BEGIN
+
+    SELECT 
+        BIN_TO_UUID(p.product_id) `id`,
+        p.name,
+        p.is_quotable,
+        p.price,
+        p.stock,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
+        GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos,
+        BIN_TO_UUID(p.user_id) userId,
+        IFNULL(uf.percentage, 0) `percentage`
+    FROM 
+    (SELECT
+        BIN_TO_UUID(o.user_id) `user_id`,
+        BIN_TO_UUID(p.product_id) `product_id`,
+        p.name `product_name`,
+        (s.quantity / (SELECT SUM(quantity) FROM
+            shoppings AS s
+            INNER JOIN
+                orders AS o
+            ON
+                BIN_TO_UUID(s.order_id) = BIN_TO_UUID(o.order_id)
+            WHERE
+                BIN_TO_UUID(o.user_id) = _user_id)
+        ) `percentage`
+    FROM 
+        shoppings AS s
+    INNER JOIN
+        orders AS o
+    ON
+        BIN_TO_UUID(s.order_id) = BIN_TO_UUID(o.order_id)
+    INNER JOIN
+        products AS p
+    ON
+        BIN_TO_UUID(s.product_id) = BIN_TO_UUID(p.product_id)
+    WHERE
+        BIN_TO_UUID(o.user_id) = _user_id OR o.user_id IS NULL
+    GROUP BY
+        BIN_TO_UUID(s.product_id)) uf
+    RIGHT JOIN
+        products AS p
+    ON 
+        uf.product_id = BIN_TO_UUID(p.product_id)
+    LEFT JOIN
+        images AS i
+    ON
+        BIN_TO_UUID(i.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
+    LEFT JOIN
+        videos AS v
+    ON
+        BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
+    WHERE
+        p.active = TRUE
+        AND p.approved = TRUE
+    GROUP BY
+        p.product_id, 
+        p.name,
+        p.is_quotable, 
+        p.price, 
+        p.stock, 
+        p.user_id,
+        uf.percentage
+    ORDER BY 
+        uf.percentage DESC;
+
+END $$
+DELIMITER ;

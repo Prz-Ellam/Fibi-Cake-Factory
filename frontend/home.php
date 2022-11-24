@@ -51,7 +51,7 @@
             <h2 class="text-center h2 font-weight-bold text-brown">Basado en tus gustos</h2>
         </div>
         <hr>
-        <div class="owl-carousel owl-theme sellers" id="recomendations">
+        <div class="owl-carousel owl-theme sellers" id="favorites">
         </div>
     </div>
 </section>
