@@ -58,12 +58,11 @@ class UserRepository
         ]) > 0;
     }
 
-    public function delete(int $userId) : bool
+    public function delete(string $userId) : bool
     {
-        DB::executeNonQuery(self::DELETE, [
+        return DB::executeNonQuery(self::DELETE, [
             "userId"            => $userId
-        ]);
-        return true;
+        ]) > 0;
     }
 
     public function getOne(string $userId) : array

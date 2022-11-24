@@ -122,6 +122,30 @@ BEGIN
     WHERE
         BIN_TO_UUID(user_id) = _user_id;
 
+    UPDATE
+        products
+    SET
+        active          = FALSE,
+        modified_at     = NOW()
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id;
+
+    UPDATE
+        reviews
+    SET
+        active          = FALSE,
+        modified_at     = NOW()
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id;
+
+    UPDATE
+        wishlists
+    SET
+        active          = FALSE,
+        modified_at     = NOW()
+    WHERE
+        BIN_TO_UUID(user_id) = _user_id;
+
 END
 DELIMITER ;
 

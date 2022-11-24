@@ -189,8 +189,10 @@ class UserController extends Controller
                 return;
             }
 
-            $session->set("userId", $userId);
-            $session->set("role", $userRole);
+            $session->set('userId', $userId);
+            $session->set('loginOrEmail', $email);
+            $session->set('role', $userRole);
+            $session->set("visible", $visible);
         }
 
         DB::endTransaction();
@@ -349,6 +351,7 @@ class UserController extends Controller
         $passwordHashed = Crypto::bcrypt($newPassword);
 
         $result = $userRepository->updatePassword($userId, $passwordHashed);
+        
         if (!$result)
         {
             $response->setStatusCode(400)->json([ 
@@ -376,6 +379,38 @@ class UserController extends Controller
      */
     public function delete(Request $request, Response $response): void
     {
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+
+        $userRouteId = $request->getRouteParams("userId");
+
+        if ($userId !== $userRouteId) {
+            $response->setStatusCode(404)->json([
+                "status" => false,
+                "message" => "No se pudo encontrar el recurso"
+            ]);
+            return;
+        }
+
+        $imageRepository = new ImageRepository();
+        $imageRepository->deleteMultimediaEntityImages($userId, 'users');
+
+        $userRepository = new UserRepository();
+        $result = $userRepository->delete($userId);
+        /*
+        if (!$result) {
+            $response->setStatusCode(400)->json([
+                "status" => false,
+                "message" => "No se pudo eliminar el usuario"
+            ]);
+            return;
+        }
+        */
+
+        $response->json([
+            "status" => true,
+            "message" => "El usuario se elimino"
+        ]);
     }
 
     /**

@@ -233,6 +233,30 @@ $(document).ready(function () {
 
     });
 
+    $('#delete').on('click', function(e) {
+        
+        e.preventDefault();
+
+        fetch(`/api/v1/users/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(response => {
+            if (response.status) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Completado!',
+                    text: response.message,
+                    confirmButtonColor: "#FF5E1F",
+                })
+                .then(() => {
+                    window.location.href = '/logout';
+                });
+            }
+        })
+
+    });
+
     $('#profile-picture').on('change', function (e) {
 
         const files = Array.from(this.files);

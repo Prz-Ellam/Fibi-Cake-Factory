@@ -215,9 +215,9 @@ $user = $userRepository->getOne($userId);
                 </div>
 
                 <hr class="mb-4">
-
-                <button class="btn btn-danger w-100">Eliminar perfil</button>
-
+<?php if ($user["userRole"] !== "Super Administrador"): ?>
+                <button class="btn btn-danger w-100" id="delete">Eliminar perfil</button>
+<?php endif ?>
             </form>
         </div>
     </div>

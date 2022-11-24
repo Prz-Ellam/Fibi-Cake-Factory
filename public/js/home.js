@@ -32,7 +32,7 @@ function CarouselCard(product)
             </div>`
             :
             `<div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-orange shadow-none rounded-1 me-1 add-cart">Agregar al carrito</button>
+                <button type="submit" class="btn btn-orange shadow-none rounded-1 me-1 add-cart">${ (product.price === 'Cotizable') ? 'Solicitar cotizacion' : 'Agregar al carrito' }</button>
                 <button type="button" class="btn btn-danger shadow-none rounded-1 add-wishlist" data-bs-toggle="modal" data-bs-target="#select-wishlist"><i class="fa fa-heart"></i></button>
             </div>`
             }

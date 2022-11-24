@@ -10,7 +10,6 @@ if (!$userId) return;
 $userRepository = new UserRepository();
 $user = $userRepository->getOne($userId);
 
-//var_dump($user);
 
 ?>
 <header class="fixed-top sticky-top">
