@@ -123,7 +123,7 @@ class WishlistObjectController extends Controller
         }
 
         $wishlistObjectRepository = new WishlistObjectRepository();
-        $wishlistObjects = $wishlistObjectRepository->getWishlistObjects($wishlistId);
+        $wishlistObjects = $wishlistObjectRepository->getWishlistObjects($wishlistId, $userId);
 
         foreach ($wishlistObjects as &$wishlistObject) {
             $wishlistObject["images"] = explode(',', $wishlistObject["images"]);

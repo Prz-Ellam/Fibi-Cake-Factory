@@ -109,17 +109,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <ul class="list-group" id="wishlists-list">
-                </ul>
-                <nav aria-label="Page navigation" class="mt-4 text-center d-flex justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Anterior</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Siguiente</a></li>
-                    </ul>
-                </nav>
+                <ul class="list-group" id="wishlists-list"></ul>
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary rounded-1 shadow-none" data-bs-dismiss="modal">Cancelar</button>
@@ -146,9 +136,6 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/48ce36e499.js" crossorigin="anonymous"></script>
 
-    <!-- Intro JS -->
-    <script src="https://unpkg.com/intro.js/minified/intro.min.js" type="text/javascript"></script>
-
     <!-- Owl Carousel -->
     <script src="vendor/node_modules/owl.carousel/dist/owl.carousel.min.js"></script>
 
@@ -156,7 +143,7 @@
     <script src="vendor/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
     <!-- JavaScript -->
-    <script type="text/javascript" src="./js/home.js"></script>
+    <script type="module" src="./js/home.js"></script>
 </body>
 
 </html>

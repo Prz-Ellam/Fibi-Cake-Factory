@@ -112,7 +112,7 @@ BEGIN
         p.name,
         p.description,
         p.is_quotable,
-        p.price,
+        IF(p.is_quotable = 1, 'Cotizable', p.price) `price`,
         p.stock,
         p.approved,
         JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
@@ -168,7 +168,8 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_user_products $$
 
 CREATE PROCEDURE sp_get_user_products(
-    IN _user_id                 VARCHAR(36)
+    IN _user_id                 VARCHAR(36),
+    IN _client_id               VARCHAR(36)
 )
 BEGIN
 
@@ -177,7 +178,7 @@ BEGIN
         p.name,
         p.description,
         p.is_quotable,
-        p.price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         p.stock,
         p.approved,
         JSON_ARRAY(GROUP_CONCAT(DISTINCT JSON_OBJECT('id', BIN_TO_UUID(c.category_id), 'name', c.name))) categories,
@@ -201,6 +202,17 @@ BEGIN
         videos AS v
     ON
         p.product_id = v.multimedia_entity_id
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _client_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         BIN_TO_UUID(p.user_id) = _user_id
         AND p.active = TRUE
@@ -225,7 +237,8 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_product $$
 
 CREATE PROCEDURE sp_get_product(
-    IN _product_id                 VARCHAR(36)
+    IN _product_id                 VARCHAR(36),
+    IN _user_id                    VARCHAR(36)
 )
 BEGIN
 
@@ -234,7 +247,7 @@ BEGIN
         p.name,
         p.description,
         p.is_quotable,
-        p.price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         p.stock,
         p.approved,
         BIN_TO_UUID(p.user_id) `user`,
@@ -261,6 +274,17 @@ BEGIN
         videos AS v
     ON
         p.product_id = v.multimedia_entity_id
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         BIN_TO_UUID(p.product_id) = _product_id
         AND p.active = TRUE
@@ -922,7 +946,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) `id`,
         p.name,
         p.is_quotable,
-        p.price,
+        IF(p.is_quotable = 1, IFNULL(c.q_price, 'Cotizable'), p.price) `price`,
         p.stock,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(i.image_id)) images,
         GROUP_CONCAT(DISTINCT BIN_TO_UUID(v.video_id)) videos,
@@ -968,6 +992,17 @@ BEGIN
         videos AS v
     ON
         BIN_TO_UUID(v.multimedia_entity_id) = BIN_TO_UUID(p.product_id)
+    LEFT JOIN
+        (SELECT
+            BIN_TO_UUID(product_id) `q_product_id`, 
+            BIN_TO_UUID(user_id) `q_user_id`, 
+            price `q_price`
+        FROM
+            quotes
+        WHERE
+            BIN_TO_UUID(user_id) = _user_id) c
+    ON
+        BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         p.active = TRUE
         AND p.approved = TRUE

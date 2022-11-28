@@ -1,17 +1,7 @@
-function WishlistItem(wishlist) {
-    return /*html*/`
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>
-            <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
-            ${wishlist.name}
-            </span>
-        <input class="custom-control-input form-check-input shadow-none me-1" name="wishlists[]" type="checkbox" value="${wishlist.id}" aria-label="...">
-    </li>
-    `;
-}
+import { getSession } from "./utils/session.js";
+import { WishlistItem } from "./views/wishlist-list.js";
 
-function CarouselCard(product)
-{
+function CarouselCard(product) {
     var fmt = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -42,23 +32,13 @@ function CarouselCard(product)
 }
 
 
-var id;
-$.ajax({
-    url: 'api/v1/session',
-    method: 'GET',
-    async: false,
-    success: function(response) {
-        id = response.id;
-    }
-});
-
+var id = getSession();
 $.ajax({
     url: `api/v1/products?filter=rates&order=desc`,
     method: 'GET',
     async: false,
     success: function(response) {
-        response.forEach(function(product) 
-        {
+        response.forEach(product => {
             $('#rates').append(CarouselCard(product));
         });
     }
@@ -69,8 +49,7 @@ $.ajax({
     method: 'GET',
     async: false,
     success: function(response) {
-        response.forEach(function(product) 
-        {
+        response.forEach(product => {
             $('#recents').append(CarouselCard(product));
         });
     }
@@ -81,9 +60,7 @@ $.ajax({
     method: 'GET',
     async: false,
     success: function(response) {
-        console.log(response);
-        response.forEach(function(product) 
-        {
+        response.forEach(product => {
             $('#favorites').append(CarouselCard(product));
         });
     }
@@ -94,9 +71,7 @@ $.ajax({
     method: 'GET',
     async: false,
     success: function(response) {
-        console.log(response);
-        response.forEach(function(product) 
-        {
+        response.forEach(product => {
             $('#sellers').append(CarouselCard(product));
         });
     }
@@ -106,7 +81,7 @@ $.ajax({
     url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
     success: function(response) {
-        response.wishlists.forEach(function(wishlist) {
+        response.wishlists.forEach(wishlist => {
             $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }
@@ -135,26 +110,22 @@ $(document).ready(function() {
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-
-                console.log(response);
-
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Tu producto ha sido añadido al carrito'
-                });
-                
+                if (response.status) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.message
+                    });
+                }
             }
         });
 
     });
 
     $(document).on('click', '.add-wishlist', function() {
-        console.log($(this).parent().parent().find('[name="product-id"]').val());
         $('#wishlist-product-id').val($(this).parent().parent().find('[name="product-id"]').val());
     });
 
     $('#add-wishlists').submit(function(event) {
-
         event.preventDefault();
 
         const modal = document.getElementById('select-wishlist');
@@ -165,12 +136,12 @@ $(document).ready(function() {
             url: `api/v1/wishlist-objects`,
             method: 'POST',
             data: $(this).serialize(),
-            success: function(response) {
-                console.log(response);
+            success: response => {
+                $(this)[0].reset();
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu producto ha sido añadido a las listas de deseos'
-                })
+                });
             }
         });
     

@@ -32,7 +32,7 @@ $user = $userRepository->getOne($userId);
             </a>
         </li>
         <li class="list-item rounded-1">
-            <a href="/categories" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
+            <a href="/profile" class="fs-6 text-white text-decoration-none d-flex justify-content-between px-2 py-2 mb-1">
                 <span><i class="fas fa-border-all me-2"></i>Perfil</span>
                 <span></span>
             </a>

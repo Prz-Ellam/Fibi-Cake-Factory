@@ -31,14 +31,26 @@ $user = $userRepository->getOne($userId);
 
     <!-- CSS -->
     <link rel="stylesheet" href="./styles/colors.css">
+<?php if ($user["userRole"] === "Vendedor" || $user["userRole"] === "Comprador") { ?>
     <link rel="stylesheet" href="./styles/navbar.css">
+    <link rel="stylesheet" href="./styles/footer.css">
+<?php } ?>
+
     <link rel="stylesheet" href="./styles/layout.css">
     <link rel="stylesheet" href="./styles/profile-picture.css">
-    <link rel="stylesheet" href="./styles/footer.css">
+
+<?php if ($user["userRole"] === "Administrador" || $user["userRole"] === "Super Administrador") { ?>
+    <link rel="stylesheet" href="./styles/admin.css">
+<?php } ?>
 </head>
 <body>
+<?php if ($user["userRole"] === "Administrador" || $user["userRole"] === "Super Administrador") { ?>
+    <div class="main-container d-flex">
+        @sidebar
+        <div class="bg-light content">
+<?php } else if ($user["userRole"] === "Vendedor" || $user["userRole"] === "Comprador") { ?>
     @navbar
-
+<?php } ?>
     <div class="container my-4">
         <div class="row d-flex justify-content-center">
             <form class="form bg-white rounded p-5 col-xl-6 col-lg-6 col-md-7" id="profile-form" novalidate>
@@ -222,7 +234,14 @@ $user = $userRepository->getOne($userId);
         </div>
     </div>
 
+    <?php if ($user["userRole"] === "Administrador" || $user["userRole"] === "Super Administrador") { ?>
+    </div>
+    </div>
+        <?php } ?>
+
+<?php if ($user["userRole"] === "Vendedor" || $user["userRole"] === "Comprador") { ?>
     @footer
+<?php } ?>
 
     <!-- jQuery 3.6.0 -->
     <script src="vendor/node_modules/jquery/dist/jquery.min.js"></script>

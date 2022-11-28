@@ -30,67 +30,6 @@
         @sidebar
         <div class="bg-light content">
             <div class=" container-fluid my-4">
-
-                <button class="btn d-inline d-sm-none position-relative btn-side-bar"><i class="fas fa-bars"></i></button>
-
-                <h1 class="text-center">Dashboard</h1>
-                <hr>
-                <div class="row mb-3">
-
-                    <div class="col-md-4 col-xl-3 mb-3">
-                        <div class="card bg-primary order-card p-3 border-0">
-                            <div class="card-block">
-                                <h5 class="text-white">Ordenes</h5>
-                                <div class="d-flex justify-content-between">
-                                    <h2 class="text-white">486</h2>
-                                    <h1 class="text-white"><i class="fa fa-shopping-bag me-2"></i></h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 col-xl-3 mb-3">
-                        <div class="card bg-success order-card p-3 border-0">
-                            <div class="card-block">
-                                <h5 class="text-white">Usuarios registrados</h5>
-                                <div class="d-flex justify-content-between">
-                                    <h2 class="text-white">210</h2>
-                                    <h1 class="text-white"><i class="fas fa-users"></i></h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 col-xl-3 mb-3">
-                        <div class="card bg-warning order-card p-3 border-0">
-                            <div class="card-block">
-                                <h5 class="text-white">Productos registrados</h5>
-                                <div class="d-flex justify-content-between">
-                                    <h2 class="text-white">310</h2>
-                                    <h1 class="text-white"><i class="fas fa-box"></i></h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 col-xl-3 mb-3">
-                        <div class="card bg-danger order-card p-3 border-0">
-                            <div class="card-block">
-                                <h5 class="text-white">Categorias</h5>
-                                <div class="d-flex justify-content-between">
-                                    <h2 class="text-white">20</h2>
-                                    <h1 class="text-white"><i class="fas fa-border-all"></i></h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-10 col-12">
-                        <canvas id="orders-chart"></canvas>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

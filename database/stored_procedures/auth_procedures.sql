@@ -20,11 +20,11 @@ BEGIN
     ON
         BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
     WHERE
-        email = _loginOrEmail 
-        OR username = _loginOrEmail;
+        (email = _loginOrEmail 
+        OR username = _loginOrEmail)
+        AND u.active = TRUE;
 
 END$$
-
 DELIMITER ;
 
 

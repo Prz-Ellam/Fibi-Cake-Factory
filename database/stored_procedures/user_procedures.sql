@@ -265,7 +265,8 @@ BEGIN
         BIN_TO_UUID(u.user_role) = BIN_TO_UUID(ur.user_role_id)
     WHERE
         u.username LIKE CONCAT('%', _filter, '%')
-        AND BIN_TO_UUID(u.user_id) != _except;
+        AND BIN_TO_UUID(u.user_id) != _except
+        AND u.active = TRUE;
 END $$
 DELIMITER ;
 

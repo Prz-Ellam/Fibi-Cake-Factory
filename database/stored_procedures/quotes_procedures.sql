@@ -113,7 +113,8 @@ CREATE PROCEDURE sp_quotes_get_by_user_product(
 BEGIN
 
     SELECT
-        COUNT(*) `count`
+        BIN_TO_UUID(quote_id) `quote_id`,
+        price `price`
     FROM
         quotes
     WHERE

@@ -1,3 +1,5 @@
+import { WishlistItem } from './views/wishlist-list.js';
+
 function CarouselCard(product)
 {
     var fmt = new Intl.NumberFormat('en-US', {
@@ -11,7 +13,7 @@ function CarouselCard(product)
             <input type="hidden" name="product-id" value="${product.id}">
             <input type="hidden" name="quantity" value="1">
             <a href="/product?search=${product.id}"><img src="/api/v1/images/${product.images[0]}" class="p-3"></a>
-            <h5 class="fw-bold price mb-0">${ (product.is_quotable) ? 'Cotizable' : fmt.format(product.price)}</h5>
+            <h5 class="fw-bold price mb-0">${(product.price === 'Cotizable') ? product.price : fmt.format(product.price)}</h5>
             <p>${product.name}</p>
             ${ (product.userId === id) ?
             `<div class="d-flex justify-content-center">
@@ -94,7 +96,7 @@ $.ajax({
         });
         $('#category').text(data);
 
-        $('#price').text((product.is_quotable) ? 'Cotizable' : fmt.format(product.price));
+        $('#price').text((product.price === 'Cotizable') ? product.price : fmt.format(product.price));
         $('#rate-number').text(product.rate);
         $('#description').text(product.description);
         $('#zoom').attr('src', 'api/v1/images/' + product.images[0]);
@@ -129,8 +131,7 @@ $.ajax({
             method: 'GET',
             async: false,
             success: function(response) {
-                response.forEach(function(product) 
-                {
+                response.forEach(product => {
                     $('#users').append(CarouselCard(product));
                 });
             }
@@ -143,32 +144,17 @@ $.ajax({
     url: `/api/v1/products/${productId}/comments`,
     method: 'GET',
     success: function (response) {
-        response.forEach((comment) => {
+        response.forEach(comment => {
             $('#comment-section').append(CommentComponent(comment));
         })
     }
 });
 
-
-
-function WishlistItem(wishlist)
-{
-    return /*html*/`
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>
-            <img src="api/v1/images/${wishlist.images[0]}" class="img-fluid" alt="lay" style="max-width: 128px">
-            ${wishlist.name}
-            </span>
-        <input class="custom-control-input form-check-input shadow-none me-1" name="wishlists[]" type="checkbox" value="${wishlist.id}" aria-label="...">
-    </li>
-    `;
-}
-
 $.ajax({
     url: `api/v1/users/${id}/wishlists`,
     method: 'GET',
     success: function(response) {
-        response.wishlists.forEach(function(wishlist) {
+        response.wishlists.forEach(wishlist => {
             $('#wishlists-list').append(WishlistItem(wishlist));
         });
     }
@@ -337,14 +323,13 @@ $(document).ready(function () {
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                console.log(response);
+                $(this)[0].reset();
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Tu producto ha sido añadido a las listas de deseos'
+                });
             }
         });
-        
-        Toast.fire({
-            icon: 'success',
-            title: 'Tu producto ha sido añadido a las listas de deseos'
-        })
     });
 
     $('#create-review-form').submit(function (event) {

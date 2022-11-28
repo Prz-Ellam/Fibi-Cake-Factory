@@ -47,7 +47,7 @@ class QuoteRepository
             "productId"     => $productId
         ]);
 
-        return $result[0]["count"] ?? false;
+        return $result[0] ?? [];
 
     }
 }

@@ -14,8 +14,8 @@ class ProductRepository
     
     private const UPDATE = "CALL sp_products_update(:productId, :name, :description, :isQuotable, :price, :stock)";
     private const DELETE = "CALL sp_products_delete(:productId)";
-    private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId)";
-    private const GET_ONE = "CALL sp_get_product(:productId)";
+    private const GET_USER_PRODUCTS = "CALL sp_get_user_products(:userId, :clientId)";
+    private const GET_ONE = "CALL sp_get_product(:productId, :userId)";
     private const FIND_ALL_BY_PENDING = "CALL sp_get_pending_products()";
 
     private const APPROVE = "CALL sp_product_approve(:productId, :userId)";
@@ -78,19 +78,21 @@ class ProductRepository
         return $result > 0;
     }
 
-    public function getProduct(string $productId)
+    public function getProduct(string $productId, string $userId)
     {
         $result = DB::executeReader(self::GET_ONE, [
-            "productId" => $productId
+            "productId" => $productId,
+            "userId" => $userId
         ]);
 
         return $result;
     }
 
-    public function getUserProducts(string $userId)
+    public function getUserProducts(string $userId, string $clientId)
     {
         $result = DB::executeReader(self::GET_USER_PRODUCTS, [
-            "userId" => $userId
+            "userId" => $userId,
+            "clientId" => $clientId
         ]);
 
         return $result;

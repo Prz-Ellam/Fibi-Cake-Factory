@@ -25,7 +25,7 @@ class ShoppingCartItemController extends Controller
         $userId = (new PhpSession())->get('userId');
 
         $productRepository = new ProductRepository();
-        $product = $productRepository->getProduct($productId)[0];
+        $product = $productRepository->getProduct($productId, $userId)[0];
         if (!$product) {
             $response->json([
                 "status" => false,
@@ -43,7 +43,8 @@ class ShoppingCartItemController extends Controller
         }
 
         $quoteRepository = new QuoteRepository();
-        $isInQuote = $quoteRepository->getByUserProduct($userId, $productId);
+        $quote = $quoteRepository->getByUserProduct($userId, $productId);
+        $isInQuote = ($quote !== []);
         
         if ($product["is_quotable"] && !$isInQuote) {
 
@@ -57,7 +58,17 @@ class ShoppingCartItemController extends Controller
             $quoteRepository = new QuoteRepository();
             $quoteRepository->create($quote);
 
-            $response->json("Este es cotizable");
+            $response->json([
+                "status" => true,
+                "message" => "Se ha solicitado una cotización del producto"
+            ]);
+            return;
+        }
+        else if ($quote["price"] === null) {
+            $response->json([
+                "status" => true,
+                "message" => "Ya se ha solicitado una cotización del producto"
+            ]);
             return;
         }
 
@@ -74,7 +85,10 @@ class ShoppingCartItemController extends Controller
         $shoppingCartItemRepository = new ShoppingCartItemRepository();
         $result = $shoppingCartItemRepository->addShoppingCartItem($shoppingCartItem);
 
-        $response->json([$result]);
+        $response->json([
+            "status" => true,
+            "message" => "Su producto ha sido añadido al carrito"
+        ]);
     }
 
     public function addItemQuantity(Request $request, Response $response)
@@ -84,6 +98,8 @@ class ShoppingCartItemController extends Controller
 
     public function update(Request $request, Response $response): void
     {
+        $userId = (new PhpSession())->get('userId');
+        
         $shoppingCartItemId = $request->getRouteParams("shoppingCartItemId");
         $quantity = $request->getBody("quantity");
 
@@ -96,7 +112,7 @@ class ShoppingCartItemController extends Controller
 
         $productId = $shoppingCartItemRepository->getProductId($shoppingCartItemId);
         $productRepository = new ProductRepository();
-        $product = $productRepository->getProduct($productId)[0];
+        $product = $productRepository->getProduct($productId, $userId)[0];
         if (!$product) {
             $response->json([
                 "status" => false,

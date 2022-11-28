@@ -49,7 +49,7 @@ use CakeFactory\Repositories\UserRepository;
                             src=""
                             alt="Profile picture"
                             class="me-3 rounded-circle p-0 col-md-6 col-sm-12"
-                            style="width: 128px; height: 128px;"
+                            style="width: 128px; height: 128px; object-fit:cover"
                             id="profile-picture"
                         >
                         <!-- Body -->

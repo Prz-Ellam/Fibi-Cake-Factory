@@ -179,6 +179,7 @@ $(document).ready(function() {
             return;
         }
 
+        $('#submit').attr('disabled');
         $.ajax({
             method: 'POST',
             url: '/api/v1/products',
@@ -187,12 +188,14 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             success: function(response) {
-                console.log(response);
+                $('#submit').removeAttr('disabled');
 
                 if (response.status) {
-                    Toast.fire({
+                    Swal.fire({
                         icon: 'success',
-                        title: response.message
+                        title: '¡Completado!',
+                        text: response.message,
+                        confirmButtonColor: "#FF5E1F",
                     }).then(result => {
                         window.location.href = '/home';
                     });

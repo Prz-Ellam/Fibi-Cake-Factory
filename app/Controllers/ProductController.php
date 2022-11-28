@@ -214,7 +214,7 @@ class ProductController extends Controller
 
         $response->json([
             "status" => $result,
-            "message" => "El producto ha sido creada con éxito"
+            "message" => "El producto ha sido creado con éxito"
         ]);
     }
 
@@ -452,13 +452,21 @@ class ProductController extends Controller
      */
     public function getUserProducts(Request $request, Response $response)
     {
-        //$userId = (new PhpSession())->get('user_id');
+        $clientId = (new PhpSession())->get('userId');
+        if (!$clientId) {
+            $response->setStatusCode(401)->json([
+                "status" => false,
+                "message" => "Unauthorized"
+            ]);
+            return;
+        }
+
         $userId = $request->getRouteParams("userId");
 
         // TODO: Validar que coincida con la sesión
 
         $productRepository = new ProductRepository();
-        $result = $productRepository->getUserProducts($userId);
+        $result = $productRepository->getUserProducts($userId, $clientId);
 
         foreach ($result as &$element) {
             $element["categories"] = json_decode($element["categories"], true);
@@ -481,10 +489,20 @@ class ProductController extends Controller
      */
     public function getProduct(Request $request, Response $response)
     {
+        $session = new PhpSession();
+        $userId = $session->get("userId");
+        if (!$userId) {
+            $response->setStatusCode(401)->json([
+                "status" => false,
+                "message" => "Unauthorized"
+            ]);
+            return;
+        }
+
         $productId = $request->getRouteParams("productId");
 
         $productRepository = new ProductRepository();
-        $product = $productRepository->getProduct($productId);
+        $product = $productRepository->getProduct($productId, $userId);
 
         if ($product === []) {
             $response->json((object)null);
@@ -540,7 +558,7 @@ class ProductController extends Controller
                 $products = $productRepository->getAllByUserFavorites($userId);
                 break;
             default:
-                $products = $productRepository->getAllByShips($order, $search, $category);
+                $products = $productRepository->getAllByShips($userId, $order, $search, $category);
         }
 
         foreach ($products as &$element) {

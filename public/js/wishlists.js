@@ -208,11 +208,11 @@ $(document).ready(function () {
                     method: 'DELETE',
                     success: function (response) {
 
-                        fetch(`api/v1/users/${id}/wishlists`)
+                        fetch(`api/v1/users/${id}/wishlists?page=${page}`)
                             .then(response => response.json())
                             .then(response => {
                                 $('#wishlist-container').empty();
-                                const html = template(response);
+                                const html = template(response.wishlists);
                                 $('#wishlist-container').append(html);
                                 var carouselsDOM = document.querySelectorAll('.carousel');
                                 carouselsDOM.forEach(carouselDOM => {
@@ -373,7 +373,7 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response, status, headers) {
 
-                    fetch(`api/v1/users/${id}/wishlists?page=${page}&count=${count}`)
+                    fetch(`api/v1/users/${id}/wishlists?page=${page}`)
                         .then(response => response.json())
                         .then(response => {
                             $('#wishlist-container').empty();
