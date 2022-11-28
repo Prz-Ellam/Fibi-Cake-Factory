@@ -159,15 +159,6 @@
                 </div>
                 <div class="modal-body">
                     <ul class="list-group" id="wishlists-list"></ul>
-                    <nav aria-label="Page navigation" class="mt-4 text-center d-flex justify-content-center">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Anterior</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link text-brown shadow-none" href="#">Siguiente</a></li>
-                        </ul>
-                    </nav>
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-secondary rounded-1 shadow-none" data-bs-dismiss="modal">Cancelar</button>

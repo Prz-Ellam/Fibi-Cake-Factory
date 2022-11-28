@@ -6,5 +6,5 @@ public/*.png
 public/*.webp
 public/*.js
 public/*.html
-vendor
+/vendor
 .env
