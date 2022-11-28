@@ -4,6 +4,10 @@ export function updateProductValidator(id) {
         return (element.files.length >= Number(parameter));
     }, 'Please complete the input file');
 
+    $.validator.addMethod('maxfiles', function(value, element, parameter) {
+        return (element.files.length <= Number(parameter));
+    }, 'Too many files');
+
     $.validator.addMethod('filesize', function (value, element, parameter) {
 
         let result;
@@ -35,7 +39,8 @@ export function updateProductValidator(id) {
                 min: 1
             },
             'images[]': {
-                fileCount: 3
+                fileCount: 3,
+                maxfiles: 3
             },
             'video': {
                 required: true,

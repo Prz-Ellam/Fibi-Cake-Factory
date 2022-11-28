@@ -28,6 +28,8 @@ $.ajax({
         $('#stock').val(response.stock);
         if (response.is_quotable) {
             $('#cotizar').attr('checked', '');
+            $('#price').attr('disabled', 'true');
+            $('#price').val('0.00');
         }
         else {
             $('#vender').attr('checked', '');

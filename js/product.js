@@ -292,15 +292,20 @@ $(document).ready(function () {
         })
         .then(response => response.json())
         .then(response => {
-
-            console.log(response);
-            Toast.fire({
-                icon: 'success',
-                title: 'Tu producto ha sido añadido al carrito'
-            });
-
+            if (response.status) {
+                console.log(response);
+                Toast.fire({
+                    icon: 'success',
+                    title: response.message
+                });
+            }
+            else {
+                Toast.fire({
+                    icon: 'error',
+                    title: response.message
+                });
+            }
         });
-
     });
 
     $(document).on('click', '.add-wishlists', function() {

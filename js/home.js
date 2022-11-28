@@ -18,7 +18,7 @@ function CarouselCard(product) {
             ${ (product.userId === id) ?
             `<div class="d-flex justify-content-center">
                 <a href="/update-product?search=${product.id}" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
-                <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
+                <button class="btn btn-red btn-delete shadow-none rounded-1" value="${product.id}">Eliminar</button>
             </div>`
             :
             `<div class="d-flex justify-content-center">
@@ -101,6 +101,16 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('click', '.btn-delete', function(event) {
+        event.preventDefault();
+        const id = $(this).val();
+        fetch(`/api/v1/products/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(res => window.location.href = '/');
+    })
+
     $(document).on('submit', '#add-cart', function(event) {
 
         event.preventDefault();
@@ -114,6 +124,15 @@ $(document).ready(function() {
                     Toast.fire({
                         icon: 'success',
                         title: response.message
+                    });
+                }
+            },
+            error: function (response, status, error) {
+                const responseText = response.responseJSON;
+                if (!responseText.status) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: responseText.message
                     });
                 }
             }

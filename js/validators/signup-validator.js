@@ -15,7 +15,7 @@ export function signupValidator(id) {
 
     // Username
     $.validator.addMethod("username", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}$/.test(value);
+        return this.optional(element) || /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){2,18}$/.test(value);
     }, 'Please enter a valid username');
 
     // Data size (no puede pesar mas de 8MB)
