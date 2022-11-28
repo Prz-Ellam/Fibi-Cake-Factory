@@ -35,12 +35,9 @@ require_once("../vendor/autoload.php");
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
-
-
 //$startup = new Startup();
 //$startup->load();
 //die;
-
 
 $app = Application::app();
 
@@ -53,10 +50,9 @@ if ($uri[strlen($uri) - 1] === "/")
 $app->get('/', function(Request $request, Response $response) {
 
     $session = new PhpSession();
-
     $login = $session->has('userId');
 
-    if ($login === true)
+    if ($login)
     {
         $response->redirect('/home');
         return;

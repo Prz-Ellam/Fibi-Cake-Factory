@@ -1,0 +1,5 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !(assets|layouts|styles|js|vendor)
+
+RewriteRule ^(.*)$ public/index.php?path=$1 [NC,L,QSA]

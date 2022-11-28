@@ -43,8 +43,7 @@ $.ajax({
     async: false,
     success: function(response)
     {
-        response.forEach((element) => 
-        {
+        response.forEach(element => {
             $('#table-body-2').append(/*html*/`
                 <tr>
                     <td>${element.date}</td>
@@ -116,7 +115,6 @@ $(document).ready(function() {
             success: function(response) {
                 detailedSalesReport.clear();
                 response.forEach(element => {
-
                     detailedSalesReport.row.add([
                         element.date,
                         element.categories,
@@ -135,10 +133,8 @@ $(document).ready(function() {
             url: `/api/v1/reports/sales-report2?${query.toString()}`,
             method: 'GET',
             success: function(response) {
-                console.log(response);
                 groupSalesReport.clear();
                 response.forEach(element => {
-
                     groupSalesReport.row.add([
                         element.date,
                         element.category,

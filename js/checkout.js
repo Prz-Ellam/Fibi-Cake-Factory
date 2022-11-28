@@ -262,7 +262,6 @@ $(document).ready(function() {
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                
                 Swal.fire({
                     title: '¡Gracias por su compra!',
                     text: '¡Que tenga un bonito día! ',
@@ -276,7 +275,6 @@ $(document).ready(function() {
                 }).then(function() {
                     window.location.href = '/home';
                 });
-
             }
         });
 

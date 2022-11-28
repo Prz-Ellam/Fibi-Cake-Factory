@@ -46,30 +46,31 @@ class ShoppingCartItemController extends Controller
         $quote = $quoteRepository->getByUserProduct($userId, $productId);
         $isInQuote = ($quote !== []);
         
-        if ($product["is_quotable"] && !$isInQuote) {
+        if ($product["is_quotable"] ) {
+            if (!$isInQuote) {
+                // Crear una cotizacion 
+                $quote = new Quote();
+                $quote
+                    ->setQuoteId(Uuid::uuid4()->toString())
+                    ->setUserId($userId)
+                    ->setProductId($productId);
 
-            // Crear una cotizacion 
-            $quote = new Quote();
-            $quote
-                ->setQuoteId(Uuid::uuid4()->toString())
-                ->setUserId($userId)
-                ->setProductId($productId);
+                $quoteRepository = new QuoteRepository();
+                $quoteRepository->create($quote);
 
-            $quoteRepository = new QuoteRepository();
-            $quoteRepository->create($quote);
-
-            $response->json([
-                "status" => true,
-                "message" => "Se ha solicitado una cotización del producto"
-            ]);
-            return;
-        }
-        else if ($quote["price"] === null) {
-            $response->json([
-                "status" => true,
-                "message" => "Ya se ha solicitado una cotización del producto"
-            ]);
-            return;
+                $response->json([
+                    "status" => true,
+                    "message" => "Se ha solicitado una cotización del producto"
+                ]);
+                return;
+            }
+            else if ($quote["price"] === null) {
+                $response->json([
+                    "status" => true,
+                    "message" => "Ya se ha solicitado una cotización del producto"
+                ]);
+                return;
+            }
         }
 
         $shoppingCartRepository = new ShoppingCartRepository();

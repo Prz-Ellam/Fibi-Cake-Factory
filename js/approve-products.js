@@ -1,7 +1,6 @@
 $.ajax({
     url: '/api/v1/products/find/pending',
     method: 'GET',
-    timeout: 0,
     async: false,
     success: function(response)
     {
@@ -75,8 +74,7 @@ $(document).ready(function() {
         $.ajax({
             url: `/api/v1/products/${id}/approve`,
             method: 'POST',
-            success: function(response)
-            {
+            success: function(response) {
                 console.log(response);
                 Toast.fire({
                     icon: 'success',
@@ -96,8 +94,7 @@ $(document).ready(function() {
         $.ajax({
             url: `/api/v1/products/${id}/denied`,
             method: 'POST',
-            success: function(response)
-            {
+            success: function(response) {
                 console.log(response);
                 Toast.fire({
                     icon: 'error',

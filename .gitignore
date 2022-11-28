@@ -1,10 +1,4 @@
 .vscode
 node_modules
-public/*.jpg
-public/*.svg
-public/*.png
-public/*.webp
-public/*.js
-public/*.html
 /vendor
 .env

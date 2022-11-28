@@ -11,8 +11,7 @@ $.ajax({
     method: 'GET',
     async: false,
     success: function(response) {
-        response.forEach((category) =>
-        {
+        response.forEach(category => {
             $('#order-report-categories').append(`<option value="${category.id}">${category.name}</option>`)
         });
     }
@@ -22,10 +21,8 @@ $.ajax({
     url: '/api/v1/reports/order-report',
     method: 'GET',
     async: false,
-    success: function(response)
-    {
-        response.forEach((element) => 
-        {
+    success: function(response) {
+        response.forEach(element => {
             $('#table-body').append(/*html*/`
                 <tr role="button">
                     <td>${element.date}</td>
@@ -36,7 +33,6 @@ $.ajax({
                 </tr>
             `);
         });
-
     }
 });
 
@@ -72,15 +68,14 @@ $(document).ready(function() {
         const category = $('#order-report-categories').val();
 
         const query = new URLSearchParams();
-        if (from !== '') query.set('from', from);
-        if (to !== '') query.set('to', to);
-        if (category !== '') query.set('category', category);
+        if (from !== '')        query.set('from', from);
+        if (to !== '')          query.set('to', to);
+        if (category !== '')    query.set('category', category);
 
         $.ajax({
             url: `/api/v1/reports/order-report?${query.toString()}`,
             method: 'GET',
             success: function(response) {
-
                 table.clear();
                 response.forEach(element => {
                     table.row.add([
@@ -92,10 +87,8 @@ $(document).ready(function() {
                     ]);
                 });
                 table.draw(false);
-
             }
         });
-
 
     });
 

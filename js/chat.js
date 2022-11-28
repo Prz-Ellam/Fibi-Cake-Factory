@@ -62,13 +62,10 @@ $.ajax({
     url: 'api/v1/session',
     method: 'GET',
     async: false,
-    timeout: 0,
     success: function(response) {
         id = response.id;
-        
     }
 });
-
 
 $.ajax({
     url: `/api/v1/users/${id}/chats`,
@@ -81,43 +78,10 @@ $.ajax({
 })
 
 
-
-$.ajax({
-    url: `/api/v1/users?exclude=${id}`,
-    method: 'GET',
-    timeout: 0,
-    success: function(response) {
-        
-    }
-});
-
-
-
 $(document).ready(function() {
 
     $('#send-message').click(function() {
-
         let message = $('#message').val();
-        /*
-        if ($('#chat-file')[0].files.length !== 0)
-        {
-            const reader = new FileReader();
-            reader.readAsDataURL($('#chat-file')[0].files[0]);
-
-            reader.onloadend = function(e) {
-                $('#comment-box').append(`
-                <div class="d-flex justify-content-end my-3">
-                    <img class="img-fluid rounded-2 overflow-auto w-50" src="${e.target.result}">
-                </div>
-                `);
-                $('#message').val('');
-                $('#chat-file').val('');
-                $('#comment-box').stop().animate({
-                    scrollTop: $('#comment-box')[0].scrollHeight
-                }, 800);
-            }
-        }
-*/
         if (message === '') return;
         postMessage(message);
 
@@ -132,8 +96,7 @@ $(document).ready(function() {
         }
     });
 
-    function postMessage(message)
-    {
+    function postMessage(message) {
         if (chatParticipantId !== null && chatId !== null)
         {
             $.ajax({
@@ -216,8 +179,6 @@ $(document).ready(function() {
 			$(this).val(ui.item.label);
         },
         select: function(event, ui) {
-
-
             // prevent autocomplete from updating the textbox
 			event.preventDefault();
 		    // manually update the textbox and hidden field
@@ -242,9 +203,7 @@ $(document).ready(function() {
                 method: 'POST',
                 data: `userId=${id}&chatId=${chatId}`,
                 async: false,
-                success: function(response)
-                {
-                    console.log(response);
+                success: function(response) {
                     chatParticipantId = response.id;
                 }
             });
@@ -252,9 +211,7 @@ $(document).ready(function() {
             $.ajax({
                 url: `/api/v1/chats/${chatId}/messages`,
                 method: 'GET',
-                timeout: 0,
-                success: function(response)
-                {
+                success: function(response) {
                     $('#chat-name').text(ui.item.label);
                     //$('#user-label').attr('href', `/profile?id=${ui.item.value}`);
 
