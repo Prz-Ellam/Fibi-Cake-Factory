@@ -28,13 +28,11 @@ $(document).ready(() => {
     .then(response => {
 
         response.forEach(quote => {
-            console.log(quote);
-
             table.row.add([
                 '',
                 quote.username,
                 quote.name,
-                `<input class="form-control" type="number" id="input-${quote.quote_id}">`,
+                `<input class="form-control" type="number" min="0" step=0.01" id="input-${quote.quote_id}">`,
                 `<button class="btn btn-success shadow-none rounded-1 btn-approve" id="${quote.quote_id}"><i class="fa fa-check"></i></button>`
             ]);
 
@@ -48,6 +46,9 @@ $(document).ready(() => {
 
         const quoteId = $(this).attr('id');
         const price = $(`#input-${quoteId}`).val();
+        if (price <= 0) {
+            return;
+        }
 
         var urlencoded = new URLSearchParams();
         urlencoded.append("price", price);
@@ -65,7 +66,6 @@ $(document).ready(() => {
             fetch(`/api/v1/quotes/pending?userId=${userId}`)
             .then(response => response.json())
             .then(response => {
-        
                 table.clear();
                 response.forEach(quote => {
                     console.log(quote);
@@ -74,7 +74,7 @@ $(document).ready(() => {
                         '',
                         quote.username,
                         quote.name,
-                        `<input class="form-control" type="number" id="input-${quote.quote_id}">`,
+                        `<input class="form-control" type="number" min="0" step=0.01" id="input-${quote.quote_id}">`,
                         `<button class="btn btn-success shadow-none rounded-1 btn-approve" id="${quote.quote_id}"><i class="fa fa-check"></i></button>`
                     ]);
         
