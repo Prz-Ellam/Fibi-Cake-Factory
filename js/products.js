@@ -1,29 +1,5 @@
-
 import { getSession } from './utils/session.js';
-
 const id = getSession();
-
-/*
-$.getJSON(`/api/v1/users/${id}/products/approved`, {
-    format: 'json',
-}).done(function(response) {
-    response.forEach(function(product) {
-        $('#products-container').append(ProductCard(product));
-    });
-});
-*/
-
-const productCard = /*html*/`
-    <div class="col-lg-4 col-md-6 col-sm-12 text-center p-5">
-        <a href="/product"><img src="assets/img/E001S000032.jpg" class="img-fluid p-3"></a>
-        <h5 class="fw-bold text-brown mb-0">$298.00</h5>
-        <p class="text-brown">Tentación de frutas</p>
-        <div class="d-flex justify-content-center">
-            <a href="/update-product" class="btn btn-blue shadow-none rounded-1 me-1">Editar</a>
-            <a href="#" class="btn btn-red shadow-none rounded-1" data-bs-toggle="modal" data-bs-target="#delete-product">Eliminar</a>
-        </div>
-    </div>
-`;
 
 function ProductCard(product)
 {
@@ -50,9 +26,8 @@ $.ajax({
     method: 'GET',
     timeout: 0,
     async: false,
-    success: function(response)
-    {
-        response.forEach(function(product) {
+    success: function(response) {
+        response.forEach(product => {
             $('#products-container').append(ProductCard(product));
         });
     }
@@ -61,7 +36,6 @@ $.ajax({
 $('body').removeClass('d-none');
 
 $(document).ready(function() {
-
 
     $("#main-tab li a").click(function(e) {
         e.preventDefault();
@@ -85,11 +59,9 @@ $(document).ready(function() {
         $.ajax({
             url: url,
             method: 'GET',
-            timeout: 0,
-            success: function(response)
-            {
+            success: function(response) {
                 $('#products-container').empty();
-                response.forEach(function(product) {
+                response.forEach(product => {
                     $('#products-container').append(ProductCard(product));
                 });
             }
@@ -120,9 +92,7 @@ $(document).ready(function() {
         $.ajax({
             url: `/api/v1/products/${id}`,
             method: 'DELETE',
-            timeout: 0,
-            success: function(response)
-            {
+            success: function(response) {
                 Toast.fire({
                     icon: 'success',
                     title: 'Tu producto ha sido eliminado'

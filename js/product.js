@@ -80,7 +80,6 @@ $.ajax({
     async: false,
     success: function (response) {
         productOwnerId = response.user;
-        console.log(response);
         const product = response;
 
         var fmt = new Intl.NumberFormat('en-US', {
@@ -92,7 +91,7 @@ $.ajax({
 
         let data = ' ';
         product.categories_name.forEach(category => {
-            data += category;
+            data += category + ' ';
         });
         $('#category').text(data);
 
@@ -159,6 +158,10 @@ $.ajax({
         });
     }
 });
+
+if (productOwnerId === id) {
+    $('#create-review-form').remove();
+}
 
 $(document).ready(function () {
 
@@ -320,8 +323,6 @@ $(document).ready(function () {
         const modal = document.getElementById('select-wishlist');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
-
-        console.log($(this).serialize());
 
         $.ajax({
             url: `api/v1/wishlist-objects`,

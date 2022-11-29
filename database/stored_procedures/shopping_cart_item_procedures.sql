@@ -218,6 +218,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         BIN_TO_UUID(sci.shopping_cart_id) = _shopping_cart_id
+        AND p.active = TRUE
         AND sci.active = TRUE
     GROUP BY
         sci.shopping_cart_item_id,

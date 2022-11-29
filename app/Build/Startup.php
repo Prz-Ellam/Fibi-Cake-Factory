@@ -76,7 +76,7 @@ class Startup
         $imageId = Uuid::uuid4()->toString();
         $imageName = "pyramid.png";
         $imageType = "image/jpeg";
-        $imageContent = file_get_contents(__DIR__ . '\\pyramid.jpg');
+        $imageContent = file_get_contents(__DIR__ . '/pyramid.jpg');
         $imageSize = strlen($imageContent);
 
         $image = new Image();
@@ -95,7 +95,6 @@ class Startup
         {
             return false;
         }
-
         
         $email = "admin@localhost.com";
         $username = "admin";

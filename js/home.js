@@ -67,7 +67,7 @@ $.ajax({
 });
 
 $.ajax({
-    url: `api/v1/products?filter=sells`,
+    url: `api/v1/products?filter=sells&order=desc`,
     method: 'GET',
     async: false,
     success: function(response) {

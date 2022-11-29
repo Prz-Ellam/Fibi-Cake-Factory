@@ -101,6 +101,7 @@ BEGIN
         BIN_TO_UUID(p.product_id) = c.q_product_id AND c.q_price IS NOT NULL
     WHERE
         BIN_TO_UUID(wo.wishlist_id) = _wishlist_id
+        AND p.active = TRUE
         AND wo.active = TRUE
     GROUP BY
         wo.wishlist_object_id, 

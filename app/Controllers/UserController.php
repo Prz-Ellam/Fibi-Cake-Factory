@@ -507,6 +507,8 @@ class UserController extends Controller
         $users = $userRepository->getAllByFilter($search, $userId);
 
 
-        $response->json($users);
+        $response
+            ->setHeader("Access-Control-Allow-Origin", "*")
+            ->json($users);
     }
 }

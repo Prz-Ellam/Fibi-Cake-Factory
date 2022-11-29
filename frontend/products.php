@@ -62,15 +62,6 @@
                 <div class="row" id="products-container">
                 </div>
 
-                <nav aria-label="Page navigation example">
-                    <ul class="mt-4 pagination justify-content-center">
-                        <li class="page-item"><a class="page-link shadow-none" style="color: #3B1002" href="#">Anterior</a></li>
-                        <li class="page-item"><a class="page-link shadow-none" style="color: #3B1002" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link shadow-none" style="color: #3B1002" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link shadow-none" style="color: #3B1002" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link shadow-none" style="color: #3B1002" href="#">Siguiente</a></li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
