@@ -170,7 +170,6 @@ END $$
 DELIMITER ;
 
 
-CALL sp_get_users_except('', '');
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_users_except $$

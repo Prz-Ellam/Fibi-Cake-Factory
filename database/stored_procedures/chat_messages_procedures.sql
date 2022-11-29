@@ -1,6 +1,3 @@
-
-
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_create_chat_message $$
 

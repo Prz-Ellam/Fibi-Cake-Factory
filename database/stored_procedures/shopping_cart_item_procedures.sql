@@ -162,7 +162,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-
+DROP PROCEDURE IF EXISTS sp_add_quantity_shopping_cart_item $$
 CREATE PROCEDURE sp_add_quantity_shopping_cart_item(
     IN _shopping_cart_item          VARCHAR(36),
     IN _quantity                    SMALLINT

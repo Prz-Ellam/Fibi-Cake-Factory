@@ -1,5 +1,3 @@
-USE cake_factory;
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_reviews_create $$
 

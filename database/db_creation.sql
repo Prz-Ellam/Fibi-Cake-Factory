@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS cake_factory;
-
-USE cake_factory;
-
 -- Users
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users`(

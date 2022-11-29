@@ -230,9 +230,6 @@ DELIMITER ;
 
 
 
-
-CALL sp_get_product('f36d0036-eaa6-4112-8ce2-d471dc63c9bc');
-
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_get_product $$
 
@@ -302,7 +299,7 @@ END $$
 DELIMITER ;
 
 
-CALL sp_products_get_all_by_recents('d356d225-0cab-4b25-9d6a-fefa66a71990');
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_products_get_all_by_recents $$
 

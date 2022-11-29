@@ -48,7 +48,6 @@ BEGIN
         visible         = IFNULL(_visible, visible)
     WHERE
         BIN_TO_UUID(wishlist_id) = _wishlist_id
-        --AND BIN_TO_UUID(user_id) = _user_id
         AND active = TRUE;
 
 END$$
@@ -70,7 +69,6 @@ BEGIN
         active = FALSE
     WHERE
         BIN_TO_UUID(wishlist_id) = _wishlist_id;
-        --AND BIN_TO_UUID(user_id) = _user_id
     
 END$$
 DELIMITER ;
